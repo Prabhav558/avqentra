@@ -1,65 +1,110 @@
+// Single source of truth for product copy. Homepage, product pages, footer and metadata read from here.
+// Voice rules: DESIGN.md §9. Products are pre-launch: describe what they do, not results they've had.
+
+export type ProductStatus = "Launching soon" | "Early access" | "Live";
+
 export type Product = {
   slug: string;
   name: string;
-  tag: string;
+  status: ProductStatus;
+  /** Short category label, e.g. "AI Agent Evaluation". */
+  category: string;
+  /** Display headline used on the homepage panel. */
+  headline: string;
+  /** One or two sentences: what it does and who it's for. */
+  summary: string;
+  /** One line for cards and meta descriptions. */
   tagline: string;
-  description: string;
   highlights: string[];
+  /** "Show the work" walkthrough on the homepage. */
+  walkthrough: { intro: string; steps: string[] };
+  repo?: string;
 };
 
 export const products: Product[] = [
   {
     slug: "agentbattle",
     name: "AgentBattle",
-    tag: "AI agents",
-    tagline: "Pit AI agents against each other and see which one actually wins.",
-    description:
-      "AgentBattle is a head-to-head arena for AI agents. Run agents on the same tasks under the same conditions and compare results objectively instead of trusting demos.",
+    status: "Launching soon",
+    category: "AI Agent Evaluation",
+    headline: "Don't trust demos. Trust data.",
+    summary:
+      "A head-to-head arena for AI agents. Run agents on the same tasks under the same conditions, score them, and compare the results.",
+    tagline: "A head-to-head arena for testing and comparing AI agents.",
     highlights: [
-      "Side-by-side agent comparisons on identical tasks",
+      "Side-by-side comparisons on identical tasks",
       "Repeatable, scored runs",
-      "Clear results you can act on",
+      "Bring your own tasks or use built-in benchmarks",
     ],
+    walkthrough: {
+      intro: "Create a challenge, let agents attempt it under identical conditions, then compare the scores.",
+      steps: ["Create a challenge", "Agents attempt it", "Compare the scores"],
+    },
+    repo: "https://github.com/yashsrivastava1408/AgentBattle",
   },
   {
     slug: "devsick",
-    name: "Devsick",
-    tag: "Developer tools",
-    tagline: "Tooling for developers who are done with broken workflows.",
-    description:
-      "Devsick is built for developers. It targets the friction that slows engineering teams down and gives you a faster path from problem to fix.",
+    name: "DevSick",
+    status: "Launching soon",
+    category: "AI Incident Reasoning",
+    headline: "Know why it broke, not just that it did.",
+    summary:
+      "Sits on top of your monitoring tools to detect, explain and guide the resolution of application failures, correlating logs and traces to find the root cause.",
+    tagline: "AI incident reasoning that explains why your application failed.",
     highlights: [
-      "Built for real developer workflows",
-      "Fast to adopt, minimal setup",
-      "Focused on removing friction, not adding dashboards",
+      "Root cause analysis from logs and traces",
+      "Human-in-the-loop remediation: you make the final call",
+      "Works alongside your existing observability tools",
     ],
+    walkthrough: {
+      intro: "Connect your monitoring, investigate an incident, and move from symptom to root cause and a suggested fix.",
+      steps: ["Connect monitoring", "Investigate an incident", "Review the suggested fix"],
+    },
+    repo: "https://github.com/yashsrivastava1408/DevSick",
   },
   {
     slug: "questionforge",
     name: "QuestionForge",
-    tag: "Question generation",
-    tagline: "Forge better questions, faster.",
-    description:
-      "QuestionForge generates high-quality questions on demand, for assessments, interviews, research and learning, so you stop writing them by hand.",
+    status: "Launching soon",
+    category: "Technical Interview Questions",
+    headline: "Forge better questions, faster.",
+    summary:
+      "Generate, validate and export technical interview questions across DSA, OOP, system design and SQL, built for hiring and university placement teams.",
+    tagline: "Generate and validate technical interview questions.",
     highlights: [
-      "Generate questions from your own material",
-      "Control difficulty and format",
-      "Edit and reuse your question sets",
+      "Coverage across DSA, OOP, system design and SQL",
+      "Every question checked for correctness, edge cases and clarity",
+      "Export sets ready for your ATS or internal wiki",
     ],
+    walkthrough: {
+      intro: "Choose topics and difficulty, generate questions, then validate and export the set.",
+      steps: ["Choose topics", "Generate and validate", "Export the set"],
+    },
+    repo: "https://github.com/yashsrivastava1408/QuestionForge",
   },
   {
     slug: "ops-academy",
     name: "Ops Academy",
-    tag: "Learning platform",
-    tagline: "Learn operations by doing the work.",
-    description:
-      "Ops Academy is a learning platform for operations skills. Structured paths and hands-on exercises help people build practical ability, with progress you can see.",
+    status: "Launching soon",
+    category: "Operations Training",
+    headline: "Learn operations by doing the work.",
+    summary:
+      "A learning platform that builds practical operations skills through structured paths, hands-on exercises and visible progress.",
+    tagline: "Learn operations through structured paths and hands-on exercises.",
     highlights: [
       "Structured learning paths for operations roles",
       "Hands-on exercises, not just reading",
       "Clear progress for learners and teams",
     ],
+    walkthrough: {
+      intro: "Pick a learning path, work through hands-on exercises, and track your progress.",
+      steps: ["Choose a learning path", "Complete an exercise", "Track your progress"],
+    },
   },
 ];
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
+
+/** "AgentBattle, DevSick, QuestionForge and Ops Academy" */
+export const productList = (names = products.map((p) => p.name)) =>
+  names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names.join("");

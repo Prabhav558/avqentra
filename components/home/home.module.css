@@ -246,6 +246,7 @@
 .productNum{display:block;margin-bottom:28px;font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#6f6c65}
 .productCat{margin:0 0 18px;font:600 10px/1.5 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase;color:#b9ae94}
 .productVisual{position:relative;min-width:0}
+.productStatus{display:inline-block;margin-left:12px;padding:4px 8px;border:1px solid rgba(230,220,195,.28);font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#e6dcc8;vertical-align:1px}
 .visualCaption{display:block;margin-top:14px;font:400 9px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#55534c}
 
 /* illustrative interfaces */

@@ -4,7 +4,7 @@ import type { Product } from "@/lib/products";
 export default function ProductCard({ p }: { p: Product }) {
   return (
     <Link className="card link" href={`/products/${p.slug}`}>
-      <span className="tag">{p.tag}</span>
+      <span className="tag">{p.category}</span>
       <h3>{p.name}</h3>
       <p>{p.tagline}</p>
       <span className="more">Learn more &rarr;</span>

@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import OptionWheel from "@/components/OptionWheel/OptionWheel";
-import { AgentBattleVisual, DevSickVisual, OpsAcademyVisual, QuestionForgeVisual } from "./ProductVisuals";
+import { products } from "@/lib/products";
+import { productVisuals } from "./ProductVisuals";
 import s from "./home.module.css";
 
 function Arrow() {
@@ -13,47 +14,10 @@ function Arrow() {
   );
 }
 
-const products = [
-  {
-    slug: "agentbattle",
-    name: "AgentBattle",
-    category: "AI Agent Evaluation & Competition",
-    headline: "Put intelligent agents to the test.",
-    body: "A platform for challenging, evaluating, and comparing AI agents through practical tasks and competitive environments.",
-    cta: "Explore AgentBattle",
-    Visual: AgentBattleVisual,
-  },
-  {
-    slug: "devsick",
-    name: "DevSick",
-    category: "AI-Assisted Software Development",
-    headline: "Build software with greater intelligence.",
-    body: "A developer-focused platform designed to help engineers understand codebases, identify problems, and accelerate software development.",
-    cta: "Explore DevSick",
-    Visual: DevSickVisual,
-  },
-  {
-    slug: "questionforge",
-    name: "QuestionForge",
-    category: "AI-Powered Question & Knowledge Management",
-    headline: "Turn questions into knowledge.",
-    body: "A platform for creating, organizing, and exploring high-quality questions, with AI-assisted workflows for learning, assessment, and knowledge discovery.",
-    cta: "Explore QuestionForge",
-    Visual: QuestionForgeVisual,
-  },
-  {
-    slug: "ops-academy",
-    name: "Ops Academy",
-    category: "Operations Training & Upskilling",
-    headline: "Learn operations by doing the work.",
-    body: "A learning platform that helps people build practical operations skills through structured paths, hands-on exercises, and visible progress.",
-    cta: "Explore Ops Academy",
-    Visual: OpsAcademyVisual,
-  },
-];
+const items = products.map((p) => ({ ...p, Visual: productVisuals[p.slug] }));
 
-const names = products.map((p) => p.name);
-const N = products.length;
+const names = items.map((p) => p.name);
+const N = items.length;
 const pad = (n: number) => String(n).padStart(2, "0");
 
 // Must match the media query that un-pins the stage in home.module.css.
@@ -176,17 +140,19 @@ export default function Ecosystem() {
           </div>
 
           <div className={s.ecoRight}>
-            {products.map(({ slug, name, category, headline, body, cta, Visual }, i) => (
+            {items.map(({ slug, name, status, category, headline, summary, Visual }, i) => (
               <article key={slug} className={s.ecoPanel} data-active={i === active} inert={i !== active}>
                 <div className={s.productText}>
                   <span className={s.productNum}>
                     {pad(i + 1)} / {pad(N)}
                   </span>
-                  <p className={s.productCat}>{category}</p>
+                  <p className={s.productCat}>
+                    {category} <span className={s.productStatus}>{status}</span>
+                  </p>
                   <h3 className={s.h3}>{headline}</h3>
-                  <p className={s.body}>{body}</p>
-                  <Link href={`/products/${slug}`} className={`${s.btn} ${s.btnGhost}`} aria-label={cta}>
-                    {cta} <Arrow />
+                  <p className={s.body}>{summary}</p>
+                  <Link href={`/products/${slug}`} className={`${s.btn} ${s.btnGhost}`}>
+                    Explore {name} <Arrow />
                   </Link>
                 </div>
                 <div className={s.productVisual} data-cursor="inspect">
