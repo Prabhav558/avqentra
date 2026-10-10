@@ -4,7 +4,7 @@ import { getProduct } from "@/lib/products";
 
 const p = getProduct("devsick")!;
 
-export const metadata: Metadata = { title: p.name, description: p.tagline };
+export const metadata: Metadata = { title: p.title, description: p.lead };
 
 export default function Page() {
   return <ProductPage p={p} variant="incident" />;

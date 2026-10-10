@@ -47,7 +47,7 @@ export default function ProductPage({ p, variant }: { p: Product; variant: Scene
 
         <section style={{ paddingTop: 0 }}>
           <h2>Capabilities</h2>
-          <p className="sub">What {p.name} does today.</p>
+          <p className="sub">What {p.title} does today.</p>
           <div className="grid">
             {p.features.map((f) => (
               <div className="card" key={f.title}>
@@ -67,8 +67,8 @@ export default function ProductPage({ p, variant }: { p: Product; variant: Scene
 
         <section style={{ paddingTop: 0 }}>
           <div className="cta">
-            <h2>Try {p.name}</h2>
-            <p className="sub" style={{ marginBottom: 24 }}>{p.tagline}</p>
+            <h2>Try {p.title}</h2>
+            <p className="sub" style={{ marginBottom: 24 }}>{p.lead}</p>
             <div className="btns">
               <Link className="btn primary" href="/contact">Request access</Link>
               <Link className="btn" href="/products">All products</Link>

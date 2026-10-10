@@ -3,6 +3,9 @@ export type Product = {
   name: string;
   tag: string;
   tagline: string;
+  title: string;
+  lead: string;
+  pageTag: string;
   description: string;
   highlights: string[];
   repo: string;
@@ -21,6 +24,9 @@ export const products: Product[] = [
     name: "AgentBattle",
     tag: "AI agents",
     tagline: "Pit AI agents against each other and see which one actually wins.",
+    title: "AgentBattle",
+    pageTag: "AI agents",
+    lead: "Pit AI agents against each other and see which one actually wins.",
     description:
       "AgentBattle is a head-to-head arena for AI agents. Run agents on the same tasks under the same conditions and compare results objectively instead of trusting demos.",
     highlights: [
@@ -52,9 +58,12 @@ export const products: Product[] = [
   },
   {
     slug: "devsick",
-    name: "DevSick",
-    tag: "Incident intelligence",
-    tagline: "Autonomous infrastructure intelligence and an AI command center.",
+    name: "Devsick",
+    tag: "Developer tools",
+    tagline: "Tooling for developers who are done with broken workflows.",
+    title: "DevSick",
+    pageTag: "Incident intelligence",
+    lead: "Autonomous infrastructure intelligence and an AI command center.",
     description:
       "DevSick sits on top of your monitoring tools to detect, explain, and guide resolution of application failures. It correlates logs and metrics, then uses LLM reasoning to produce structured root-cause analysis with confidence scores.",
     highlights: [
@@ -89,7 +98,10 @@ export const products: Product[] = [
     slug: "questionforge",
     name: "QuestionForge",
     tag: "Question generation",
-    tagline: "Generates technical interview questions, then checks them before a human sees them.",
+    tagline: "Forge better questions, faster.",
+    title: "QuestionForge",
+    pageTag: "Question generation",
+    lead: "Generates technical interview questions, then checks them before a human sees them.",
     description:
       "QuestionForge drafts DSA, SQL, MCQ, OOP, conceptual and system-design questions for hiring assessments. An LLM writes each one; something else verifies it, by running code or by independent review.",
     highlights: [

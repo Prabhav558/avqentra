@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Scene from "./Scene";
-import ProductCard from "./ProductCard";
+import ProductCard from "./ProductHubCard";
 import { products } from "@/lib/products";
 
 export default function ProductsHub({ home = false }: { home?: boolean }) {
