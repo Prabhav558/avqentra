@@ -34,3 +34,4 @@ textarea{min-height:130px;resize:vertical}
 footer{border-top:1px solid var(--border);padding:32px 0;color:var(--muted);font-size:14px;margin-top:40px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 footer a{color:var(--muted)}
+.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:22px;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));margin-bottom:6px}

@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="wrap">
             <span>&copy; {new Date().getFullYear()} Avqentra. All rights reserved.</span>
             <span>
-              <Link href="/products">Products</Link> &middot; <Link href="/about">About</Link> &middot;{" "}
+              <Link href="/products">Products</Link> &middot; <Link href="/founders">Founders</Link> &middot; <Link href="/about">About</Link> &middot;{" "}
               <Link href="/contact">Contact</Link>
             </span>
           </div>
