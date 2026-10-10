@@ -16,6 +16,24 @@ export class Kit {
   tex<T extends THREE.Texture>(t: T): T { this.items.push(t); return t; }
   dispose() { this.items.forEach((i) => i.dispose()); this.items = []; }
 
+  private _brushed?: THREE.CanvasTexture;
+  /** Fine anisotropic streaks for roughnessMap: breaks up the "CG-perfect" uniform metal look. */
+  brushed() {
+    if (this._brushed) return this._brushed;
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 256;
+    const x = cv.getContext("2d")!;
+    x.fillStyle = "#c8c8c8"; x.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 900; i++) {
+      const v = 150 + Math.random() * 105 | 0;
+      x.fillStyle = `rgba(${v},${v},${v},${0.15 + Math.random() * 0.3})`;
+      x.fillRect(Math.random() * 256, Math.random() * 256, 20 + Math.random() * 90, 1);
+    }
+    const t = this.tex(new THREE.CanvasTexture(cv));
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 3); t.anisotropy = 8;
+    return (this._brushed = t);
+  }
+
   chrome = this.mat(new THREE.MeshPhysicalMaterial({ color: 0xd5d9e0, metalness: 1, roughness: 0.16, clearcoat: 1, clearcoatRoughness: 0.08 }));
   dark = this.mat(new THREE.MeshPhysicalMaterial({ color: 0x17181d, metalness: 0.9, roughness: 0.28, clearcoat: 0.6, clearcoatRoughness: 0.2 }));
   steel = this.mat(new THREE.MeshPhysicalMaterial({ color: 0x3a3e46, metalness: 1, roughness: 0.38 }));

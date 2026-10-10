@@ -467,3 +467,9 @@ body:has(.pv) footer .wrap{padding:8px var(--gutr) 8px var(--gut)}
 /* detail hero headline: fit the screen */
 .pd-title{font-size:clamp(28px,min(4.3vw,8.6vh),84px);letter-spacing:-.045em}
 .pd-main{max-width:min(56vw,900px)}
+
+/* how-it-works: size to content instead of filling the viewport, so numbers and titles sit closer */
+.frame .pd-how{min-height:0}
+.pd-steps{flex:none}
+.pd-step{min-height:clamp(240px,34vh,340px)}
+@media(max-width:900px){.pd-step{min-height:0}}

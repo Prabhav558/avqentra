@@ -13,6 +13,8 @@ const rail = [
   { id: "capabilities", n: "03", label: "Capabilities" },
   { id: "start", n: "04", label: "Get started" },
 ];
+// product accents are tinted per-product; the 3D scenes and hero glow follow the site's cream-on-black theme
+const THEME = "#e6dcc8";
 const Arrow = () => <span aria-hidden="true" className="arr">↗</span>;
 
 export default function ProductDetail({ p, variant }: { p: Product; variant: SceneVariant }) {
@@ -21,19 +23,18 @@ export default function ProductDetail({ p, variant }: { p: Product; variant: Sce
   const nextN = String(((i + 1) % products.length) + 2).padStart(2, "0");
   const Mock = UI[p.slug];
   return (
-    <div className="frame pd" style={{ ["--c" as string]: p.accent }}>
+    <div className="frame pd" style={{ ["--c" as string]: THEME }}>
       <SectionRail items={rail} />
 
       <section className="pd-hero" id="top">
-        <Scene className="scene" variant={variant} accent={p.accent} />
+        <Scene className="scene" variant={variant} accent={THEME} />
         <div className="pd-main">
           <Link className="pd-back mono" href="/products">← ALL PRODUCTS</Link>
           <p className="eyebrow mono"><span className="dot" />{String(i + 2).padStart(2, "0")} — {p.badge.toUpperCase()}<span className="soon"><i />{p.status}</span></p>
           <h1 className="pd-title">{p.headline[0]}<br /><span className="tan">{p.headline[1]}</span></h1>
           <p className="pd-lead mono">{p.description}</p>
           <div className="pd-actions">
-            <Link className="pbtn cream" href={p.repo}>VIEW ON GITHUB <Arrow /></Link>
-            <Link className="pbtn line" href="/contact">Get notified <Arrow /></Link>
+            <Link className="pbtn cream" href="/contact">Get notified <Arrow /></Link>
           </div>
         </div>
         <dl className="ps-facts pd-facts">

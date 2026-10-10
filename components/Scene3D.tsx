@@ -35,6 +35,8 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
     renderer.setClearColor(0x000000, 0);
+    renderer.shadowMap.enabled = variant !== "mark";
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     el.appendChild(renderer.domElement);
 
     const kit = new Kit();
@@ -43,7 +45,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
     scene.environment = envRT.texture;
-    scene.environmentIntensity = 0.55;
+    scene.environmentIntensity = 0.7;
 
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
     camera.position.set(0, 1.6, 10.5);
@@ -75,19 +77,19 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
     const add = <M extends Model>(m: M, parent: THREE.Object3D = root) => { parent.add(m.group); models.push(m); return m; };
 
     if (variant === "arena") {
-      root.position.y = -1.0;
+      root.position.y = -1.4;
       key.intensity = 70; fill.intensity = 30;
       buildBenchmark({ kit, root, accent: col, tick, fill, key });
     }
 
     if (variant === "incident") {
-      root.position.y = -0.1;
+      root.position.y = -2.2;
       key.intensity = 70; fill.intensity = 35;
       buildTopology({ kit, root, accent: col, tick, fill, key });
     }
 
     if (variant === "forge") {
-      root.position.y = -0.9;
+      root.position.y = -2.5;
       key.intensity = 70; fill.intensity = 35;
       buildPipeline({ kit, root, accent: col, tick, fill, key });
     }
@@ -206,11 +208,29 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       });
     }
 
+    // soft key shadows: grounds every plate, node and card on the surface below it
+    if (variant !== "mark") {
+      const sun = new THREE.DirectionalLight(0xfff1dc, 1.6);
+      sun.position.set(4, 9, 6);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(2048, 2048);
+      const sc = sun.shadow.camera;
+      sc.left = -9; sc.right = 9; sc.top = 9; sc.bottom = -9; sc.near = 1; sc.far = 30;
+      sun.shadow.radius = 5; sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
+      scene.add(sun);
+      root.traverse((o) => {
+        const m = o instanceof THREE.Mesh ? (o.material as THREE.Material & { isMeshPhysicalMaterial?: boolean; isMeshStandardMaterial?: boolean }) : null;
+        if (!m || !(o instanceof THREE.Mesh)) return;
+        if (m.isMeshPhysicalMaterial) { o.castShadow = true; o.receiveShadow = true; }
+        else if (m.isMeshStandardMaterial) o.receiveShadow = true; // floor: catches, never casts
+      });
+    }
+
     // composer + bloom
     const msaa = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
     const composer = new EffectComposer(renderer, msaa);
     composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), variant === "mark" ? 0.32 : 0.4, 0.5, 0.95);
+    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), variant === "mark" ? 0.32 : 0.4, 0.7, 0.95);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
 
@@ -224,14 +244,17 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const wide = w / h > 1.3;
       camera.position.z = wide ? 10.5 : 15;
       camera.fov = wide ? 38 : 42;
-      root.position.x = wide ? (variant === "arena" ? 2.6 : variant === "mark" ? 3.3 : variant === "incident" ? 3.4 : variant === "forge" ? 2.4 : 3.0) : 0;
-      baseScale = variant === "arena" ? 0.58 : variant === "forge" ? 0.74 : variant === "incident" ? 0.52 : variant === "mark" ? 0.8 : 1;
+      root.position.x = wide ? (variant === "arena" ? 2.6 : variant === "mark" ? 3.3 : variant === "incident" ? 3.0 : variant === "forge" ? 2.4 : 3.0) : 0;
+      baseScale = variant === "arena" ? 0.68 : variant === "forge" ? 0.72 : variant === "incident" ? 0.55 : variant === "mark" ? 0.8 : 1;
       camera.updateProjectionMatrix();
     };
     const baseY = root.position.y;
     size();
-    root.position.y = baseY + (el.clientWidth / (el.clientHeight || 1) > 1.3 ? 0 : 2.4);
-    const ro = new ResizeObserver(() => { size(); root.position.y = baseY + (el.clientWidth / (el.clientHeight || 1) > 1.3 ? 0 : 2.4); });
+    // wide layouts: nudge the model up so its base clears the stats strip over the bottom of the hero
+    const lift = variant === "incident" ? 2.0 : variant === "arena" ? 1.4 : variant === "forge" ? 1.3 : 0;
+    const place = () => { root.position.y = baseY + (el.clientWidth / (el.clientHeight || 1) > 1.3 ? lift : 2.4); };
+    place();
+    const ro = new ResizeObserver(() => { size(); place(); });
     ro.observe(el);
 
     const mouse = { x: 0, y: 0 };
@@ -250,7 +273,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       raf = requestAnimationFrame(frame);
       if (!visible || document.hidden) { last = now; return; }
       const raw = Math.max(0, (now - last) / 1000);
-      const dt = Math.min(raw, 0.05);
+      const dt = Math.min(0.5 * raw + 0.5 * ema, 0.05); // blend with the running average so a single late frame doesn't jolt animation
       last = now;
       ema = ema * 0.94 + Math.min(raw, 0.2) * 0.06;
       if (++frames > 90 && --cool < 0) {
@@ -265,7 +288,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const intro = 1 - Math.pow(1 - Math.min(1, age / 1.8), 3);
       root.scale.setScalar(baseScale * (0.9 + 0.1 * intro));
       const sway = Math.sin(time * 0.35) * 0.22;
-      root.rotation.y = damp(root.rotation.y, variant === "mark" ? sway * 0.35 + mouse.x * 0.12 : variant === "forge" ? -0.7 + sway * 0.5 + mouse.x * 0.2 : -0.35 + sway * 0.7 + mouse.x * 0.3, 3, dt);
+      root.rotation.y = damp(root.rotation.y, variant === "mark" ? sway * 0.35 + mouse.x * 0.12 : variant === "forge" ? -0.25 + sway * 0.5 + mouse.x * 0.2 : -0.35 + sway * 0.7 + mouse.x * 0.3, 3, dt);
       root.rotation.x = damp(root.rotation.x, mouse.y * 0.06, 3, dt);
       camera.position.x = damp(camera.position.x, mouse.x * 0.8, 2.5, dt);
       camera.position.y = damp(camera.position.y, 1.6 - mouse.y * 0.6, 2.5, dt);
