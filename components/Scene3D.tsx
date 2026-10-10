@@ -7,7 +7,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import { Kit, makeAgent, makeForge, makeGlowPool, makeRack, makeSparks, type Model } from "./three-models";
+import { Kit, MONO, drawFrame, makeAgent, makeContactShadow, makeFloor, makeForge, makeGlowPool, makePanel, makeRack, makeSparks, type Model } from "./three-models";
 
 export type SceneVariant = "arena" | "incident" | "forge" | "mark";
 type Props = { variant: SceneVariant; accent?: string; className?: string };
@@ -75,8 +75,8 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
 
     if (variant === "arena") {
       const pink = new THREE.Color(accent), ice = new THREE.Color("#8fd0ff");
-      root.position.y = -1.2;
-      const plat = new THREE.Mesh(kit.geo(new THREE.CylinderGeometry(3.6, 3.85, 0.22, 96)), kit.dark);
+      root.position.y = -0.55;
+      const plat = new THREE.Mesh(kit.geo(new THREE.CylinderGeometry(3.6, 3.85, 0.22, 96)), kit.mat(new THREE.MeshPhysicalMaterial({ color: 0x15161a, metalness: 0.8, roughness: 0.5 })));
       root.add(plat);
       const edge = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(3.6, 0.025, 8, 128)), kit.glow(pink, 2.4));
       edge.rotation.x = Math.PI / 2; edge.position.y = 0.12; root.add(edge);
@@ -85,6 +85,18 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const mid = new THREE.Mesh(kit.geo(new THREE.PlaneGeometry(0.02, 5.2)), kit.glow("#ffffff", 1.2, 0.4));
       mid.rotation.x = -Math.PI / 2; mid.position.y = 0.12; root.add(mid);
       const pool = makeGlowPool(kit, pink, 5.5); pool.position.y = 0.14; root.add(pool);
+      const floor = makeFloor(kit, 13); floor.position.y = -0.115; root.add(floor);
+      const shA = makeContactShadow(kit, 1.1, 0.7), shB = makeContactShadow(kit, 1.1, 0.7);
+      shA.position.y = shB.position.y = 0.125; root.add(shA, shB);
+      const board = makePanel(kit, 3.3, 3.3, (x, W, H) => {
+        drawFrame(x, W, H);
+        x.fillStyle = "#8a877f"; x.font = `600 ${W * 0.034}px ${MONO}`; x.fillText("TASK 07  ·  REASONING", W * 0.07, H * 0.1);
+        x.strokeStyle = "rgba(230,220,200,.12)"; x.lineWidth = 2;
+        for (let i = 1; i < 5; i++) { x.beginPath(); x.moveTo(W * 0.07, H * (0.16 + i * 0.13)); x.lineTo(W * 0.93, H * (0.16 + i * 0.13)); x.stroke(); }
+        x.fillStyle = "#ece8df"; x.font = `600 ${W * 0.04}px ${MONO}`;
+        x.fillText("A", W * 0.27, H * 0.93); x.fillText("B", W * 0.67, H * 0.93);
+      });
+      board.position.set(0, 4.25, -0.95); root.add(board);
 
       const A = add(makeAgent(kit, pink, 0)), B = add(makeAgent(kit, ice, 1.7));
       A.group.position.set(-2.2, 1.5, 0); A.group.rotation.y = Math.PI / 2; A.group.scale.setScalar(1.25);
@@ -107,7 +119,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       // scoreboard
       const barA = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(0.34, 1, 0.34)), kit.glow(pink, 2.2));
       const barB = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(0.34, 1, 0.34)), kit.glow(ice, 2.2));
-      barA.position.set(-0.5, 3.6, -0.6); barB.position.set(0.5, 3.6, -0.6); root.add(barA, barB);
+      barA.position.set(-0.55, 3.6, -0.7); barB.position.set(0.55, 3.6, -0.7); root.add(barA, barB);
       const plinth = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(1.7, 0.06, 0.6)), kit.chrome); plinth.position.set(0, 3.1, -0.6); root.add(plinth);
       let last = -1;
       tick.push((t, dt) => {
@@ -127,6 +139,8 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
         const sa = 1.4 + Math.sin(t * 0.7) * 0.9, sb = 1.4 - Math.sin(t * 0.7) * 0.9;
         barA.scale.y = sa; barA.position.y = 3.13 + sa / 2; barB.scale.y = sb; barB.position.y = 3.13 + sb / 2;
         key.color.copy(pink).lerp(ice, (Math.sin(t * 0.7) + 1) / 2);
+        shA.position.x = A.group.position.x; shB.position.x = B.group.position.x;
+        const sh = 1 + Math.sin(t * 1.7) * 0.08; shA.scale.setScalar(sh); shB.scale.setScalar(sh);
       });
     }
 
@@ -135,6 +149,28 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const pool = makeGlowPool(kit, col, 6); pool.position.y = 0.02; root.add(pool);
       const rack = add(makeRack(kit, col));
       const red = new THREE.Color("#ff3b4e");
+      const floor = makeFloor(kit, 12); floor.position.y = -0.065; root.add(floor);
+      const rca = makePanel(kit, 3.1, 1.95, (x, W, H) => {
+        drawFrame(x, W, H, "rgba(230,220,200,.45)");
+        x.fillStyle = "#8a877f"; x.font = `600 ${W * 0.032}px ${MONO}`; x.fillText("ROOT CAUSE ANALYSIS", W * 0.06, H * 0.14);
+        x.fillStyle = "#ece8df"; x.font = `600 ${W * 0.05}px ${MONO}`; x.fillText("DB POOL EXHAUSTED", W * 0.06, H * 0.34);
+        x.fillStyle = "#b2aea6"; x.font = `400 ${W * 0.034}px ${MONO}`;
+        x.fillText("api-5xx-spike  ·  3 services", W * 0.06, H * 0.48);
+        x.fillStyle = "#8a877f"; x.font = `600 ${W * 0.03}px ${MONO}`; x.fillText("CONFIDENCE", W * 0.06, H * 0.64);
+        x.fillStyle = "rgba(230,220,200,.15)"; x.fillRect(W * 0.06, H * 0.7, W * 0.88, H * 0.05);
+        x.fillStyle = "#e6dcc8"; x.fillRect(W * 0.06, H * 0.7, W * 0.88 * 0.94, H * 0.05);
+        x.fillStyle = "#ece8df"; x.font = `600 ${W * 0.034}px ${MONO}`; x.fillText("94%", W * 0.84, H * 0.64);
+        x.fillStyle = "#8a877f"; x.font = `400 ${W * 0.03}px ${MONO}`; x.fillText("FIX  restart pool · scale +2   [ APPROVE ]", W * 0.06, H * 0.92);
+      });
+      rca.position.set(-2.7, 3.0, 1.2); rca.rotation.y = 0.45; root.add(rca);
+      const rcaMat = rca.material as THREE.MeshBasicMaterial; rcaMat.opacity = 0;
+      const sm = (a: number, b: number, v: number) => { const k = Math.min(1, Math.max(0, (v - a) / (b - a))); return k * k * (3 - 2 * k); };
+      tick.push((t) => {
+        const ph = rack.state?.phase ?? 0;
+        const vis = sm(0.55, 0.62, ph) * (1 - sm(0.82, 0.9, ph));
+        rcaMat.opacity = vis; rca.visible = vis > 0.01;
+        rca.position.y = 3.0 + Math.sin(t * 1.1) * 0.06 + (1 - vis) * -0.25;
+      });
       tick.push(() => {
         const a = rack.state?.alert ?? 0;
         fill.color.copy(col).lerp(red, a);
@@ -144,6 +180,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
 
     if (variant === "forge") {
       root.position.y = -1.2;
+      const floor = makeFloor(kit, 12); floor.position.y = -0.285; root.add(floor);
       const pool = makeGlowPool(kit, "#ffa24d", 5); pool.position.y = -0.27; root.add(pool);
       const forge = add(makeForge(kit, col));
       forge.group.scale.setScalar(1.15);

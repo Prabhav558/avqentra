@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ProductPage from "@/components/ProductPage";
+import ProductDetail from "@/components/ProductDetail";
 import { getProduct } from "@/lib/products";
 
 const p = getProduct("devsick")!;
@@ -7,5 +7,5 @@ const p = getProduct("devsick")!;
 export const metadata: Metadata = { title: p.title, description: p.lead };
 
 export default function Page() {
-  return <ProductPage p={p} variant="incident" />;
+  return <ProductDetail p={p} variant="incident" />;
 }

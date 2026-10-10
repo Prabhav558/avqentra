@@ -36,12 +36,12 @@ export default function ProductsLanding() {
         </div>
 
         <div className="pindex mono" role="list">
-          <div className="pindex-h"><span>NO.</span><span>PRODUCT</span><span>CATEGORY</span><span>BUILT WITH</span><span /></div>
+          <div className="pindex-h"><span>NO.</span><span>PRODUCT</span><span>CATEGORY</span><span>BUILT WITH</span><span>STATUS</span><span /></div>
           {sections.map(({ slug, n }) => {
             const p = getProduct(slug)!;
             return (
               <Link role="listitem" key={slug} href={`#${slug}`} style={{ ["--c" as string]: p.accent }}>
-                <span>{n}</span><b className="pi-name">{p.title}</b><span>{p.pageTag}</span><span>{p.stack.slice(0, 3).join(" · ")}</span><span className="arr">↓</span>
+                <span>{n}</span><b className="pi-name">{p.title}</b><span>{p.pageTag}</span><span>{p.stack.slice(0, 3).join(" · ")}</span><span className="soon"><i />{p.status}</span><span className="arr">↓</span>
               </Link>
             );
           })}
@@ -60,7 +60,8 @@ export default function ProductsLanding() {
             </div>
             <div className="ps-grid">
               <div className="ps-copy">
-                <h2 className="display-s">{p.title}</h2>
+                <span className="soon"><i />{p.status}</span>
+              <h2 className="display-s">{p.title}</h2>
                 <p className="kicker mono">{kicker}</p>
                 <p className="ps-body mono">{body}</p>
                 <ol className="hl mono">

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const items = [
+export const landingItems = [
   { id: "top", n: "01", label: "Intro" },
   { id: "agentbattle", n: "02", label: "AgentBattle" },
   { id: "devsick", n: "03", label: "DevSick" },
@@ -10,7 +10,9 @@ const items = [
 ];
 
 /** Fixed left rail: section numbers, highlights the one in view. */
-export default function SectionRail() {
+type Item = { id: string; n: string; label: string };
+
+export default function SectionRail({ items = landingItems }: { items?: Item[] }) {
   const [active, setActive] = useState("top");
   useEffect(() => {
     const els = items.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
@@ -20,7 +22,7 @@ export default function SectionRail() {
     );
     els.forEach((e) => io.observe(e));
     return () => io.disconnect();
-  }, []);
+  }, [items]);
   return (
     <nav className="rail" aria-label="Sections">
       {items.map((i) => (

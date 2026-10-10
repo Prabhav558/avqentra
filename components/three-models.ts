@@ -5,7 +5,7 @@ export type Model = {
   group: THREE.Group;
   update(t: number, dt: number): void;
   /** 0..1 extra info for the host scene (e.g. incident alert level) */
-  state?: { alert: number };
+  state?: { alert: number; phase?: number };
 };
 
 /** Tracks every geometry/material/texture so a scene can dispose them in one call. */
@@ -252,7 +252,7 @@ export function makeRack(kit: Kit, color: THREE.ColorRepresentation): Model & { 
   const pkts = sats.map((_, i) => { const m = new THREE.Mesh(pktGeo, ok); m.userData.o = i * 0.37; g.add(m); return m; });
   const sparks = makeSparks(kit, "#ff6b7a", 90, 0.045, 2);
   g.add(sparks.points);
-  const state = { alert: 0 };
+  const state: { alert: number; phase: number } = { alert: 0, phase: 0 };
   const sickY = 0.28 + SICK * 0.35;
 
   return {
@@ -260,7 +260,7 @@ export function makeRack(kit: Kit, color: THREE.ColorRepresentation): Model & { 
     update(t, dt) {
       const c = (t % 10) / 10;
       const alert = c < 0.3 ? 0 : c < 0.45 ? smooth(0.3, 0.45, c) : c < 0.75 ? 1 : 1 - smooth(0.75, 0.88, c);
-      state.alert = alert;
+      state.alert = alert; state.phase = c;
       sickMat.color.copy(col).multiplyScalar(2.4).lerp(_c.copy(red).multiplyScalar(2.6), alert);
       alertMat.opacity = alert * (0.18 + Math.sin(t * 9) * 0.1);
       const pp = (t * 1.2) % 1;
@@ -406,3 +406,56 @@ export function makeForge(kit: Kit, color: THREE.ColorRepresentation): Model {
     },
   };
 }
+
+
+/* ───────────────────────── shared scene dressing ───────────────────────── */
+
+/** Soft-edged reflective floor: picks up the environment map, fades to nothing at the rim. */
+export function makeFloor(kit: Kit, radius = 11) {
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = 256;
+  const x = cv.getContext("2d")!;
+  const g = x.createRadialGradient(128, 128, 8, 128, 128, 128);
+  g.addColorStop(0, "#fff"); g.addColorStop(0.5, "#6a6a6a"); g.addColorStop(1, "#000");
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+  const alpha = kit.tex(new THREE.CanvasTexture(cv));
+  const m = new THREE.Mesh(
+    kit.geo(new THREE.CircleGeometry(radius, 64)),
+    kit.mat(new THREE.MeshStandardMaterial({ color: 0x15140f, metalness: 0.92, roughness: 0.36, transparent: true, alphaMap: alpha, depthWrite: false })),
+  );
+  m.rotation.x = -Math.PI / 2;
+  return m;
+}
+
+/** Dark blurred blob that grounds an object on a surface. */
+export function makeContactShadow(kit: Kit, radius = 1.2, strength = 0.6) {
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = 128;
+  const x = cv.getContext("2d")!;
+  const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, `rgba(0,0,0,${strength})`); g.addColorStop(0.6, `rgba(0,0,0,${strength * 0.35})`); g.addColorStop(1, "rgba(0,0,0,0)");
+  x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  const t = kit.tex(new THREE.CanvasTexture(cv));
+  const m = new THREE.Mesh(kit.geo(new THREE.PlaneGeometry(radius * 2, radius * 2)), kit.mat(new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false })));
+  m.rotation.x = -Math.PI / 2;
+  return m;
+}
+
+/** Flat HUD-style panel drawn on a canvas (text stays crisp, no font files needed). */
+export function makePanel(kit: Kit, w: number, h: number, draw: (x: CanvasRenderingContext2D, W: number, H: number) => void, px = 1024) {
+  const cv = document.createElement("canvas");
+  cv.width = px; cv.height = Math.round((px * h) / w);
+  const x = cv.getContext("2d")!;
+  draw(x, cv.width, cv.height);
+  const t = kit.tex(new THREE.CanvasTexture(cv));
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  const mat = kit.mat(new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
+  return new THREE.Mesh(kit.geo(new THREE.PlaneGeometry(w, h)), mat);
+}
+
+const MONO = "ui-monospace, Menlo, Consolas, monospace";
+export function drawFrame(x: CanvasRenderingContext2D, W: number, H: number, border = "rgba(230,220,200,.35)") {
+  x.fillStyle = "rgba(12,12,9,.78)"; x.beginPath(); x.roundRect(2, 2, W - 4, H - 4, 18); x.fill();
+  x.strokeStyle = border; x.lineWidth = 3; x.stroke();
+}
+export { MONO };

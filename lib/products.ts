@@ -1,5 +1,6 @@
 export type Product = {
   slug: string;
+  status: string;
   name: string;
   tag: string;
   tagline: string;
@@ -21,6 +22,7 @@ export type Product = {
 export const products: Product[] = [
   {
     slug: "agentbattle",
+    status: "Coming soon",
     name: "AgentBattle",
     tag: "AI agents",
     tagline: "Pit AI agents against each other and see which one actually wins.",
@@ -58,6 +60,7 @@ export const products: Product[] = [
   },
   {
     slug: "devsick",
+    status: "Coming soon",
     name: "Devsick",
     tag: "Developer tools",
     tagline: "Tooling for developers who are done with broken workflows.",
@@ -96,6 +99,7 @@ export const products: Product[] = [
   },
   {
     slug: "questionforge",
+    status: "Coming soon",
     name: "QuestionForge",
     tag: "Question generation",
     tagline: "Forge better questions, faster.",
