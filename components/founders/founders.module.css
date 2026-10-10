@@ -106,3 +106,45 @@
   .chapters li{grid-template-columns:48px minmax(0,1fr);gap:0 16px;padding:32px 0}
   .chNum{font-size:26px}
 }
+
+/* ---------- ownership matrix ---------- */
+.matrixWrap{max-width:1216px}
+.matrix{width:100%;border-collapse:collapse;table-layout:fixed;font-family:var(--font-mono),monospace}
+.matrix th,.matrix td{padding:0;border-bottom:1px solid var(--hair);text-align:left;font-weight:400}
+.matrix thead th{padding:0 0 20px;border-bottom:1px solid rgba(255,245,225,.14);vertical-align:bottom}
+.matrix thead th:first-child{width:38%}
+.colName{display:block;font-family:var(--font-display),sans-serif;font-stretch:112%;font-size:15px;letter-spacing:-.005em;text-transform:uppercase;color:#ece8df}
+.colRole{display:block;margin-top:8px;font:600 9px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94}
+.matrix tbody th{padding:22px 24px 22px 0;font-size:13px;color:#cfccc4}
+.matrix tbody td{padding:22px 0}
+.matrix tbody tr{transition:background-color .25s}
+.matrix tbody tr:hover{background:rgba(230,220,195,.03)}
+.matrix td,.matrix thead th:not(:first-child){position:relative;border-left:1px solid var(--hair);padding-left:24px}
+.cell{display:inline-flex;align-items:center;gap:12px;font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase}
+.glyph{width:10px;height:10px;flex:none;border:1px solid #e6dcc8}
+.own{color:#e6dcc8}.own .glyph{background:#e6dcc8}
+.shape{color:#7d7a73}.shape .glyph{border-color:#7d7a73}
+.matrix td:has(.own){background:rgba(230,220,195,.035)}
+.dash{display:block;width:10px;height:1px;background:rgba(255,245,225,.14)}
+.legend{display:flex;flex-wrap:wrap;gap:12px 32px;margin-top:28px;font:400 12px/1.5 var(--font-mono),monospace;color:#7d7a73}
+.legend .cell{letter-spacing:.14em}
+
+@media (max-width:1080px){
+  .matrix thead th:first-child{width:auto}
+  .matrix td,.matrix thead th:not(:first-child){padding-left:12px}
+  .matrix tbody th{padding:18px 12px 18px 0}
+  .matrix tbody td{padding:18px 0 18px 12px}
+  .cellText{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .colName{font-size:12px}
+}
+@media (max-width:520px){
+  .matrix thead th:first-child{width:44%}
+  .matrix tbody th{font-size:12px}
+  .colName{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .matrix thead .colRole{margin-top:0;font-size:10px;color:#ece8df}
+}
+@media (prefers-reduced-motion:reduce){
+  .matrix tbody tr{transition:none}
+}
+
+.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

@@ -43,3 +43,18 @@ export const founders: Founder[] = [
     owns: ["Finance", "Capital & runway", "Operations"],
   },
 ];
+
+/** "own" = accountable for the call; "shape" = consulted before it's made. */
+export type Stake = "own" | "shape";
+
+/** Decision areas for the ownership matrix, keyed by founder slug. */
+export const decisions: { area: string; stakes: Partial<Record<string, Stake>> }[] = [
+  { area: "Company direction", stakes: { yash: "own", prabhav: "shape", ishaan: "shape" } },
+  { area: "Product strategy", stakes: { yash: "own", prabhav: "shape" } },
+  { area: "Partnerships", stakes: { yash: "own", ishaan: "shape" } },
+  { area: "Architecture & engineering", stakes: { prabhav: "own" } },
+  { area: "AI systems", stakes: { prabhav: "own", yash: "shape" } },
+  { area: "What ships", stakes: { prabhav: "own", yash: "shape" } },
+  { area: "Finance & runway", stakes: { ishaan: "own", yash: "shape" } },
+  { area: "Operations", stakes: { ishaan: "own", yash: "shape" } },
+];
