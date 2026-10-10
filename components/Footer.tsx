@@ -5,6 +5,7 @@ const explore = [
   { href: "/products/agentbattle", label: "AgentBattle" },
   { href: "/products/devsick", label: "DevSick" },
   { href: "/products/questionforge", label: "QuestionForge" },
+  { href: "/products/ops-academy", label: "Ops Academy" },
 ];
 
 const company = [

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { founders } from "@/lib/founders";
-import { AgentBattleVisual, DevSickVisual, QuestionForgeVisual } from "./ProductVisuals";
 import DemoSection from "./Demo";
 import s from "./home.module.css";
 
@@ -19,75 +18,6 @@ function Head({ kicker, title, children, wide }: { kicker: string; title: React.
       <h2 className={s.h2}>{title}</h2>
       {children && <p className={s.sub}>{children}</p>}
     </div>
-  );
-}
-
-/* 03 — Product ecosystem */
-const productRows = [
-  {
-    slug: "agentbattle",
-    n: "01",
-    name: "AgentBattle",
-    category: "AI Agent Evaluation & Competition",
-    headline: "Put intelligent agents to the test.",
-    body: "A platform for challenging, evaluating, and comparing AI agents through practical tasks and competitive environments.",
-    cta: "Explore AgentBattle",
-    Visual: AgentBattleVisual,
-  },
-  {
-    slug: "devsick",
-    n: "02",
-    name: "DevSick",
-    category: "AI-Assisted Software Development",
-    headline: "Build software with greater intelligence.",
-    body: "A developer-focused platform designed to help engineers understand codebases, identify problems, and accelerate software development.",
-    cta: "Explore DevSick",
-    Visual: DevSickVisual,
-  },
-  {
-    slug: "questionforge",
-    n: "03",
-    name: "QuestionForge",
-    category: "AI-Powered Question & Knowledge Management",
-    headline: "Turn questions into knowledge.",
-    body: "A platform for creating, organizing, and exploring high-quality questions, with AI-assisted workflows for learning, assessment, and knowledge discovery.",
-    cta: "Explore QuestionForge",
-    Visual: QuestionForgeVisual,
-  },
-];
-
-export function Ecosystem() {
-  return (
-    <section id="ecosystem" className={s.sec} aria-labelledby="ecosystem-h">
-      <Head
-        kicker="— Product ecosystem"
-        title={<span id="ecosystem-h">Three products. Distinct problems. One engineering mindset.</span>}
-        wide
-      >
-        From evaluating intelligent agents to accelerating software development and transforming how people work with
-        questions and knowledge, our products turn focused ideas into practical software.
-      </Head>
-
-      <div className={s.products}>
-        {productRows.map(({ slug, n, name, category, headline, body, cta, Visual }, i) => (
-          <article key={slug} className={`${s.product} ${i % 2 ? s.productFlip : ""} ${s.reveal}`}>
-            <div className={s.productText}>
-              <span className={s.productNum}>{n} / 03</span>
-              <p className={s.productCat}>{category}</p>
-              <h3 className={s.h3}>{headline}</h3>
-              <p className={s.body}>{body}</p>
-              <Link href={`/products/${slug}`} className={`${s.btn} ${s.btnGhost}`} aria-label={`${cta}`}>
-                {cta} <Arrow />
-              </Link>
-            </div>
-            <div className={s.productVisual} data-cursor="inspect">
-              <Visual />
-              <span className={s.visualCaption}>{name} &middot; Illustrative interface</span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
   );
 }
 

@@ -3,7 +3,7 @@ import SystemVisual from "./SystemVisual";
 import s from "./home.module.css";
 
 const stats = [
-  { value: "03", label: ["Products", "In the ecosystem"], size: "lg" },
+  { value: "04", label: ["Products", "In the ecosystem"], size: "lg" },
   { value: "AI", label: ["Core discipline"], size: "sm" },
   { value: "Next", label: ["Global Impact"], size: "md" },
 ];
@@ -88,7 +88,7 @@ export default function Hero() {
           ))}
         </dl>
         <div className={s.reel} aria-hidden="true">
-          <span className={s.reelCount}>[ 01 — 03 ]</span>
+          <span className={s.reelCount}>[ 01 — 04 ]</span>
           <Thumb id="thumb-a" seed={7} tone="#8d8878" />
           <Thumb id="thumb-b" seed={3} tone="#5f5b50" />
           <span className={s.reelRule} />

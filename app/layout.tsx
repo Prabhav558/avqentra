@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Avqentra | Products that solve real problems", template: "%s | Avqentra" },
-  description: "Avqentra builds AgentBattle, Devsick and QuestionForge.",
+  description: "Avqentra builds AgentBattle, Devsick, QuestionForge and Ops Academy.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

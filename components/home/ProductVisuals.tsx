@@ -142,3 +142,38 @@ export function QuestionForgeVisual() {
     </div>
   );
 }
+
+export function OpsAcademyVisual() {
+  const modules = [
+    { t: "Reading the signals", state: "Done", pct: 100 },
+    { t: "Triage and escalation", state: "Done", pct: 100 },
+    { t: "Run a live incident", state: "In progress", pct: 55 },
+    { t: "Write the review", state: "Locked", pct: 0 },
+  ];
+  return (
+    <div className={`${s.vShell} ${s.vOps}`} aria-hidden="true">
+      <Chrome title="ops-academy / path" tag="2 / 4 modules" />
+      <div className={`${s.vBody} ${s.vOpsBody}`}>
+        <div className={s.vTask}>
+          <span className={s.vLabel}>Learning path</span>
+          <p>Incident response: from the first alert to the written review.</p>
+          <div className={s.vChips}><span>Hands-on</span><span>Guided</span><span>Tracked</span></div>
+        </div>
+        <div className={s.vModList}>
+          {modules.map((m, i) => (
+            <div key={m.t} className={s.vMod} data-state={m.state}>
+              <span className={s.vNo}>{String(i + 1).padStart(2, "0")}</span>
+              <p>{m.t}</p>
+              <em>{m.state}</em>
+              <div className={s.vBar}><i style={{ width: `${m.pct}%` }} /></div>
+            </div>
+          ))}
+        </div>
+        <div className={s.vGen}>
+          <span className={s.vLabel}>Next exercise</span>
+          <span className={s.vGenBtn}>Continue &#8599;</span>
+        </div>
+      </div>
+    </div>
+  );
+}

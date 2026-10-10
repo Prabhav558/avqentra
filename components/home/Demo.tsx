@@ -40,6 +40,16 @@ const demos: Demo[] = [
       { label: "Explore and filter", log: "search  →  “hash map”  ·  matches highlighted" },
     ],
   },
+  {
+    id: "ops-academy",
+    name: "Ops Academy",
+    intro: "Pick a learning path, work through hands-on exercises, and track your progress.",
+    steps: [
+      { label: "Choose a learning path", log: "path.select  →  “incident-response”  ·  modules: 4" },
+      { label: "Complete an exercise", log: "exercise.run  →  scenario 2  ·  checks passed" },
+      { label: "Track your progress", log: "progress.update  →  2 / 4 modules complete" },
+    ],
+  },
 ];
 
 export default function DemoSection() {

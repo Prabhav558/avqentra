@@ -6,9 +6,8 @@ import s from "./home.module.css";
 
 const links = [
   { href: "/products", label: "Products" },
-  { href: "/#ecosystem", label: "Solutions" },
+  { href: "/founders", label: "Founders" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 function Arrow() {

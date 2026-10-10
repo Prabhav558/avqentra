@@ -40,7 +40,7 @@
 .header[data-scrolled="true"]{background:rgba(10,10,8,.82);border-bottom-color:rgba(255,245,225,.1);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .brand{position:absolute;left:122px;top:34px;display:flex;align-items:center;width:206px;height:30px;color:var(--cream)}
 .logo{display:block;width:206px;height:auto}
-.nav{position:absolute;left:calc(50% + 35px);transform:translateX(-50%);top:0;height:98px;display:flex;align-items:center;margin:0}
+.nav{position:absolute;left:50%;transform:translateX(-50%);top:0;height:98px;display:flex;align-items:center;margin:0}
 .nav ul{display:flex;gap:56px;margin:0;padding:0;list-style:none}
 .nav a{position:relative;font:500 13px/1 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase;color:#dcd9d1;white-space:nowrap;transition:color .2s;padding:8px 0}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
@@ -213,16 +213,39 @@
 }
 @keyframes revealIn{from{opacity:0;transform:translateY(28px)}}
 
-/* ---------- product ecosystem ---------- */
-.products{display:grid;gap:128px}
-.product{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:72px;align-items:center}
-.productFlip{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
-.productFlip .productText{order:2}
-.productFlip .productVisual{order:1}
+/* ---------- product ecosystem: pinned stage + option wheel ----------
+   The track is tall; the stage inside it sticks to the viewport while the page scrolls
+   through it. Scroll position picks the product (see Ecosystem.tsx). */
+.eco{--eco-n:3;--eco-step:64svh;position:relative;height:calc(100svh + var(--eco-n) * var(--eco-step));border-top:1px solid var(--hair)}
+.eco::before,.eco::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--hair);pointer-events:none}
+.eco::before{left:64px}
+.eco::after{right:64px}
+.ecoStage{position:sticky;top:0;height:100svh;padding:112px 96px 40px 112px;display:flex}
+.ecoGrid{display:grid;grid-template-columns:minmax(340px,4fr) minmax(0,8fr);gap:56px;width:100%;max-width:1216px;min-height:0}
+
+.ecoLeft{display:flex;flex-direction:column;min-height:0;min-width:0}
+.ecoLeft .kicker{margin-bottom:18px}
+.ecoTitle{margin:0 0 18px;font-size:clamp(20px,2vw,30px)}
+.ecoIntro{margin:0;max-width:400px;font:400 13px/1.7 var(--font-mono),monospace;color:#8c897f}
+.ecoWheel{position:relative;flex:1 1 0;min-height:200px;margin-top:8px;outline-offset:-1px}
+.ecoWheel::before{content:"";position:absolute;left:-59px;top:50%;width:26px;height:1px;background:var(--tick);pointer-events:none}
+.ecoWheel :global(.option-wheel){font-family:var(--font-display),sans-serif;font-stretch:112%;outline:none}
+.ecoWheel :global(.option-wheel:focus-visible){outline:1px solid rgba(230,220,200,.45);outline-offset:4px}
+.ecoWheel :global(.option-wheel__item){letter-spacing:-.025em}
+.ecoMeta{display:flex;align-items:center;gap:16px;padding-top:20px;font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#6f6c65}
+.ecoCount b{color:#e6dcc8;font-weight:500}
+.ecoRail{position:relative;flex:1;height:1px;background:var(--hair)}
+.ecoRail i{position:absolute;left:0;top:-0.5px;height:2px;width:100%;background:linear-gradient(90deg,#9c937a,#d2c9b1);transform-origin:left;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.ecoHint{white-space:nowrap}
+
+/* all panels share one grid cell so the stage never changes height between products */
+.ecoRight{display:grid;min-width:0;align-items:center}
+.ecoPanel{grid-area:1/1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center;min-width:0;opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .45s ease,transform .6s cubic-bezier(.2,.7,.2,1),visibility 0s .45s}
+.ecoPanel[data-active="true"]{opacity:1;visibility:visible;transform:none;transition-delay:.12s,.12s,0s}
 .productText .body{margin-bottom:36px}
 .productNum{display:block;margin-bottom:28px;font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#6f6c65}
 .productCat{margin:0 0 18px;font:600 10px/1.5 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase;color:#b9ae94}
-.productVisual{position:relative}
+.productVisual{position:relative;min-width:0}
 .visualCaption{display:block;margin-top:14px;font:400 9px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#55534c}
 
 /* illustrative interfaces */
@@ -283,6 +306,13 @@
 .vQMeta{grid-column:2;display:flex;gap:12px}
 .vQMeta em{font:400 9px/1 var(--font-mono),monospace;font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:#7d7a73}
 .vQMeta em:first-child{color:#b9ae94}
+.vOpsBody{gap:14px}
+.vModList{display:grid;gap:8px}
+.vMod{display:grid;grid-template-columns:24px 1fr auto;gap:4px 10px;align-items:center;padding:12px 14px;border:1px solid rgba(255,245,225,.08);background:rgba(255,245,225,.02)}
+.vMod p{margin:0;font:400 12px/1.5 var(--font-mono),monospace;color:#d9d5ca}
+.vMod em{font:400 9px/1 var(--font-mono),monospace;font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:#b9ae94}
+.vMod .vBar{grid-column:2/4;margin:4px 0 0}
+.vMod[data-state="Locked"] p,.vMod[data-state="Locked"] em{color:#55534c}
 .vGen{display:flex;justify-content:space-between;align-items:center}
 .vGen .vLabel{margin:0}
 .vGenBtn{padding:9px 12px;background:#e6dcc8;font:500 9px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase;color:#1c1a16}
@@ -370,8 +400,8 @@
 
 /* ---------- responsive: sections ---------- */
 @media (max-width:1280px){
-  .products{gap:104px}
-  .product,.productFlip{gap:48px}
+  .ecoGrid{gap:40px}
+  .ecoPanel{gap:32px}
   .caps{grid-template-columns:repeat(2,1fr)}
   .aboutGrid{gap:56px}
 }
@@ -380,9 +410,6 @@
   .sec::before,.sec::after{display:none}
   .kicker::before{display:none}
   .secHead{margin-bottom:48px}
-  .products{gap:80px}
-  .product,.productFlip{grid-template-columns:minmax(0,1fr);gap:36px}
-  .productFlip .productText,.productFlip .productVisual{order:0}
   .geo{display:none}
   .philoTop .secHead{margin-bottom:56px}
   .principles{grid-template-columns:1fr}
@@ -403,6 +430,26 @@
   .cta{padding:96px 24px}
   .vDevBody{grid-template-columns:110px 1fr}
 }
+/* The pinned stage needs room: below this the section flows normally and the wheel acts as a selector */
+@media (max-width:1080px),(max-height:620px){
+  .eco{height:auto;padding:96px 64px 96px 112px}
+  .ecoStage{position:static;height:auto;padding:0}
+  .ecoGrid{grid-template-columns:minmax(0,1fr);gap:40px}
+  .ecoWheel{flex:none;height:240px}
+  .ecoRail,.ecoHint{display:none}
+  .ecoPanel{transition:none}
+  .ecoPanel[data-active="false"]{display:none}
+}
+@media (max-width:1080px){
+  .eco{padding:80px 24px}
+  .eco::before,.eco::after{display:none}
+  .ecoWheel::before{display:none}
+  .ecoIntro{display:block}
+  .ecoPanel{grid-template-columns:minmax(0,1fr);gap:32px;align-items:start}
+}
+@media (max-height:820px){
+  .ecoIntro{display:none}
+}
 @media (max-width:520px){
   .vBody{padding:16px}
   .vCols{grid-template-columns:1fr}
@@ -414,6 +461,7 @@
 }
 
 @media (prefers-reduced-motion:reduce){
+  .ecoPanel,.ecoRail i{transition:none}
   .reveal{animation:none!important;opacity:1!important;transform:none!important}
   .demoCursor{animation:none}
 }

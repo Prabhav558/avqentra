@@ -47,6 +47,19 @@ export const products: Product[] = [
       "Edit and reuse your question sets",
     ],
   },
+  {
+    slug: "ops-academy",
+    name: "Ops Academy",
+    tag: "Learning platform",
+    tagline: "Learn operations by doing the work.",
+    description:
+      "Ops Academy is a learning platform for operations skills. Structured paths and hands-on exercises help people build practical ability, with progress you can see.",
+    highlights: [
+      "Structured learning paths for operations roles",
+      "Hands-on exercises, not just reading",
+      "Clear progress for learners and teams",
+    ],
+  },
 ];
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
