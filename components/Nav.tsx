@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Logo from "./home/Logo";
+import { display, mono } from "@/lib/fonts";
 
 const links = [
   { href: "/", label: "Home" },
@@ -12,13 +14,13 @@ const links = [
 
 export default function Nav() {
   const path = usePathname();
+  if (path === "/") return null;
   if (path.startsWith("/products")) {
     return (
-      <header className="pnav">
+      <header className={`pnav ${display.variable} ${mono.variable}`}>
         <div className="pnav-in">
           <Link className="logo" href="/" aria-label="Avqentra home">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/avqentra-logo.png" alt="Avqentra" height={26} style={{ height: 26, width: "auto", display: "block" }} />
+            <Logo className="plogo" />
           </Link>
           <ul>
             {links.slice(1).map((l) => (

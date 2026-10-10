@@ -22,20 +22,17 @@ export default function ProductsLanding() {
       <SectionRail />
 
       <section className="ph" id="top">
-        <Scene className="scene" variant="mark" accent="#d9cfb3" />
+        <Scene className="scene" variant="mark" accent="#e6dcc8" />
         <div className="ph-grid">
-          <div>
+          <div className="ph-left">
             <p className="eyebrow">PRODUCTS</p>
             <h1 className="display">IDEAS<br />INTO<br /><span className="tan">TOOLS.</span></h1>
+            <div className="ph-copy">
+              <p className="mono">Three products. One mission.<br />We build software that helps people<br />think, build, and explore without limits.</p>
+              <Link className="pbtn cream" href="#agentbattle">EXPLORE PRODUCTS <Arrow /></Link>
+            </div>
           </div>
-          <div className="ph-copy">
-            <p className="mono">Three products. One mission.<br />We build software that helps people<br />think, build, and explore without limits.</p>
-            <Link className="pbtn cream" href="#agentbattle">EXPLORE PRODUCTS <Arrow /></Link>
-          </div>
-          <div className="ph-side">
-            <i className="moon" aria-hidden="true" />
-            
-          </div>
+          <div className="ph-side"><i className="moon" aria-hidden="true" /></div>
         </div>
 
         <div className="pindex mono" role="list">
