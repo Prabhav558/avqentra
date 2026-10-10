@@ -1,18 +1,11 @@
 import Link from "next/link";
-import Logo from "./Logo";
+import SiteHeader from "./SiteHeader";
 import SystemVisual from "./SystemVisual";
 import s from "./home.module.css";
 
-const links = [
-  { href: "/products", label: "Product" },
-  { href: "/#solutions", label: "Solutions" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
-
 const stats = [
-  { value: "20+", label: ["Projects", "Delivered"], size: "lg" },
-  { value: "5+", label: ["Industries"], size: "sm" },
+  { value: "03", label: ["Products", "In the ecosystem"], size: "lg" },
+  { value: "AI", label: ["Core discipline"], size: "sm" },
   { value: "Next", label: ["Global Impact"], size: "md" },
 ];
 
@@ -70,55 +63,26 @@ export default function Hero() {
         </div>
       </div>
 
-      <header className={s.header}>
-        <Link href="/" className={s.brand} aria-label="Avqentra home">
-          <Logo className={s.logo} />
-        </Link>
-        <nav className={s.nav} aria-label="Primary">
-          <ul>
-            {links.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href}>{l.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <span className={s.navDivider} aria-hidden="true" />
-        <Link href="/contact" className={`${s.btn} ${s.btnNav}`}>
-          Get in touch <Arrow />
-        </Link>
-        <details className={s.menu}>
-          <summary aria-label="Menu"><i /><i /></summary>
-          <ul>
-            {links.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href}>{l.label}</Link>
-              </li>
-            ))}
-            <li><Link href="/founders">Founders</Link></li>
-          </ul>
-        </details>
-      </header>
+      <SiteHeader />
 
       <div className={s.content}>
         <div className={s.copy}>
-          <p className={s.eyebrow} style={{ "--i": 0 } as React.CSSProperties}>
-            Built for what&rsquo;s next
-          </p>
           <h1 className={s.title}>
+            <span className={s.eyebrow} style={{ "--i": 0 } as React.CSSProperties}>We turn</span>
             <span style={{ "--i": 1 } as React.CSSProperties}>Ideas</span>
             <span style={{ "--i": 2 } as React.CSSProperties}>into</span>
             <span className={s.gold} style={{ "--i": 3 } as React.CSSProperties}>Systems.</span>
           </h1>
           <p className={s.lede} style={{ "--i": 4 } as React.CSSProperties}>
-            We design and build software systems that turn complex ideas into real-world impact.
+            We design and build intelligent software products that solve real problems, empower people, and push the
+            boundaries of what&rsquo;s possible.
           </p>
           <div className={s.actions} style={{ "--i": 5 } as React.CSSProperties}>
-            <Link href="#work" className={`${s.btn} ${s.btnSolid}`}>
-              Explore work <Arrow />
+            <Link href="/products" className={`${s.btn} ${s.btnSolid}`}>
+              Explore our products <Arrow />
             </Link>
             <Link href="/contact" className={`${s.btn} ${s.btnGhost}`}>
-              Talk to us <Arrow />
+              Work with us <Arrow />
             </Link>
           </div>
         </div>
@@ -141,7 +105,7 @@ export default function Hero() {
           <Thumb id="thumb-b" seed={3} tone="#5f5b50" />
           <span className={s.reelRule} />
         </div>
-        <a href="#work" className={s.scroll}>
+        <a href="#ecosystem" className={s.scroll}>
           <span>Scroll</span>
           <i />
         </a>
