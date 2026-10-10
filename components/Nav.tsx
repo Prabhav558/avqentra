@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Logo from "./home/Logo";
+import { display, mono } from "@/lib/fonts";
 
 const links = [
   { href: "/", label: "Home" },
@@ -14,6 +16,25 @@ export default function Nav() {
   const path = usePathname();
   // These pages render their own SiteHeader.
   if (path === "/" || path === "/founders") return null;
+  if (path.startsWith("/products")) {
+    return (
+      <header className={`pnav ${display.variable} ${mono.variable}`}>
+        <div className="pnav-in">
+          <Link className="logo" href="/" aria-label="Avqentra home">
+            <Logo className="plogo" />
+          </Link>
+          <ul>
+            {links.slice(1).map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className={path.startsWith(l.href) ? "active" : undefined}>{l.label}</Link>
+              </li>
+            ))}
+          </ul>
+          <Link className="pbtn ghost" href="/contact">GET IN TOUCH <span aria-hidden="true">↗</span></Link>
+        </div>
+      </header>
+    );
+  }
   return (
     <header>
       <div className="wrap">
