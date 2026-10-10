@@ -12,6 +12,7 @@ const links = [
 
 export default function Nav() {
   const path = usePathname();
+  if (path === "/") return null;
   return (
     <header>
       <div className="wrap">
