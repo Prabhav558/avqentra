@@ -13,16 +13,17 @@ nav ul a{color:var(--muted);font-size:15px}nav ul a:hover,nav ul a.active{color:
 .hero h1{font-size:clamp(36px,6vw,64px);line-height:1.08;letter-spacing:-.03em;margin:0 0 20px}
 .hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{max-width:640px;margin:0 auto 32px;color:var(--muted);font-size:19px}
-.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;border:1px solid var(--border);color:var(--text)}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font:inherit;font-weight:600;border:1px solid var(--border);color:var(--text);background:transparent;cursor:pointer}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn:hover{text-decoration:none;opacity:.9}
 .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 section{padding:56px 0}
 h2{font-size:32px;letter-spacing:-.02em;margin:0 0 8px}.sub{color:var(--muted);margin:0 0 32px}
 .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:10px}
+.card.link{color:inherit}.card.link:hover{text-decoration:none;border-color:var(--accent)}
 .card h3{margin:0;font-size:22px}.card p{margin:0;color:var(--muted)}
 .tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);font-weight:700}
-.card .more{margin-top:auto;padding-top:8px;font-weight:600}
+.card .more{margin-top:auto;padding-top:8px;font-weight:600;color:var(--accent)}
 .page-head{padding:72px 0 24px}.page-head h1{font-size:clamp(32px,5vw,48px);letter-spacing:-.03em;margin:0 0 12px}
 .page-head p{color:var(--muted);font-size:18px;max-width:680px;margin:0}
 ul.feat{padding-left:20px}ul.feat li{margin:8px 0}
