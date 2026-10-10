@@ -1,36 +1,27 @@
 import type { Metadata } from "next";
-import { founders } from "@/lib/founders";
+import SiteHeader from "@/components/home/SiteHeader";
+import Hero from "@/components/founders/Hero";
+import Profiles from "@/components/founders/Profiles";
+import Story from "@/components/founders/Story";
+import Ownership from "@/components/founders/Ownership";
+import Closing from "@/components/founders/Closing";
+import { display, mono } from "@/lib/fonts";
+import h from "@/components/home/home.module.css";
 
 export const metadata: Metadata = {
   title: "Founders",
-  description: "Meet the founders of Avqentra.",
+  description: "Meet Yash Srivastava, Prabhav Singh and Ishaan Bajpai, the founders of Avqentra.",
 };
-
-const initials = (name: string) =>
-  name.split(" ").map((w) => w[0]).join("");
 
 export default function Founders() {
   return (
-    <div className="wrap">
-      <div className="page-head">
-        <h1>Founders</h1>
-        <p>The team behind Avqentra.</p>
-      </div>
-      <section style={{ paddingTop: 24 }}>
-        <div className="grid">
-          {founders.map((f) => (
-            <div className="card" key={f.name}>
-              <div className="avatar" aria-hidden="true">{initials(f.name)}</div>
-              <span className="tag">{f.role}</span>
-              <h3>{f.name}</h3>
-              <p>{f.title}</p>
-              <a className="more" href={`https://${f.site}`} target="_blank" rel="noopener noreferrer">
-                {f.site} &rarr;
-              </a>
-            </div>
-          ))}
-        </div>
-      </section>
+    <div className={`home-theme ${display.variable} ${mono.variable} ${h.page}`}>
+      <SiteHeader />
+      <Hero />
+      <Profiles />
+      <Story />
+      <Ownership />
+      <Closing />
     </div>
   );
 }

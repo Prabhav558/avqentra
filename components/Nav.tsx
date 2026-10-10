@@ -14,7 +14,8 @@ const links = [
 
 export default function Nav() {
   const path = usePathname();
-  if (path === "/") return null;
+  // These pages render their own SiteHeader.
+  if (path === "/" || path === "/founders") return null;
   if (path.startsWith("/products")) {
     return (
       <header className={`pnav ${display.variable} ${mono.variable}`}>

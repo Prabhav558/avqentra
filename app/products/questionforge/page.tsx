@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import ProductDetail from "@/components/ProductDetail";
-import { getProduct } from "@/lib/products";
+import { getPageProduct } from "@/lib/products";
 
-const p = getProduct("questionforge")!;
+const p = getPageProduct("questionforge")!;
 
 export const metadata: Metadata = { title: p.title, description: p.lead };
 

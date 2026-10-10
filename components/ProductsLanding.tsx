@@ -3,7 +3,7 @@ import Scene from "./Scene";
 import Tilt from "./landing/Tilt";
 import SectionRail from "./landing/SectionRail";
 import { AgentBattleUI, DevSickUI, QuestionForgeUI } from "./landing/Mockups";
-import { getProduct } from "@/lib/products";
+import { getPageProduct } from "@/lib/products";
 
 const sections = [
   { slug: "agentbattle", n: "02", kicker: "AI AGENTS. REAL CHALLENGES.", tags: ["AI AGENTS", "COMPETITIONS", "EVALUATIONS"], UI: AgentBattleUI,
@@ -38,7 +38,7 @@ export default function ProductsLanding() {
         <div className="pindex mono" role="list">
           <div className="pindex-h"><span>NO.</span><span>PRODUCT</span><span>CATEGORY</span><span>BUILT WITH</span><span>STATUS</span><span /></div>
           {sections.map(({ slug, n }) => {
-            const p = getProduct(slug)!;
+            const p = getPageProduct(slug)!;
             return (
               <Link role="listitem" key={slug} href={`#${slug}`} style={{ ["--c" as string]: p.accent }}>
                 <span>{n}</span><b className="pi-name">{p.title}</b><span>{p.pageTag}</span><span>{p.stack.slice(0, 3).join(" · ")}</span><span className="soon"><i />{p.status}</span><span className="arr">↓</span>
@@ -50,7 +50,7 @@ export default function ProductsLanding() {
       </section>
 
       {sections.map(({ slug, n, kicker, body, tags, UI }, i) => {
-        const p = getProduct(slug)!;
+        const p = getPageProduct(slug)!;
         return (
           <section className={`ps ${i % 2 ? "rev" : ""}`} id={slug} key={slug}>
             <div className="ps-meta mono">

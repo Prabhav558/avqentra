@@ -4,7 +4,7 @@ import type { SceneVariant } from "./Scene3D";
 import Tilt from "./landing/Tilt";
 import SectionRail from "./landing/SectionRail";
 import { AgentBattleUI, DevSickUI, QuestionForgeUI } from "./landing/Mockups";
-import { products, type Product } from "@/lib/products";
+import { pageProducts as products, type PageProduct } from "@/lib/products";
 
 const UI: Record<string, () => React.JSX.Element> = { agentbattle: AgentBattleUI, devsick: DevSickUI, questionforge: QuestionForgeUI };
 const rail = [
@@ -17,7 +17,7 @@ const rail = [
 const THEME = "#e6dcc8";
 const Arrow = () => <span aria-hidden="true" className="arr">↗</span>;
 
-export default function ProductDetail({ p, variant }: { p: Product; variant: SceneVariant }) {
+export default function ProductDetail({ p, variant }: { p: PageProduct; variant: SceneVariant }) {
   const i = products.findIndex((x) => x.slug === p.slug);
   const next = products[(i + 1) % products.length];
   const nextN = String(((i + 1) % products.length) + 2).padStart(2, "0");
@@ -31,7 +31,7 @@ export default function ProductDetail({ p, variant }: { p: Product; variant: Sce
         <div className="pd-main">
           <Link className="pd-back mono" href="/products">← ALL PRODUCTS</Link>
           <p className="eyebrow mono"><span className="dot" />{String(i + 2).padStart(2, "0")} — {p.badge.toUpperCase()}<span className="soon"><i />{p.status}</span></p>
-          <h1 className="pd-title">{p.headline[0]}<br /><span className="tan">{p.headline[1]}</span></h1>
+          <h1 className="pd-title">{p.heroLines[0]}<br /><span className="tan">{p.heroLines[1]}</span></h1>
           <p className="pd-lead mono">{p.description}</p>
           <div className="pd-actions">
             <Link className="pbtn cream" href="/contact">Get notified <Arrow /></Link>
