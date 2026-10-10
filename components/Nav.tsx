@@ -12,7 +12,8 @@ const links = [
 
 export default function Nav() {
   const path = usePathname();
-  if (path === "/") return null;
+  // These pages render their own SiteHeader.
+  if (path === "/" || path === "/founders") return null;
   return (
     <header>
       <div className="wrap">
