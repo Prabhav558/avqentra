@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteHeader from "@/components/home/SiteHeader";
 import Hero from "@/components/founders/Hero";
+import Profiles from "@/components/founders/Profiles";
 import { display, mono } from "@/lib/fonts";
 import h from "@/components/home/home.module.css";
 
@@ -14,6 +15,7 @@ export default function Founders() {
     <div className={`home-theme ${display.variable} ${mono.variable} ${h.page}`}>
       <SiteHeader />
       <Hero />
+      <Profiles />
     </div>
   );
 }
