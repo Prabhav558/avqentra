@@ -11,6 +11,7 @@ const explore = [
 const company = [
   { href: "/about", label: "About" },
   { href: "/founders", label: "Founders" },
+  { href: "/contact?type=project", label: "Start a project" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -22,7 +23,7 @@ export default function Footer() {
           <Link href="/" className="site-footer-logo">
             Avqentra
           </Link>
-          <p>A technology company building software for what&rsquo;s next.</p>
+          <p>A product and engineering studio. AI products launching soon, and software built for clients.</p>
         </div>
         <div role="group" aria-label="Explore" className="site-footer-col">
           <h2>Explore</h2>

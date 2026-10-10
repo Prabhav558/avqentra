@@ -30,10 +30,13 @@ export default function Closing() {
             <br />
             <span className={h.gold}>the people who decide.</span>
           </h2>
-          <p className={h.sub}>No sales layer, no gatekeepers. Every message reaches a founder.</p>
+          <p className={h.sub}>
+            No sales layer, no gatekeepers. Every message, from a project brief to an early-access request, reaches a
+            founder.
+          </p>
           <div className={h.ctaActions}>
-            <Link href="/contact" className={`${h.btn} ${h.btnSolid}`}>
-              Get in touch <Arrow />
+            <Link href="/contact?type=project" className={`${h.btn} ${h.btnSolid}`}>
+              Start a project <Arrow />
             </Link>
             <Link href="/products" className={`${h.btn} ${h.btnGhost}`}>
               Explore our products <Arrow />

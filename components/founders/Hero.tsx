@@ -8,7 +8,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export default function Hero() {
   const stats = [
     { value: pad(founders.length), label: "Founders" },
-    { value: pad(products.length), label: "Products in the ecosystem" },
+    { value: pad(products.length), label: "Products launching soon" },
     { value: "01", label: "Shared standard" },
   ];
 
@@ -29,8 +29,9 @@ export default function Hero() {
             <span style={{ "--i": 1 } as React.CSSProperties} className={h.gold}>One standard.</span>
           </h1>
           <p className={s.lede}>
-            Avqentra is run by the people who build it. Strategy, engineering, and finance each have a clear owner,
-            so decisions are made fast and nothing ships without someone accountable for it.
+            Avqentra is run by the people who build it, for our own products and for every client project. Strategy,
+            engineering and finance each have a clear owner, so decisions are made fast and nothing ships without
+            someone accountable for it.
           </p>
         </div>
 
