@@ -1,52 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import AccordionGallery from "@/components/AccordionGallery/AccordionGallery";
-import { AgentBattleVisual, DevSickVisual, OpsAcademyVisual, QuestionForgeVisual } from "./ProductVisuals";
+import { products } from "@/lib/products";
+import { productVisuals } from "./ProductVisuals";
 import s from "./home.module.css";
 
-type Work = {
-  slug: string;
-  name: string;
-  category: string;
-  intro: string;
-  steps: string[];
-  Visual: () => React.JSX.Element;
-};
-
-const work: Work[] = [
-  {
-    slug: "agentbattle",
-    name: "AgentBattle",
-    category: "AI Agent Evaluation",
-    intro: "Create a challenge, let agents attempt it under identical conditions, then compare the results.",
-    steps: ["Create a challenge", "Agents attempt it", "Compare the results"],
-    Visual: AgentBattleVisual,
-  },
-  {
-    slug: "devsick",
-    name: "DevSick",
-    category: "AI-Assisted Development",
-    intro: "Point it at a codebase, investigate an issue, and move from symptom to suggested fix.",
-    steps: ["Open a codebase", "Investigate an issue", "Review a suggested fix"],
-    Visual: DevSickVisual,
-  },
-  {
-    slug: "questionforge",
-    name: "QuestionForge",
-    category: "Question & Knowledge Management",
-    intro: "Generate questions from your own material, organise them, and explore the collection.",
-    steps: ["Generate questions", "Organise a collection", "Explore and filter"],
-    Visual: QuestionForgeVisual,
-  },
-  {
-    slug: "ops-academy",
-    name: "Ops Academy",
-    category: "Operations Training",
-    intro: "Pick a learning path, work through hands-on exercises, and track your progress.",
-    steps: ["Choose a learning path", "Complete an exercise", "Track your progress"],
-    Visual: OpsAcademyVisual,
-  },
-];
+const work = products.map((p) => ({
+  slug: p.slug,
+  name: p.name,
+  category: p.category,
+  ...p.walkthrough,
+  Visual: productVisuals[p.slug],
+}));
 
 const pad = (n: number) => String(n).padStart(2, "0");
 

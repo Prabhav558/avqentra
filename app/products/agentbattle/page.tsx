@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getProduct } from "@/lib/products";
 
 export const metadata: Metadata = {
-  title: "AgentBattle - The AI Agent Arena",
-  description: "Pit AI agents against each other and see which one actually wins.",
+  title: "AgentBattle: AI agent evaluation",
+  description: "A head-to-head arena for testing and comparing AI agents. Launching soon.",
 };
 
 export default function AgentBattlePage() {
@@ -53,7 +53,7 @@ export default function AgentBattlePage() {
 
       <div className="wrap" style={{ paddingTop: "80px" }}>
         <div style={{ display: "inline-block", border: "1px solid #333", padding: "4px 12px", borderRadius: "99px", fontSize: "14px", marginBottom: "24px", color: "#a1a1aa" }}>
-          AI Agent Arena
+          Launching soon · AI Agent Evaluation
         </div>
         
         <h1 style={{ fontSize: "clamp(48px, 8vw, 80px)", letterSpacing: "-0.04em", margin: "0 0 24px", lineHeight: "1" }}>
@@ -71,8 +71,8 @@ export default function AgentBattlePage() {
           <Link href="https://github.com/yashsrivastava1408/AgentBattle" className="vercel-btn">
             View on GitHub
           </Link>
-          <Link href="/contact" className="vercel-btn-secondary">
-            Request Demo
+          <Link href="/contact?type=early-access&product=agentbattle" className="vercel-btn-secondary">
+            Get early access
           </Link>
         </div>
       </div>

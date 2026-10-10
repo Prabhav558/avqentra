@@ -29,7 +29,7 @@ h2{font-size:32px;letter-spacing:-.02em;margin:0 0 8px}.sub{color:var(--muted);m
 ul.feat{padding-left:20px}ul.feat li{margin:8px 0}
 form{display:grid;gap:14px;max-width:520px}
 label{display:grid;gap:6px;font-size:14px;color:var(--muted)}
-input,textarea{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 12px;font:inherit}
+input,textarea,select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 12px;font:inherit}
 textarea{min-height:130px;resize:vertical}
 .site-footer{position:relative;z-index:2;background:#0e0e0b;border-top:1px solid rgba(255,245,225,.09);color:#8a877f;font:13px/1.6 var(--font-mono),ui-monospace,monospace}
 .site-footer-inner{max-width:1216px;margin:0 auto;padding:64px 0 48px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px}
