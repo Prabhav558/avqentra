@@ -19,7 +19,7 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="wrap">
       <div className="page-head">
-        <span className="tag">{p.category}</span>
+        <span className="tag">{p.status} · {p.category}</span>
         <h1>{p.name}</h1>
         <p>{p.tagline}</p>
       </div>
@@ -28,7 +28,7 @@ export default async function ProductPage({ params }: Props) {
         <h2 style={{ fontSize: 22, marginTop: 32 }}>Highlights</h2>
         <ul className="feat">{p.highlights.map((h) => <li key={h}>{h}</li>)}</ul>
         <div className="btns" style={{ justifyContent: "flex-start", marginTop: 28 }}>
-          <Link className="btn primary" href="/contact">Request access</Link>
+          <Link className="btn primary" href={`/contact?type=early-access&product=${p.slug}`}>Get early access</Link>
           <Link className="btn" href="/products">All products</Link>
         </div>
       </section>

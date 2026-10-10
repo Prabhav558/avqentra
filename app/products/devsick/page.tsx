@@ -3,11 +3,11 @@ import Link from "next/link";
 import { getProduct } from "@/lib/products";
 
 export const metadata: Metadata = {
-  title: "Devsick - AI-powered incident reasoning",
-  description: "Detect, explain, and guide resolution of application failures.",
+  title: "DevSick: AI incident reasoning",
+  description: "AI incident reasoning that detects, explains and guides the resolution of application failures. Launching soon.",
 };
 
-export default function DevsickPage() {
+export default function DevSickPage() {
   const p = getProduct("devsick");
   
   return (
@@ -53,7 +53,7 @@ export default function DevsickPage() {
 
       <div className="wrap" style={{ paddingTop: "80px" }}>
         <div style={{ display: "inline-block", border: "1px solid #333", padding: "4px 12px", borderRadius: "99px", fontSize: "14px", marginBottom: "24px", color: "#a1a1aa" }}>
-          Enterprise-grade Reliability
+          Launching soon · AI Incident Reasoning
         </div>
         
         <h1 style={{ fontSize: "clamp(48px, 8vw, 80px)", letterSpacing: "-0.04em", margin: "0 0 24px", lineHeight: "1" }}>
@@ -64,15 +64,15 @@ export default function DevsickPage() {
         </h1>
         
         <p style={{ fontSize: "20px", color: "#a1a1aa", maxWidth: "600px", margin: "0 0 40px", lineHeight: "1.5" }}>
-          Devsick sits on top of your monitoring tools to detect, explain, and guide resolution of application failures. It correlates logs and identifies root causes using LLM-based reasoning.
+          DevSick sits on top of your monitoring tools to detect, explain, and guide resolution of application failures. It correlates logs and identifies root causes using LLM-based reasoning.
         </p>
 
         <div style={{ display: "flex", gap: "16px", marginBottom: "80px" }}>
           <Link href="https://github.com/yashsrivastava1408/DevSick" className="vercel-btn">
             View on GitHub
           </Link>
-          <Link href="/contact" className="vercel-btn-secondary">
-            Request Demo
+          <Link href="/contact?type=early-access&product=devsick" className="vercel-btn-secondary">
+            Get early access
           </Link>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function DevsickPage() {
           <div className="vercel-card">
             <h3 style={{ fontSize: "20px", margin: "0 0 12px" }}>Monitoring Integration</h3>
             <p style={{ color: "#a1a1aa", margin: 0, fontSize: "16px", lineHeight: "1.5" }}>
-              Connects directly to Datadog, New Relic, and other standard observability platforms without requiring complex setup.
+              Designed to connect to Datadog, New Relic and other standard observability platforms without complex setup.
             </p>
           </div>
         </div>
