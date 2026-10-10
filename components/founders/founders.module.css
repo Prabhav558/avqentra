@@ -1,0 +1,41 @@
+/* Founders page. Builds on home.module.css tokens (--cream, --hair, --tick) and type scale. */
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;isolation:isolate;background:#0a0a08;padding:90px 0 0;border-bottom:1px solid var(--hair)}
+.heroInner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:64px;align-items:end;padding:104px 96px 96px 112px;max-width:1440px}
+.title{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(44px,6vw,86px);line-height:.98;letter-spacing:-.05em;text-transform:uppercase;color:#f2efe8}
+.title span{display:block;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*90ms + 150ms)}
+.lede{margin:32px 0 0;max-width:500px;font:400 15px/1.75 var(--font-mono),monospace;color:#a09d94;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:420ms}
+
+/* index of founders: doubles as in-page navigation */
+.roster{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,245,225,.14);animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:520ms}
+.roster a{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--hair);color:#ece8df;transition:padding .3s cubic-bezier(.2,.7,.2,1),color .2s}
+.roster a:hover{padding-left:8px}
+.rNum{font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#6f6c65}
+.rName{font-family:var(--font-display),sans-serif;font-stretch:112%;font-weight:400;font-size:17px;letter-spacing:-.005em;text-transform:uppercase}
+.rRole{font:600 9px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94}
+
+/* stat strip */
+.stats{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 64px;border-top:1px solid var(--hair)}
+.stats div{padding:28px 0 32px 48px;border-left:1px solid var(--hair)}
+.stats div:first-child{border-left:0}
+.stats dt{font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:200;font-size:44px;line-height:1;color:#e6dcc8}
+.stats dd{margin:12px 0 0;font:500 10px/1.5 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#7d7a73}
+
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+
+@media (max-width:1080px){
+  .hero{padding-top:72px}
+  .navRule{display:none}
+  .heroInner{grid-template-columns:minmax(0,1fr);gap:48px;padding:72px 24px 56px}
+  .stats{margin:0 24px}
+  .stats div{padding:24px 0 28px 16px}
+  .stats dt{font-size:32px}
+}
+@media (max-width:520px){
+  .stats dd{font-size:9px}
+}
+@media (prefers-reduced-motion:reduce){
+  .title span,.lede,.roster{animation:none}
+  .roster a{transition:none}
+}
