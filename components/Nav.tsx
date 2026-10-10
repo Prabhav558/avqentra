@@ -17,8 +17,8 @@ export default function Nav() {
       <header className="pnav">
         <div className="pnav-in">
           <Link className="logo" href="/" aria-label="Avqentra home">
-            <svg viewBox="0 0 34 30" width="30" height="26" aria-hidden="true"><path fill="currentColor" d="M17 0 34 30H23.5L17 18.2 10.5 30H0Z"/><path fill="var(--bg)" d="M17 9.5 21.2 17H12.8Z"/></svg>
-            <span>AVQENTRA</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/avqentra-logo.png" alt="Avqentra" height={26} style={{ height: 26, width: "auto", display: "block" }} />
           </Link>
           <ul>
             {links.slice(1).map((l) => (
