@@ -4,6 +4,7 @@ import Hero from "@/components/founders/Hero";
 import Profiles from "@/components/founders/Profiles";
 import Story from "@/components/founders/Story";
 import Ownership from "@/components/founders/Ownership";
+import Closing from "@/components/founders/Closing";
 import { display, mono } from "@/lib/fonts";
 import h from "@/components/home/home.module.css";
 
@@ -20,6 +21,7 @@ export default function Founders() {
       <Profiles />
       <Story />
       <Ownership />
+      <Closing />
     </div>
   );
 }
