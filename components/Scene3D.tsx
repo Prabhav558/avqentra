@@ -1,14 +1,19 @@
 "use client";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { Kit, makeAgent, makeForge, makeGlowPool, makeRack, makeSparks, type Model } from "./three-models";
 
 export type SceneVariant = "arena" | "incident" | "forge" | "hub";
-
 type Props = { variant: SceneVariant; accent?: string; focus?: number; className?: string };
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
-/** Lightweight procedural three.js scene: no models or textures, only primitives. */
+/** Procedural three.js scenes: no model files, textures drawn on canvas, env reflections + bloom. */
 export default function Scene3D({ variant, accent = "#ffffff", focus = -1, className }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const focusRef = useRef(focus);
@@ -20,243 +25,201 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
+      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
     } catch {
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    const dpr = Math.min(window.devicePixelRatio, 1.6);
+    renderer.setPixelRatio(dpr);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    renderer.setClearColor(0x000000, 0);
     el.appendChild(renderer.domElement);
 
+    const kit = new Kit();
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000000, 0.045);
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0.6, 9);
+    scene.fog = new THREE.FogExp2(0x000000, 0.028);
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
+    scene.environment = envRT.texture;
+    scene.environmentIntensity = 0.55;
+
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 1.6, 10.5);
     const col = new THREE.Color(accent);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-    const key = new THREE.PointLight(col, 60, 30);
-    key.position.set(4, 4, 5);
-    scene.add(key);
-    const rim = new THREE.PointLight(0xffffff, 40, 30);
-    rim.position.set(-5, -2, 3);
-    scene.add(rim);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+    const key = new THREE.PointLight(col, 90, 24, 1.6);
+    key.position.set(3, 5, 5);
+    const rim = new THREE.PointLight(0xffffff, 55, 24, 1.6);
+    rim.position.set(-5, 3, -3);
+    const fill = new THREE.PointLight(col, 40, 18, 1.8);
+    fill.position.set(-4, 0.5, 4);
+    scene.add(key, rim, fill);
 
     const root = new THREE.Group();
     scene.add(root);
 
-    const glass = (c: THREE.ColorRepresentation, wire = false) =>
-      new THREE.MeshStandardMaterial({ color: c, metalness: 0.85, roughness: 0.22, wireframe: wire, flatShading: true });
-    const glow = (c: THREE.ColorRepresentation, o = 1) =>
-      new THREE.MeshBasicMaterial({ color: c, transparent: o < 1, opacity: o });
-
-    // Starfield dust shared by all scenes
-    const dustN = 260;
-    const dustPos = new Float32Array(dustN * 3);
-    for (let i = 0; i < dustN; i++) {
-      dustPos[i * 3] = rand(-12, 12);
-      dustPos[i * 3 + 1] = rand(-7, 7);
-      dustPos[i * 3 + 2] = rand(-10, 3);
-    }
-    const dustGeo = new THREE.BufferGeometry();
+    // dust
+    const dustN = 320, dustPos = new Float32Array(dustN * 3);
+    for (let i = 0; i < dustN; i++) { dustPos[i * 3] = rand(-14, 14); dustPos[i * 3 + 1] = rand(-4, 9); dustPos[i * 3 + 2] = rand(-12, 4); }
+    const dustGeo = kit.geo(new THREE.BufferGeometry());
     dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-    const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ size: 0.03, color: 0x8a8a8a, transparent: true, opacity: 0.7 }));
+    const dust = new THREE.Points(dustGeo, kit.mat(new THREE.PointsMaterial({ size: 0.035, color: 0x9a9a9a, transparent: true, opacity: 0.6, depthWrite: false })));
     scene.add(dust);
 
     const tick: ((t: number, dt: number) => void)[] = [];
-    const disposables: { dispose(): void }[] = [dustGeo];
-    const track = <T extends { dispose(): void }>(o: T) => (disposables.push(o), o);
+    const models: Model[] = [];
+    const add = <M extends Model>(m: M, parent: THREE.Object3D = root) => { parent.add(m.group); models.push(m); return m; };
 
     if (variant === "arena") {
-      // Two rival agents orbiting a scoring core inside a ring
-      const ringGeo = track(new THREE.TorusGeometry(3, 0.03, 12, 128));
-      const ring = new THREE.Mesh(ringGeo, track(glow(0xffffff, 0.35)));
-      ring.rotation.x = Math.PI / 2.4;
-      root.add(ring);
-      const coreGeo = track(new THREE.IcosahedronGeometry(0.7, 1));
-      const core = new THREE.Mesh(coreGeo, track(glass(0x222222)));
-      const coreWire = new THREE.Mesh(coreGeo, track(glow(col, 0.6)));
-      coreWire.material = track(new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: 0.6 }));
-      root.add(core, coreWire);
-      const aGeo = track(new THREE.OctahedronGeometry(0.5));
-      const bGeo = track(new THREE.BoxGeometry(0.7, 0.7, 0.7));
-      const A = new THREE.Mesh(aGeo, track(glass(0xffffff)));
-      const B = new THREE.Mesh(bGeo, track(glass(col)));
-      root.add(A, B);
-      const trailN = 60;
-      const mkTrail = (c: THREE.ColorRepresentation) => {
-        const g = track(new THREE.BufferGeometry());
-        g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(trailN * 3), 3));
-        const l = new THREE.Line(g, track(new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: 0.6 })));
-        root.add(l);
-        return { g, l, pts: [] as THREE.Vector3[] };
+      const pink = new THREE.Color(accent), ice = new THREE.Color("#8fd0ff");
+      root.position.y = -1.2;
+      const plat = new THREE.Mesh(kit.geo(new THREE.CylinderGeometry(3.6, 3.85, 0.22, 96)), kit.dark);
+      root.add(plat);
+      const edge = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(3.6, 0.025, 8, 128)), kit.glow(pink, 2.4));
+      edge.rotation.x = Math.PI / 2; edge.position.y = 0.12; root.add(edge);
+      const inner = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(2.2, 0.012, 8, 128)), kit.glow("#ffffff", 1.2, 0.5));
+      inner.rotation.x = Math.PI / 2; inner.position.y = 0.12; root.add(inner);
+      const mid = new THREE.Mesh(kit.geo(new THREE.PlaneGeometry(0.02, 5.2)), kit.glow("#ffffff", 1.2, 0.4));
+      mid.rotation.x = -Math.PI / 2; mid.position.y = 0.12; root.add(mid);
+      const pool = makeGlowPool(kit, pink, 5.5); pool.position.y = 0.14; root.add(pool);
+
+      const A = add(makeAgent(kit, pink, 0)), B = add(makeAgent(kit, ice, 1.7));
+      A.group.position.set(-2.2, 1.5, 0); A.group.rotation.y = Math.PI / 2; A.group.scale.setScalar(1.25);
+      B.group.position.set(2.2, 1.5, 0); B.group.rotation.y = -Math.PI / 2; B.group.scale.setScalar(1.25);
+
+      const orb = new THREE.Group(); orb.position.set(0, 1.7, 0); root.add(orb);
+      const orbCore = new THREE.Mesh(kit.geo(new THREE.IcosahedronGeometry(0.2, 2)), kit.glow("#ffffff", 3));
+      const orbWire = new THREE.Mesh(kit.geo(new THREE.IcosahedronGeometry(0.34, 1)), kit.mat(new THREE.MeshBasicMaterial({ color: pink.clone().multiplyScalar(2.5), wireframe: true, toneMapped: false })));
+      orb.add(orbCore, orbWire);
+      const mkBeam = (c: THREE.Color) => {
+        const m = new THREE.Mesh(kit.geo(new THREE.CylinderGeometry(0.025, 0.025, 1, 8)), kit.mat(new THREE.MeshBasicMaterial({ color: c.clone().multiplyScalar(2.6), transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })));
+        m.rotation.z = Math.PI / 2; root.add(m); return m;
       };
-      const tA = mkTrail(0xffffff), tB = mkTrail(col);
-      const push = (tr: ReturnType<typeof mkTrail>, v: THREE.Vector3) => {
-        tr.pts.unshift(v.clone());
-        if (tr.pts.length > trailN) tr.pts.pop();
-        const arr = tr.g.attributes.position.array as Float32Array;
-        tr.pts.forEach((p, i) => p.toArray(arr, i * 3));
-        for (let i = tr.pts.length; i < trailN; i++) tr.pts[tr.pts.length - 1].toArray(arr, i * 3);
-        tr.g.attributes.position.needsUpdate = true;
-      };
-      tick.push((t) => {
-        const r = 3 + Math.sin(t * 0.9) * 0.6;
-        A.position.set(Math.cos(t * 1.2) * r, Math.sin(t * 1.2) * r * 0.45, Math.sin(t * 1.2) * r * 0.5);
-        B.position.set(-Math.cos(t * 1.2 + 0.4) * r, -Math.sin(t * 1.2 + 0.4) * r * 0.45, -Math.sin(t * 1.2 + 0.4) * r * 0.5);
-        A.rotation.x = B.rotation.y = t * 1.5;
-        A.rotation.y = B.rotation.x = t;
-        core.rotation.y = coreWire.rotation.y = t * 0.4;
-        const pulse = 1 + Math.max(0, Math.sin(t * 2.2)) * 0.15;
-        core.scale.setScalar(pulse);
-        coreWire.scale.setScalar(pulse * 1.25);
-        push(tA, A.position);
-        push(tB, B.position);
+      const bA = mkBeam(pink), bB = mkBeam(ice);
+      const rings = [0, 1].map(() => {
+        const r = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(0.4, 0.012, 8, 64)), kit.mat(new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, toneMapped: false, depthWrite: false })));
+        r.rotation.y = Math.PI / 2; orb.add(r); return r;
+      });
+      const sparks = makeSparks(kit, "#ffd2e6", 200, 0.055, 3); root.add(sparks.points);
+      // scoreboard
+      const barA = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(0.34, 1, 0.34)), kit.glow(pink, 2.2));
+      const barB = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(0.34, 1, 0.34)), kit.glow(ice, 2.2));
+      barA.position.set(-0.5, 3.6, -0.6); barB.position.set(0.5, 3.6, -0.6); root.add(barA, barB);
+      const plinth = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(1.7, 0.06, 0.6)), kit.chrome); plinth.position.set(0, 3.1, -0.6); root.add(plinth);
+      let last = -1;
+      tick.push((t, dt) => {
+        const lunge = Math.max(0, Math.sin(t * 1.4));
+        A.group.position.x = -2.2 + lunge * 0.5; B.group.position.x = 2.2 - lunge * 0.5;
+        const len = 4.4 - lunge;
+        const x1 = -2.2 + lunge * 0.5 + 0.35, x2 = 2.2 - lunge * 0.5 - 0.35;
+        [[bA, x1], [bB, x2]].forEach(([b, x]) => { const m = b as THREE.Mesh; const cx = ((x as number) + 0) / 2; m.position.set(cx, 1.7 + Math.sin(t * 40) * 0.01, 0); m.scale.set(1, Math.abs(x as number), 1); m.visible = lunge > 0.15; });
+        void len;
+        orb.rotation.y = t; orb.rotation.x = t * 0.6;
+        const clash = Math.sin(t * 1.4);
+        orb.scale.setScalar(1 + Math.max(0, clash) * 0.8 + Math.sin(t * 12) * 0.05);
+        const cyc = Math.floor(t * 1.4 / Math.PI);
+        if (clash > 0.95 && cyc !== last) { last = cyc; sparks.burst(new THREE.Vector3(0, 1.7, 0), 70, 3.4); }
+        rings.forEach((r, i) => { const k = ((t * 0.7 + i * 0.5) % 1); r.scale.setScalar(1 + k * 5); (r.material as THREE.MeshBasicMaterial).opacity = (1 - k) * 0.4 * Math.max(0.2, lunge); });
+        sparks.update(dt);
+        const sa = 1.4 + Math.sin(t * 0.7) * 0.9, sb = 1.4 - Math.sin(t * 0.7) * 0.9;
+        barA.scale.y = sa; barA.position.y = 3.13 + sa / 2; barB.scale.y = sb; barB.position.y = 3.13 + sb / 2;
+        key.color.copy(pink).lerp(ice, (Math.sin(t * 0.7) + 1) / 2);
       });
     }
 
     if (variant === "incident") {
-      // Service graph: one node fails (red), AI pulse travels in, node heals
-      const N = 22;
-      const pts: THREE.Vector3[] = [];
-      for (let i = 0; i < N; i++) {
-        const phi = Math.acos(1 - (2 * (i + 0.5)) / N);
-        const th = Math.PI * (1 + Math.sqrt(5)) * i;
-        pts.push(new THREE.Vector3(Math.cos(th) * Math.sin(phi), Math.cos(phi), Math.sin(th) * Math.sin(phi)).multiplyScalar(3));
-      }
-      const nodeGeo = track(new THREE.SphereGeometry(0.16, 16, 16));
-      const nodes = pts.map((p) => {
-        const m = new THREE.Mesh(nodeGeo, track(new THREE.MeshBasicMaterial({ color: col })));
-        m.position.copy(p);
-        root.add(m);
-        return m;
-      });
-      const edges: [number, number][] = [];
-      pts.forEach((p, i) => {
-        pts.map((q, j) => ({ j, d: p.distanceTo(q) })).filter((o) => o.j > i).sort((a, b) => a.d - b.d).slice(0, 2)
-          .forEach((o) => edges.push([i, o.j]));
-      });
-      const lg = track(new THREE.BufferGeometry().setFromPoints(edges.flatMap(([a, b]) => [pts[a], pts[b]])));
-      root.add(new THREE.LineSegments(lg, track(new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 }))));
-      const hub = new THREE.Mesh(track(new THREE.IcosahedronGeometry(0.55, 0)), track(glass(0x1a1a1a)));
-      const hubW = new THREE.Mesh(hub.geometry, track(new THREE.MeshBasicMaterial({ color: col, wireframe: true })));
-      root.add(hub, hubW);
+      root.position.y = -1.9;
+      const pool = makeGlowPool(kit, col, 6); pool.position.y = 0.02; root.add(pool);
+      const rack = add(makeRack(kit, col));
       const red = new THREE.Color("#ff3b4e");
-      const sick = 5;
-      const ping = new THREE.Mesh(track(new THREE.RingGeometry(0.2, 0.24, 48)), track(new THREE.MeshBasicMaterial({ color: red, transparent: true, side: THREE.DoubleSide })));
-      root.add(ping);
-      const beam = new THREE.Mesh(track(new THREE.SphereGeometry(0.09, 8, 8)), track(glow(0xffffff)));
-      root.add(beam);
-      tick.push((t) => {
-        root.rotation.y = t * 0.15;
-        hub.rotation.x = hubW.rotation.x = t * 0.5;
-        hub.rotation.y = hubW.rotation.y = t * 0.7;
-        const c = (t % 8) / 8; // 0-0.4 sick, 0.4-0.7 AI travels, 0.7-1 healed
-        const m = nodes[sick].material as THREE.MeshBasicMaterial;
-        const sickAmt = c < 0.7 ? 1 : Math.max(0, 1 - (c - 0.7) / 0.15);
-        m.color.copy(col).lerp(red, sickAmt);
-        const s = 1 + sickAmt * (0.6 + Math.sin(t * 8) * 0.4);
-        nodes[sick].scale.setScalar(s);
-        ping.visible = sickAmt > 0.01;
-        ping.position.copy(pts[sick]);
-        ping.quaternion.copy(camera.quaternion);
-        ping.scale.setScalar(1 + ((t * 1.5) % 1) * 3);
-        (ping.material as THREE.MeshBasicMaterial).opacity = (1 - ((t * 1.5) % 1)) * sickAmt;
-        beam.visible = c > 0.4 && c < 0.7;
-        if (beam.visible) beam.position.copy(new THREE.Vector3()).lerp(pts[sick], (c - 0.4) / 0.3);
+      tick.push(() => {
+        const a = rack.state?.alert ?? 0;
+        fill.color.copy(col).lerp(red, a);
+        key.color.copy(col).lerp(red, a * 0.6);
       });
     }
 
     if (variant === "forge") {
-      // Questions (cards) drop into a lattice, get verified (flash to accent), forming a block
-      const cols = 6, rows = 4, layers = 3;
-      const total = cols * rows * layers;
-      const geo = track(new THREE.BoxGeometry(0.55, 0.55, 0.55));
-      const mat = track(new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.3, flatShading: true }));
-      const inst = new THREE.InstancedMesh(geo, mat, total);
-      root.add(inst);
-      const home: THREE.Vector3[] = [];
-      for (let z = 0; z < layers; z++) for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++)
-        home.push(new THREE.Vector3((x - (cols - 1) / 2) * 0.8, (y - (rows - 1) / 2) * 0.8, (z - (layers - 1) / 2) * 0.8));
-      const delay = home.map((h) => (h.x + 2.4) * 0.12 + (h.y + 1.6) * 0.2 + Math.random() * 0.4);
-      const start = home.map(() => new THREE.Vector3(rand(-6, 6), rand(4, 9), rand(-4, 4)));
-      const o = new THREE.Object3D();
-      const c1 = new THREE.Color(0x555555), c2 = col.clone().multiplyScalar(1.6), c3 = new THREE.Color(0xffffff);
-      const tmp = new THREE.Color();
-      tick.push((t) => {
-        const T = t % 9;
-        for (let i = 0; i < total; i++) {
-          const k = THREE.MathUtils.clamp((T - delay[i]) / 1.4, 0, 1);
-          const e = 1 - Math.pow(1 - k, 3);
-          o.position.copy(start[i]).lerp(home[i], e);
-          o.rotation.set((1 - e) * 3, (1 - e) * 2, 0);
-          const out = T > 8 ? (T - 8) : 0;
-          o.scale.setScalar(Math.max(0.001, e * (1 - out * 0.9)));
-          o.updateMatrix();
-          inst.setMatrixAt(i, o.matrix);
-          const verified = THREE.MathUtils.clamp((T - delay[i] - 1.4) / 0.6, 0, 1);
-          const flash = Math.max(0, 1 - Math.abs((T - delay[i] - 1.7) / 0.35));
-          tmp.copy(c1).lerp(c2, verified).lerp(c3, flash);
-          inst.setColorAt(i, tmp);
-        }
-        inst.instanceMatrix.needsUpdate = true;
-        if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
-        root.rotation.y = t * 0.25;
-        root.rotation.x = Math.sin(t * 0.3) * 0.15;
-      });
+      root.position.y = -1.2;
+      const pool = makeGlowPool(kit, "#ffa24d", 5); pool.position.y = -0.27; root.add(pool);
+      const forge = add(makeForge(kit, col));
+      forge.group.scale.setScalar(1.15);
+      let k = 0;
+      tick.push((t) => { k = Math.max(0, Math.sin(t * 0.9 * Math.PI)); fill.color.set("#ffa24d").lerp(col, 0.5); fill.intensity = 40 + k * 20; });
     }
 
     if (variant === "hub") {
-      // Three product objects on an orbit; focus index brings one forward
       const defs = [
-        { geo: track(new THREE.OctahedronGeometry(0.9)), c: new THREE.Color("#ff4d8d") },
-        { geo: track(new THREE.IcosahedronGeometry(0.9, 0)), c: new THREE.Color("#2fe0a1") },
-        { geo: track(new THREE.TorusKnotGeometry(0.6, 0.22, 96, 12)), c: new THREE.Color("#6d8bff") },
+        { c: new THREE.Color("#ff4d8d"), build: () => { const m = makeAgent(kit, "#ff4d8d"); m.group.position.y = 1.4; return { m, s: 0.62 }; } },
+        { c: new THREE.Color("#2fe0a1"), build: () => ({ m: makeRack(kit, "#2fe0a1"), s: 0.6 }) },
+        { c: new THREE.Color("#6d8bff"), build: () => ({ m: makeForge(kit, "#6d8bff"), s: 0.82 }) },
       ];
-      const items = defs.map((d, i) => {
-        const g = new THREE.Group();
-        g.add(new THREE.Mesh(d.geo, track(glass(d.c))));
-        g.add(new THREE.Mesh(d.geo, track(new THREE.MeshBasicMaterial({ color: d.c, wireframe: true, transparent: true, opacity: 0.25 }))));
-        g.userData.base = (i / 3) * Math.PI * 2;
-        root.add(g);
-        return g;
+      root.position.y = -0.4;
+      const slots = defs.map((d, i) => {
+        const slot = new THREE.Group();
+        const { m, s } = d.build();
+        models.push(m);
+        m.group.scale.multiplyScalar(s);
+        if (i === 0) m.group.position.y *= s; else m.group.position.y = 0;
+        slot.add(m.group);
+        const ped = new THREE.Mesh(kit.geo(new THREE.CylinderGeometry(1.5, 1.65, 0.1, 64)), kit.dark);
+        ped.position.y = -0.1; slot.add(ped);
+        const rim = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(1.5, 0.014, 8, 64)), kit.glow(d.c, 2.2));
+        rim.rotation.x = Math.PI / 2; rim.position.y = -0.04; slot.add(rim);
+        const pool = makeGlowPool(kit, d.c, 2.6); pool.position.y = -0.03; slot.add(pool);
+        slot.userData.base = (i / 3) * Math.PI * 2;
+        root.add(slot);
+        return slot;
       });
-      const ring = new THREE.Mesh(track(new THREE.TorusGeometry(3.2, 0.012, 8, 160)), track(glow(0xffffff, 0.25)));
-      ring.rotation.x = Math.PI / 2;
-      root.add(ring);
+      const ring = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(1, 0.004, 8, 200)), kit.glow("#ffffff", 0.8, 0.35));
+      ring.rotation.x = Math.PI / 2; ring.scale.set(3.7, 2.4, 1); ring.position.set(0, -0.12, -0.5); root.add(ring);
       let spin = 0;
+      const one = new THREE.Vector3();
       tick.push((t, dt) => {
         const f = focusRef.current;
-        const target = f >= 0 ? -items[f].userData.base : t * 0.2;
         if (f >= 0) {
+          const target = -slots[f].userData.base;
           const d = ((target - spin + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
           spin += d * Math.min(1, dt * 3);
-        } else spin += dt * 0.2;
-        items.forEach((g, i) => {
+        } else spin += dt * 0.18;
+        slots.forEach((g, i) => {
           const a = g.userData.base + spin;
-          g.position.set(Math.sin(a) * 3.2, Math.sin(t * 0.8 + i) * 0.25, Math.cos(a) * 3.2 - 1.5);
-          g.rotation.x = t * 0.5 + i;
-          g.rotation.y = t * 0.7;
-          const s = f === i ? 1.35 : 1;
-          g.scale.lerp(new THREE.Vector3(s, s, s), 0.1);
+          g.position.set(Math.sin(a) * 3.7, 0, Math.cos(a) * 2.4 - 0.5);
+          g.rotation.y = -a * 0.35 + Math.sin(t * 0.5 + i) * 0.1;
+          const sc = f === i ? 1.22 : 1;
+          g.scale.lerp(one.set(sc, sc, sc), 0.1);
         });
-        ring.position.z = -1.5;
-        root.rotation.x = 0.25;
       });
     }
 
-    // Sizing + pointer parallax
+    // composer + bloom
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.4, 0.5, 0.95);
+    composer.addPass(bloom);
+    composer.addPass(new OutputPass());
+
     const size = () => {
       const w = el.clientWidth || 1, h = el.clientHeight || 1;
       renderer.setSize(w, h);
+      composer.setPixelRatio(dpr);
+      composer.setSize(w, h);
       camera.aspect = w / h;
-      camera.position.z = w / h < 0.9 ? 12 : 9;
-      root.position.x = w / h > 1.3 ? 3 : 0;
-      root.position.y = w / h > 1.3 ? 0 : 1.8;
+      const wide = w / h > 1.3;
+      camera.position.z = wide ? 10.5 : 15;
+      camera.fov = wide ? 38 : 42;
+      root.position.x = wide ? (variant === "hub" ? 3.0 : variant === "arena" ? 2.7 : 3.0) : 0;
+      root.scale.setScalar(variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : 1);
       camera.updateProjectionMatrix();
     };
+    const baseY = root.position.y;
     size();
-    const ro = new ResizeObserver(size);
+    root.position.y = baseY + (el.clientWidth / (el.clientHeight || 1) > 1.3 ? 0 : 2.4);
+    const ro = new ResizeObserver(() => { size(); root.position.y = baseY + (el.clientWidth / (el.clientHeight || 1) > 1.3 ? 0 : 2.4); });
     ro.observe(el);
+
     const mouse = { x: 0, y: 0 };
     const move = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
@@ -265,7 +228,7 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
     };
     window.addEventListener("pointermove", move);
 
-    let visible = true, raf = 0, last = performance.now(), time = variant === "forge" ? 5 : 0;
+    let visible = true, raf = 0, last = performance.now(), time = variant === "forge" ? 2 : 0;
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
     io.observe(el);
     const frame = (now: number) => {
@@ -273,13 +236,18 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
       if (!visible || document.hidden) { last = now; return; }
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      time += reduce ? 0 : dt;
-      tick.forEach((f) => f(time, dt));
-      camera.position.x += (mouse.x * 1.2 - camera.position.x) * 0.04;
-      camera.position.y += (0.6 - mouse.y * 0.8 - camera.position.y) * 0.04;
-      camera.lookAt(0, 0, 0);
-      dust.rotation.y = time * 0.02;
-      renderer.render(scene, camera);
+      const d = reduce ? 0 : dt;
+      time += d;
+      tick.forEach((f) => f(time, d));
+      models.forEach((m) => m.update(time, d));
+      const sway = variant === "hub" ? 0 : Math.sin(time * 0.35) * 0.22;
+      root.rotation.y += ((variant === "hub" ? 0 : -0.35 + sway + mouse.x * 0.35) - root.rotation.y) * 0.05;
+      root.rotation.x += ((mouse.y * 0.06) - root.rotation.x) * 0.05;
+      camera.position.x += (mouse.x * 0.8 - camera.position.x) * 0.04;
+      camera.position.y += (1.6 - mouse.y * 0.6 - camera.position.y) * 0.04;
+      camera.lookAt(0, 0.8, 0);
+      dust.rotation.y = time * 0.015;
+      composer.render();
     };
     raf = requestAnimationFrame(frame);
 
@@ -288,11 +256,10 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
       io.disconnect();
       ro.disconnect();
       window.removeEventListener("pointermove", move);
-      disposables.forEach((d) => d.dispose());
-      scene.traverse((o) => {
-        const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
-        if (m) [m].flat().forEach((x) => x.dispose());
-      });
+      kit.dispose();
+      envRT.dispose();
+      pmrem.dispose();
+      composer.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
