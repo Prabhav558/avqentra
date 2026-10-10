@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { founders } from "@/lib/founders";
-import DemoSection from "./Demo";
+import ShowWork from "./ShowWork";
 import s from "./home.module.css";
 
 function Arrow() {
@@ -122,7 +122,7 @@ export function Demonstration() {
         One product at a time: what you do, and what happens next.
       </Head>
       <div className={s.reveal}>
-        <DemoSection />
+        <ShowWork />
       </div>
     </section>
   );
