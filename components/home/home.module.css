@@ -344,6 +344,7 @@
 .caps li:hover{background:rgba(230,220,195,.03)}
 .capNum{display:block;margin-bottom:44px;font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#6f6c65}
 .caps .body{margin-bottom:0}
+.capsCta{margin-top:48px}
 
 /* ---------- demonstration ---------- */
 @keyframes blink{50%{opacity:0}}

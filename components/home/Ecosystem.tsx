@@ -98,13 +98,13 @@ export default function Ecosystem() {
       <div className={s.ecoStage}>
         <div className={s.ecoGrid}>
           <div className={s.ecoLeft}>
-            <p className={s.kicker}>— Product ecosystem</p>
+            <p className={s.kicker}>— Our products</p>
             <h2 className={`${s.h2} ${s.ecoTitle}`} id="ecosystem-h">
               Four products. Distinct problems. One engineering mindset.
             </h2>
             <p className={s.ecoIntro}>
-              From evaluating intelligent agents to accelerating software development and transforming how people work
-              with questions and knowledge, our products turn focused ideas into practical software.
+              Testing AI agents, explaining production failures, generating interview questions and teaching
+              operations: four focused products, each launching soon.
             </p>
 
             <div className={s.ecoWheel}>

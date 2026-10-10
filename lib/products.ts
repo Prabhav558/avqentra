@@ -27,7 +27,7 @@ export const products: Product[] = [
     name: "AgentBattle",
     status: "Launching soon",
     category: "AI Agent Evaluation",
-    headline: "Don't trust demos. Trust data.",
+    headline: "Don’t trust demos. Trust data.",
     summary:
       "A head-to-head arena for AI agents. Run agents on the same tasks under the same conditions, score them, and compare the results.",
     tagline: "A head-to-head arena for testing and comparing AI agents.",
