@@ -24,6 +24,9 @@ export default function Founders() {
               <span className="tag">{f.role}</span>
               <h3>{f.name}</h3>
               <p>{f.title}</p>
+              <a className="more" href={`https://${f.site}`} target="_blank" rel="noopener noreferrer">
+                {f.site} &rarr;
+              </a>
             </div>
           ))}
         </div>
