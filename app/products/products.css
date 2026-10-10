@@ -378,3 +378,14 @@ body:has(.pv) header.pnav,body:has(.pv) footer{font-family:var(--font-mono),ui-m
 .ph-side{align-self:start}
 @media(max-width:900px){.ph-grid{grid-template-columns:1fr}.ph-left{max-width:none}}
 .ph-left{padding-left:18px}.eyebrow{padding-left:0}
+
+/* use the right margin: slim right gutter, content runs to the edge */
+.pv,body:has(.pv){--gutr:clamp(14px,1.6vw,32px)}
+.frame{padding:0 var(--gutr) 0 var(--gut)}
+.frame::after{right:var(--gutr)}
+.frame section::before{right:calc(-1 * var(--gutr))}
+.pnav-in{padding:0 var(--gutr) 0 var(--gut)}
+body:has(.pv) footer .wrap{padding:8px var(--gutr) 8px var(--gut)}
+.pc{padding-right:18px}
+.ps-grid{padding-right:0}
+.ps-meta a{padding-right:18px}
