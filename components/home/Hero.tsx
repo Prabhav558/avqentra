@@ -1,10 +1,9 @@
 import Link from "next/link";
-import SiteHeader from "./SiteHeader";
 import SystemVisual from "./SystemVisual";
 import s from "./home.module.css";
 
 const stats = [
-  { value: "03", label: ["Products", "In the ecosystem"], size: "lg" },
+  { value: "04", label: ["Products", "In the ecosystem"], size: "lg" },
   { value: "AI", label: ["Core discipline"], size: "sm" },
   { value: "Next", label: ["Global Impact"], size: "md" },
 ];
@@ -51,19 +50,8 @@ export default function Hero() {
         <span className={`${s.tick} ${s.tickStats}`} />
         <span className={`${s.tick} ${s.tickFootL}`} />
         <span className={`${s.tick} ${s.tickFootR}`} />
-        <div className={s.orbit}>
-          <span className={s.dashes}><i /><i /></span>
-          <ul>
-            <li>Systems</li>
-            <li>Products</li>
-            <li>People</li>
-            <li>Real Impact</li>
-          </ul>
-          <span className={s.sphere} />
-        </div>
       </div>
 
-      <SiteHeader />
 
       <div className={s.content}>
         <div className={s.copy}>
@@ -100,15 +88,11 @@ export default function Hero() {
           ))}
         </dl>
         <div className={s.reel} aria-hidden="true">
-          <span className={s.reelCount}>[ 01 — 03 ]</span>
+          <span className={s.reelCount}>[ 01 — 04 ]</span>
           <Thumb id="thumb-a" seed={7} tone="#8d8878" />
           <Thumb id="thumb-b" seed={3} tone="#5f5b50" />
           <span className={s.reelRule} />
         </div>
-        <a href="#ecosystem" className={s.scroll}>
-          <span>Scroll</span>
-          <i />
-        </a>
       </div>
     </section>
   );

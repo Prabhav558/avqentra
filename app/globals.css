@@ -31,15 +31,17 @@ form{display:grid;gap:14px;max-width:520px}
 label{display:grid;gap:6px;font-size:14px;color:var(--muted)}
 input,textarea{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 12px;font:inherit}
 textarea{min-height:130px;resize:vertical}
-.site-footer{border-top:1px solid var(--border);margin-top:40px;color:var(--muted);font:13px/1.6 var(--font-mono),ui-monospace,monospace}
-.site-footer-inner{max-width:1216px;margin:0 auto;padding:64px 24px 48px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px}
-.site-footer-logo{font:300 22px/1 var(--font-display),sans-serif;font-stretch:125%;letter-spacing:.12em;text-transform:uppercase;color:var(--text)}
+.site-footer{position:relative;z-index:2;background:#0e0e0b;border-top:1px solid rgba(255,245,225,.09);color:#8a877f;font:13px/1.6 var(--font-mono),ui-monospace,monospace}
+.site-footer-inner{max-width:1216px;margin:0 auto;padding:64px 0 48px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px}
+.site-footer-logo{font:300 22px/1 var(--font-display),sans-serif;font-stretch:125%;letter-spacing:.12em;text-transform:uppercase;color:#ece8df}
 .site-footer-brand p{margin:16px 0 0;max-width:300px}
-.site-footer-col h2{margin:0 0 16px;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--text)}
+.site-footer-col h2{margin:0 0 16px;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#ece8df}
 .site-footer-col ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.site-footer a{color:var(--muted);transition:color .2s}
-.site-footer a:hover{color:var(--text);text-decoration:none}
-.site-footer-bar{border-top:1px solid var(--border);max-width:1216px;margin:0 auto;padding:20px 24px 28px;font-size:11px;letter-spacing:.06em}
+.site-footer a{color:#8a877f;transition:color .2s}
+.site-footer a:hover{color:#ece8df;text-decoration:none}
+.site-footer .site-footer-logo{color:#ece8df}
+.site-footer-bar{border-top:1px solid rgba(255,245,225,.09);max-width:1216px;margin:0 auto;padding:20px 0 28px;font-size:11px;letter-spacing:.06em}
+@media(max-width:1280px){.site-footer-inner,.site-footer-bar{margin-left:24px;margin-right:24px}}
 @media(max-width:720px){.site-footer-inner{grid-template-columns:1fr 1fr}.site-footer-brand{grid-column:1/-1}}
 .avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:22px;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));margin-bottom:6px}
 body:has(.home-theme){--bg:#0e0e0b;--surface:#16150f;--border:rgba(255,245,225,.09);--text:#ece8df;--muted:#8a877f;--accent:#e6dcc8;--accent2:#b9ae94}
@@ -73,3 +75,17 @@ html.has-cursor,html.has-cursor *{cursor:none!important}
 @keyframes cur-pulse{from{transform:scale(1);opacity:.9}to{transform:scale(4.5);opacity:0}}
 @media (prefers-reduced-motion:reduce){.cur-shape,.cur-icon{transition:none}.cur-ring.cur-pulse::after{animation:none;opacity:0}}
 @media (hover:none),(pointer:coarse){.cur-ring{display:none}}
+
+/* ---------- footer scene (logo panel slides up from behind the footer) ---------- */
+:root{--stage-h:clamp(220px,42vh,380px);--end-extra:clamp(280px,55vh,560px)}
+main{min-height:60vh}
+.footer-end{position:relative}
+.footer-scene{--p:0;position:sticky;top:calc(100vh - 470px);z-index:20}
+.footer-spacer{height:var(--end-extra)}
+.footer-stage{position:absolute;left:0;right:0;bottom:100%;height:var(--stage-h);z-index:1;display:flex;align-items:center;justify-content:center;
+  border-top:1px solid rgba(255,245,225,.09);
+  background:radial-gradient(ellipse 55% 90% at 50% 100%,rgba(112,112,64,.16),transparent 70%),#0b0b09;
+  transform:translateY(calc((1 - var(--p))*var(--stage-h)))}
+.footer-logo{display:block;width:min(66vw,940px);height:auto}
+@media(max-width:720px){:root{--stage-h:clamp(180px,30vh,260px);--end-extra:clamp(240px,45vh,420px)}.footer-logo{width:82vw}}
+@media(prefers-reduced-motion:reduce){:root{--end-extra:0px}.footer-scene{position:relative;top:auto}.footer-stage{position:static;transform:none}}

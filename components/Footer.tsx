@@ -5,6 +5,7 @@ const explore = [
   { href: "/products/agentbattle", label: "AgentBattle" },
   { href: "/products/devsick", label: "DevSick" },
   { href: "/products/questionforge", label: "QuestionForge" },
+  { href: "/products/ops-academy", label: "Ops Academy" },
 ];
 
 const company = [
@@ -23,22 +24,22 @@ export default function Footer() {
           </Link>
           <p>A technology company building software for what&rsquo;s next.</p>
         </div>
-        <nav aria-label="Explore" className="site-footer-col">
+        <div role="group" aria-label="Explore" className="site-footer-col">
           <h2>Explore</h2>
           <ul>
             {explore.map((l) => (
               <li key={l.href}><Link href={l.href}>{l.label}</Link></li>
             ))}
           </ul>
-        </nav>
-        <nav aria-label="Company" className="site-footer-col">
+        </div>
+        <div role="group" aria-label="Company" className="site-footer-col">
           <h2>Company</h2>
           <ul>
             {company.map((l) => (
               <li key={l.href}><Link href={l.href}>{l.label}</Link></li>
             ))}
           </ul>
-        </nav>
+        </div>
       </div>
       <div className="site-footer-bar">
         <span>&copy; {new Date().getFullYear()} Avqentra. All rights reserved.</span>
