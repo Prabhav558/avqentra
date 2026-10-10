@@ -1,5 +1,4 @@
 import Link from "next/link";
-import SiteHeader from "./SiteHeader";
 import SystemVisual from "./SystemVisual";
 import s from "./home.module.css";
 
@@ -51,19 +50,8 @@ export default function Hero() {
         <span className={`${s.tick} ${s.tickStats}`} />
         <span className={`${s.tick} ${s.tickFootL}`} />
         <span className={`${s.tick} ${s.tickFootR}`} />
-        <div className={s.orbit}>
-          <span className={s.dashes}><i /><i /></span>
-          <ul>
-            <li>Systems</li>
-            <li>Products</li>
-            <li>People</li>
-            <li>Real Impact</li>
-          </ul>
-          <span className={s.sphere} />
-        </div>
       </div>
 
-      <SiteHeader />
 
       <div className={s.content}>
         <div className={s.copy}>
@@ -105,10 +93,6 @@ export default function Hero() {
           <Thumb id="thumb-b" seed={3} tone="#5f5b50" />
           <span className={s.reelRule} />
         </div>
-        <a href="#ecosystem" className={s.scroll}>
-          <span>Scroll</span>
-          <i />
-        </a>
       </div>
     </section>
   );
