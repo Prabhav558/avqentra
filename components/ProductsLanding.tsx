@@ -22,7 +22,7 @@ export default function ProductsLanding() {
       <SectionRail />
 
       <section className="ph" id="top">
-        <Scene className="scene" variant="glass" accent="#d9cfb3" />
+        <Scene className="scene" variant="swarm" accent="#d9cfb3" />
         <div className="ph-grid">
           <div>
             <p className="eyebrow">PRODUCTS</p>

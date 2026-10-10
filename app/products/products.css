@@ -308,3 +308,30 @@ html:has(.pv){scroll-snap-type:y proximity;scroll-padding-top:78px}
 }
 .pv nav.rail{flex-direction:column;align-items:flex-start;justify-content:flex-start;height:auto;gap:6px}
 .display{font-size:clamp(44px,min(8.4vw,14vh),132px)}
+
+
+/* ───── use the full width ───── */
+.pv,body:has(.pv){--gut:clamp(20px,5.2vw,110px)}
+.frame{max-width:2200px}
+.pnav-in{max-width:2200px}
+body:has(.pv) footer .wrap{max-width:2200px}
+.display{font-size:clamp(44px,min(8.6vw,14vh),200px)}
+.display-s{font-size:clamp(34px,min(4.8vw,8vh),104px)}
+.display-m{font-size:clamp(30px,min(4.8vw,8vh),100px)}
+.ps-body{font-size:clamp(12.5px,.92vw,16px);max-width:min(30em,100%)}
+.hl{max-width:min(32em,100%);font-size:clamp(11.5px,.85vw,14px)}
+.kicker{font-size:clamp(12px,.9vw,15px)}
+.ph-copy p{font-size:clamp(13px,.95vw,17px)}
+.pc-copy p{font-size:clamp(13px,.95vw,17px);max-width:34em}
+.device{font-size:clamp(9px,min(1.08vw,1.85vh),22px)}
+.ps-grid{gap:clamp(24px,5vw,120px)}
+.pbtn{font-size:clamp(11px,.8vw,13px);height:clamp(44px,4.6vh,52px)}
+.pi-name{font-size:clamp(20px,1.7vw,30px)}
+.pindex a,.pindex-h{font-size:clamp(11px,.8vw,13px)}
+
+
+/* list slides left, inside the frame */
+.ph-side{padding-right:clamp(24px,4vw,88px)}
+.ph-side ul{text-align:left}
+.moon{right:clamp(24px,4vw,88px)}
+.moon{top:-34px}.ph-side ul{margin-top:44px}

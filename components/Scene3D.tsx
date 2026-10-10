@@ -9,7 +9,7 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Kit, makeAgent, makeForge, makeGlowPool, makeRack, makeSparks, type Model } from "./three-models";
 
-export type SceneVariant = "arena" | "incident" | "forge" | "glass";
+export type SceneVariant = "arena" | "incident" | "forge" | "swarm";
 type Props = { variant: SceneVariant; accent?: string; className?: string };
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
@@ -150,52 +150,75 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       tick.push((t) => { k = Math.max(0, Math.sin(t * 0.9 * Math.PI)); fill.color.set("#ffa24d").lerp(col, 0.5); fill.intensity = 40 + k * 20; });
     }
 
-    if (variant === "glass") {
-      const warm = new THREE.Color(accent);
-      root.position.y = 0.9;
-      key.color.copy(warm); fill.color.copy(warm); key.intensity = 120;
-      const panelGeo = kit.geo(new RoundedBoxGeometry(4.8, 3.0, 0.1, 5, 0.08));
-      const panelMat = (o: number) => kit.mat(new THREE.MeshPhysicalMaterial({ color: 0x1c1a15, metalness: 0.75, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12, transparent: true, opacity: o }));
-      const rim = kit.mat(new THREE.LineBasicMaterial({ color: warm.clone().multiplyScalar(0.9), transparent: true, opacity: 0.35 }));
-      const rimGeo = kit.geo(new THREE.EdgesGeometry(new THREE.BoxGeometry(4.8, 3.0, 0.1)));
-      const defs = [
-        { p: [0, 0, 0], r: [0.1, -0.5, -0.05], o: 0.96 },
-        { p: [1.5, 0.7, -1.5], r: [0.12, -0.55, -0.08], o: 0.8 },
-        { p: [-1.3, -0.5, -2.6], r: [0.08, -0.45, -0.04], o: 0.6 },
-      ];
-      const panels = defs.map((d, i) => {
-        const m = new THREE.Mesh(panelGeo, panelMat(d.o));
-        m.add(new THREE.LineSegments(rimGeo, rim));
-        m.position.set(d.p[0], d.p[1], d.p[2]); m.rotation.set(d.r[0], d.r[1], d.r[2]);
-        m.userData.p = d.p; m.userData.r = d.r; m.userData.i = i;
-        root.add(m);
-        return m;
+    if (variant === "swarm") {
+      const cream = new THREE.Color(accent);
+      root.position.y = 1.0;
+      key.color.copy(cream); fill.color.copy(cream); key.intensity = 110;
+
+      // core: glowing mind inside a faceted lattice
+      const coreG = new THREE.Group(); root.add(coreG);
+      const mind = new THREE.Mesh(kit.geo(new THREE.IcosahedronGeometry(0.5, 3)), kit.glow(cream, 1.9));
+      const lattice = new THREE.LineSegments(kit.geo(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(0.95, 1))), kit.mat(new THREE.LineBasicMaterial({ color: cream.clone().multiplyScalar(1.6), transparent: true, opacity: 0.8, toneMapped: false })));
+      const shell = new THREE.Mesh(kit.geo(new THREE.IcosahedronGeometry(0.9, 1)), kit.mat(new THREE.MeshPhysicalMaterial({ color: 0x1a1812, metalness: 0.9, roughness: 0.25, flatShading: true, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+      coreG.add(mind, lattice, shell);
+      const rings = [1.5, 2.05, 2.6].map((r, i) => {
+        const m = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(r, i === 1 ? 0.014 : 0.01, 8, 160)), i === 1 ? kit.chrome : kit.glow(cream, 1.4, 0.7));
+        m.rotation.set(0.6 + i * 0.5, i * 0.7, i * 0.3);
+        root.add(m); return m;
       });
-      const rock = (r: number, seed: number) => {
-        const g = new THREE.IcosahedronGeometry(r, 4);
-        const pos = g.attributes.position, v = new THREE.Vector3();
-        for (let k = 0; k < pos.count; k++) {
-          v.fromBufferAttribute(pos, k);
-          const n = Math.sin(v.x * 2.1 + seed) * Math.cos(v.y * 2.7 + seed * 1.3) * 0.5 + Math.sin(v.z * 4.3 + seed) * 0.25 + Math.sin((v.x + v.y) * 6.1 + seed) * 0.12;
-          v.multiplyScalar(1 + n * 0.38);
-          pos.setXYZ(k, v.x, v.y, v.z);
-        }
-        g.computeVertexNormals();
-        return kit.geo(g);
-      };
-      const stone = kit.mat(new THREE.MeshStandardMaterial({ color: 0x4a443a, roughness: 0.85, metalness: 0.15, flatShading: true }));
-      const rocks = [
-        { g: rock(1.1, 1.3), p: [3.0, -1.7, -1.0] },
-        { g: rock(0.8, 4.1), p: [-3.0, 1.6, -3.4] },
-        { g: rock(0.55, 7.7), p: [-0.4, -2.0, 1.4] },
-      ].map((d) => { const m = new THREE.Mesh(d.g, stone); m.position.set(d.p[0], d.p[1], d.p[2]); m.userData.p = d.p; root.add(m); return m; });
-      tick.push((t) => {
-        panels.forEach((m) => {
-          const i = m.userData.i as number;
-          m.position.y = m.userData.p[1] + Math.sin(t * 0.5 + i * 1.7) * 0.12;
-          m.rotation.y = m.userData.r[1] + Math.sin(t * 0.3 + i) * 0.04;
+
+      // agents orbiting the core
+      const N = 16, agents: { m: THREE.Mesh; r: number; sp: number; ph: number; axis: THREE.Vector3; tilt: number; pulse: THREE.Mesh; line: THREE.Line; pos: Float32Array; k: number }[] = [];
+      const geos = [kit.geo(new THREE.OctahedronGeometry(1)), kit.geo(new THREE.IcosahedronGeometry(1, 0)), kit.geo(new THREE.TetrahedronGeometry(1.1))];
+      const pulseGeo = kit.geo(new THREE.SphereGeometry(0.05, 10, 10));
+      const dot = kit.glow(cream, 1.7);
+      const SEG = 28;
+      for (let i = 0; i < N; i++) {
+        const size = rand(0.1, 0.2);
+        const m = new THREE.Mesh(geos[i % 3], kit.chrome);
+        m.scale.setScalar(size);
+        m.add(new THREE.Mesh(kit.geo(new THREE.SphereGeometry(0.34, 10, 10)), dot));
+        root.add(m);
+        const pos = new Float32Array(SEG * 3);
+        const lg = kit.geo(new THREE.BufferGeometry());
+        lg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        const line = new THREE.Line(lg, kit.mat(new THREE.LineBasicMaterial({ color: cream.clone().multiplyScalar(1.5), transparent: true, opacity: 0.38, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })));
+        line.frustumCulled = false;
+        root.add(line);
+        const pulse = new THREE.Mesh(pulseGeo, kit.glow(cream, 2));
+        root.add(pulse);
+        agents.push({ m, r: rand(2.3, 4.3), sp: rand(0.12, 0.34) * (i % 2 ? 1 : -1), ph: rand(0, 6.28), axis: new THREE.Vector3(rand(-1, 1), rand(-0.4, 0.4), rand(-1, 1)).normalize(), tilt: rand(0, 6.28), pulse, line, pos, k: rand(0, 1) });
+      }
+      const sparks = makeSparks(kit, cream, 160, 0.05, -0.15); root.add(sparks.points);
+      const p = new THREE.Vector3(), c = new THREE.Vector3(), q = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+      let nextBurst = 0;
+      tick.push((t, dt) => {
+        coreG.rotation.y = t * 0.25; coreG.rotation.x = t * 0.12;
+        const beat = 1 + Math.sin(t * 2.2) * 0.06 + Math.max(0, Math.sin(t * 0.7)) * 0.12;
+        mind.scale.setScalar(beat); lattice.scale.setScalar(1 + (beat - 1) * 0.5);
+        rings.forEach((r, i) => { r.rotation.z += dt * (0.12 + i * 0.07) * (i % 2 ? -1 : 1); r.rotation.x += dt * 0.03; });
+        agents.forEach((a, i) => {
+          const ang = a.ph + t * a.sp;
+          p.set(Math.cos(ang) * a.r, Math.sin(ang * 1.7 + a.tilt) * a.r * 0.28, Math.sin(ang) * a.r).applyAxisAngle(a.axis, a.tilt * 0.35);
+          a.m.position.copy(p);
+          a.m.rotation.x = t * 0.8 + i; a.m.rotation.y = t * 0.6;
+          // curved filament core -> agent
+          q.copy(p).multiplyScalar(0.5).addScaledVector(up, Math.sin(t * 0.8 + i) * 0.9 + 0.6);
+          const pos = a.pos;
+          for (let s = 0; s < SEG; s++) {
+            const u = s / (SEG - 1), v = 1 - u;
+            c.set(0, 0, 0).multiplyScalar(v * v).addScaledVector(q, 2 * v * u).addScaledVector(p, u * u);
+            pos[s * 3] = c.x; pos[s * 3 + 1] = c.y; pos[s * 3 + 2] = c.z;
+          }
+          a.line.geometry.attributes.position.needsUpdate = true;
+          // data pulse traveling along the filament (out and back)
+          const k = (t * (0.25 + (i % 4) * 0.06) + a.k) % 1;
+          const u = i % 2 ? k : 1 - k, v = 1 - u;
+          a.pulse.position.set(0, 0, 0).multiplyScalar(v * v).addScaledVector(q, 2 * v * u).addScaledVector(p, u * u);
+          a.pulse.scale.setScalar(0.6 + Math.sin(k * Math.PI) * 0.9);
         });
-        rocks.forEach((m, i) => { m.rotation.y = t * 0.08 + i; m.rotation.x = t * 0.05; m.position.y = m.userData.p[1] + Math.sin(t * 0.4 + i * 2) * 0.1; });
+        if (t > nextBurst) { nextBurst = t + 0.35; sparks.burst(c.set(0, 0, 0), 5, 0.9); }
+        sparks.update(dt);
       });
     }
 
@@ -203,7 +226,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
     const msaa = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
     const composer = new EffectComposer(renderer, msaa);
     composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), variant === "glass" ? 0.12 : 0.4, 0.5, 0.95);
+    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), variant === "swarm" ? 0.32 : 0.4, 0.5, 0.95);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
 
@@ -217,8 +240,8 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const wide = w / h > 1.3;
       camera.position.z = wide ? 10.5 : 15;
       camera.fov = wide ? 38 : 42;
-      root.position.x = wide ? (variant === "arena" ? 2.7 : variant === "glass" ? 3.3 : 3.0) : 0;
-      baseScale = variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : variant === "glass" ? 0.56 : 1;
+      root.position.x = wide ? (variant === "arena" ? 2.7 : variant === "swarm" ? 3.2 : 3.0) : 0;
+      baseScale = variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : variant === "swarm" ? 0.62 : 1;
       camera.updateProjectionMatrix();
     };
     const baseY = root.position.y;
@@ -242,7 +265,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
       if (!visible || document.hidden) { last = now; return; }
-      const raw = (now - last) / 1000;
+      const raw = Math.max(0, (now - last) / 1000);
       const dt = Math.min(raw, 0.05);
       last = now;
       ema = ema * 0.94 + Math.min(raw, 0.2) * 0.06;
