@@ -1,0 +1,11 @@
+/* Hidden unless the inline decision script (Intro.tsx) chose to play, so no-JS and
+   repeat visits never see it. */
+.intro{display:none}
+:global(html[data-intro="play"]) .intro,
+:global(html[data-intro="exit"]) .intro{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:#000;
+  /* failsafe: never let the overlay outstay a stalled script */
+  animation:introFailsafe .6s ease 7s forwards}
+:global(html[data-intro="exit"]) .intro{pointer-events:none}
+.mark{display:block;width:min(620px,74vw);height:auto;overflow:visible;will-change:transform}
+.p{opacity:0}
+@keyframes introFailsafe{to{opacity:0;visibility:hidden}}

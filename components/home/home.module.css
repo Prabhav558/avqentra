@@ -72,6 +72,9 @@
 /* entrance */
 .eyebrow,.title span,.lede,.actions{animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*90ms + 150ms)}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
+/* while the logo intro plays, hold the hero's entrance and hide the header logo it lands on */
+:global(html[data-intro="play"]) :is(.eyebrow,.title span,.lede,.actions,.strand,.node){animation-play-state:paused}
+:global(html[data-intro="play"]) .logo,:global(html[data-intro="exit"]) .logo{opacity:0}
 
 /* ---------- stats ---------- */
 .stats{position:relative;z-index:3;grid-row:3;grid-column:1}
