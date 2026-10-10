@@ -22,7 +22,7 @@ export default function ProductsLanding() {
       <SectionRail />
 
       <section className="ph" id="top">
-        <Scene className="scene" variant="swarm" accent="#d9cfb3" />
+        <Scene className="scene" variant="mark" accent="#d9cfb3" />
         <div className="ph-grid">
           <div>
             <p className="eyebrow">PRODUCTS</p>
@@ -34,7 +34,7 @@ export default function ProductsLanding() {
           </div>
           <div className="ph-side">
             <i className="moon" aria-hidden="true" />
-            <ul className="mono"><li>SYSTEMS</li><li>PRODUCTS</li><li>PEOPLE</li><li>REAL IMPACT</li></ul>
+            
           </div>
         </div>
 
