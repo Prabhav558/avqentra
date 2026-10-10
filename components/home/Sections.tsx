@@ -33,9 +33,9 @@ export function Philosophy() {
     <section id="philosophy" className={s.sec} aria-labelledby="philosophy-h">
       <div className={s.philoTop}>
         <Head kicker="— Our philosophy" title={<span id="philosophy-h">We build beyond the obvious.</span>}>
-          We believe software should do more than digitize existing processes. It should rethink how problems are
-          approached, how people interact with technology, and what becomes possible when intelligent systems are
-          designed with purpose.
+          Whether it&rsquo;s our own product or a client&rsquo;s, software should do more than digitize existing
+          processes. It should rethink how problems are approached, and what becomes possible when intelligent systems
+          are designed with purpose.
         </Head>
         <svg className={s.geo} viewBox="0 0 200 200" fill="none" aria-hidden="true">
           <g stroke="currentColor" strokeWidth=".6">
@@ -71,7 +71,9 @@ const stages = [
 export function Process() {
   return (
     <section id="how-we-build" className={s.sec} aria-labelledby="process-h">
-      <Head kicker="— How we build" title={<span id="process-h">From idea to implementation.</span>} />
+      <Head kicker="— How we build" title={<span id="process-h">From idea to implementation.</span>}>
+        The same process runs our own products and every client project.
+      </Head>
       <ol className={`${s.timeline} ${s.reveal}`}>
         {stages.map((st) => (
           <li key={st.n}>
@@ -98,8 +100,8 @@ const capabilities = [
 export function Capabilities() {
   return (
     <section id="capabilities" className={s.sec} aria-labelledby="cap-h">
-      <Head kicker="— Engineering capabilities" title={<span id="cap-h">Built with engineering at the core.</span>}>
-        The disciplines behind our products.
+      <Head kicker="— What we build for clients" title={<span id="cap-h">Built with engineering at the core.</span>}>
+        The disciplines behind our own products, available for your project.
       </Head>
       <ul className={`${s.caps} ${s.reveal}`}>
         {capabilities.map((c, i) => (
@@ -110,6 +112,11 @@ export function Capabilities() {
           </li>
         ))}
       </ul>
+      <div className={s.capsCta}>
+        <Link href="/contact?type=project" className={`${s.btn} ${s.btnGhost}`}>
+          Start a project <Arrow />
+        </Link>
+      </div>
     </section>
   );
 }
@@ -118,8 +125,8 @@ export function Capabilities() {
 export function Demonstration() {
   return (
     <section id="demo" className={s.sec} aria-labelledby="demo-h">
-      <Head kicker="— Show the work" title={<span id="demo-h">Less talk. More working software.</span>}>
-        One product at a time: what you do, and what happens next.
+      <Head kicker="— Show the work" title={<span id="demo-h">Less talk. More software.</span>}>
+        A preview of each product before launch: what you do, and what happens next.
       </Head>
       <div className={s.reveal}>
         <ShowWork />
@@ -141,9 +148,9 @@ export function AboutSection() {
         </div>
         <div className={s.aboutCopy}>
           <p className={s.sub}>
-            Avqentra is a technology company building software products around meaningful problems. We combine
-            engineering, product thinking, and emerging technologies to create systems that help people work, build,
-            and explore more effectively.
+            Avqentra is a product and engineering studio. We build our own software products around meaningful
+            problems, and we take on client projects where the same engineering, product thinking and AI experience
+            can make a difference.
           </p>
           <dl className={s.facts}>
             <div>
@@ -151,8 +158,12 @@ export function AboutSection() {
               <dd>Build products that solve real challenges and make people&rsquo;s work measurably better.</dd>
             </div>
             <div>
-              <dt>Approach</dt>
-              <dd>First principles, honest feedback, fast iteration.</dd>
+              <dt>Products</dt>
+              <dd>Four in development, launching soon.</dd>
+            </div>
+            <div>
+              <dt>Client work</dt>
+              <dd>AI systems, full-stack applications and automation, built for teams that need them done right.</dd>
             </div>
           </dl>
           <ul className={s.founders}>
@@ -187,14 +198,15 @@ export function FinalCta() {
           <span className={s.gold}>worth building?</span>
         </h2>
         <p className={s.sub}>
-          Explore what we&rsquo;re creating, discover our products, or start a conversation about what comes next.
+          Bring us a project and we&rsquo;ll design and build it with you, or get early access to our products as
+          they launch.
         </p>
         <div className={s.ctaActions}>
-          <Link href="/products" className={`${s.btn} ${s.btnSolid}`}>
-            Explore our products <Arrow />
+          <Link href="/contact?type=project" className={`${s.btn} ${s.btnSolid}`}>
+            Start a project <Arrow />
           </Link>
-          <Link href="/contact" className={`${s.btn} ${s.btnGhost}`}>
-            Get in touch <Arrow />
+          <Link href="/contact?type=early-access" className={`${s.btn} ${s.btnGhost}`}>
+            Get early access <Arrow />
           </Link>
         </div>
       </div>

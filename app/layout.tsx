@@ -7,8 +7,9 @@ import { display, mono } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Avqentra | Products that solve real problems", template: "%s | Avqentra" },
-  description: "Avqentra builds AgentBattle, Devsick, QuestionForge and Ops Academy.",
+  title: { default: "Avqentra | AI products and software engineering studio", template: "%s | Avqentra" },
+  description:
+    "Avqentra is a product and engineering studio. We're launching AgentBattle, DevSick, QuestionForge and Ops Academy, and we build software for clients.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

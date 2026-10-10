@@ -3,9 +3,9 @@ import SystemVisual from "./SystemVisual";
 import s from "./home.module.css";
 
 const stats = [
-  { value: "04", label: ["Products", "In the ecosystem"], size: "lg" },
+  { value: "04", label: ["Products", "Launching soon"], size: "lg" },
   { value: "AI", label: ["Core discipline"], size: "sm" },
-  { value: "Next", label: ["Global Impact"], size: "md" },
+  { value: "Open", label: ["For client", "projects"], size: "md" },
 ];
 
 function Arrow() {
@@ -62,15 +62,15 @@ export default function Hero() {
             <span className={s.gold} style={{ "--i": 3 } as React.CSSProperties}>Systems.</span>
           </h1>
           <p className={s.lede} style={{ "--i": 4 } as React.CSSProperties}>
-            We design and build intelligent software products that solve real problems, empower people, and push the
-            boundaries of what&rsquo;s possible.
+            A product and engineering studio. We&rsquo;re building our own AI products, launching soon, and we design
+            and build software for teams that need it done right.
           </p>
           <div className={s.actions} style={{ "--i": 5 } as React.CSSProperties}>
             <Link href="/products" className={`${s.btn} ${s.btnSolid}`}>
               Explore our products <Arrow />
             </Link>
-            <Link href="/contact" className={`${s.btn} ${s.btnGhost}`}>
-              Work with us <Arrow />
+            <Link href="/contact?type=project" className={`${s.btn} ${s.btnGhost}`}>
+              Start a project <Arrow />
             </Link>
           </div>
         </div>

@@ -177,3 +177,11 @@ export function OpsAcademyVisual() {
     </div>
   );
 }
+
+/** Illustrative interface per product slug. */
+export const productVisuals: Record<string, () => React.JSX.Element> = {
+  agentbattle: AgentBattleVisual,
+  devsick: DevSickVisual,
+  questionforge: QuestionForgeVisual,
+  "ops-academy": OpsAcademyVisual,
+};
