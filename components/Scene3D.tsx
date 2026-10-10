@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -8,16 +9,14 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Kit, makeAgent, makeForge, makeGlowPool, makeRack, makeSparks, type Model } from "./three-models";
 
-export type SceneVariant = "arena" | "incident" | "forge" | "hub";
-type Props = { variant: SceneVariant; accent?: string; focus?: number; className?: string };
+export type SceneVariant = "arena" | "incident" | "forge" | "glass";
+type Props = { variant: SceneVariant; accent?: string; className?: string };
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 /** Procedural three.js scenes: no model files, textures drawn on canvas, env reflections + bloom. */
-export default function Scene3D({ variant, accent = "#ffffff", focus = -1, className }: Props) {
+export default function Scene3D({ variant, accent = "#ffffff", className }: Props) {
   const host = useRef<HTMLDivElement>(null);
-  const focusRef = useRef(focus);
-  focusRef.current = focus;
 
   useEffect(() => {
     const el = host.current;
@@ -29,7 +28,8 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
     } catch {
       return;
     }
-    const dpr = Math.min(window.devicePixelRatio, 1.6);
+    const maxDpr = Math.min(window.devicePixelRatio, 1.75);
+    let dpr = maxDpr;
     renderer.setPixelRatio(dpr);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
@@ -150,57 +150,63 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
       tick.push((t) => { k = Math.max(0, Math.sin(t * 0.9 * Math.PI)); fill.color.set("#ffa24d").lerp(col, 0.5); fill.intensity = 40 + k * 20; });
     }
 
-    if (variant === "hub") {
+    if (variant === "glass") {
+      const warm = new THREE.Color(accent);
+      key.color.copy(warm); fill.color.copy(warm); key.intensity = 120;
+      const panelGeo = kit.geo(new RoundedBoxGeometry(4.8, 3.0, 0.1, 5, 0.08));
+      const panelMat = (o: number) => kit.mat(new THREE.MeshPhysicalMaterial({ color: 0x1c1a15, metalness: 0.75, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12, transparent: true, opacity: o }));
+      const rim = kit.mat(new THREE.LineBasicMaterial({ color: warm.clone().multiplyScalar(0.9), transparent: true, opacity: 0.35 }));
+      const rimGeo = kit.geo(new THREE.EdgesGeometry(new THREE.BoxGeometry(4.8, 3.0, 0.1)));
       const defs = [
-        { c: new THREE.Color("#ff4d8d"), build: () => { const m = makeAgent(kit, "#ff4d8d"); m.group.position.y = 1.4; return { m, s: 0.62 }; } },
-        { c: new THREE.Color("#2fe0a1"), build: () => ({ m: makeRack(kit, "#2fe0a1"), s: 0.6 }) },
-        { c: new THREE.Color("#6d8bff"), build: () => ({ m: makeForge(kit, "#6d8bff"), s: 0.82 }) },
+        { p: [0, 0, 0], r: [0.1, -0.5, -0.05], o: 0.96 },
+        { p: [1.5, 0.7, -1.5], r: [0.12, -0.55, -0.08], o: 0.8 },
+        { p: [-1.3, -0.5, -2.6], r: [0.08, -0.45, -0.04], o: 0.6 },
       ];
-      root.position.y = -0.4;
-      const slots = defs.map((d, i) => {
-        const slot = new THREE.Group();
-        const { m, s } = d.build();
-        models.push(m);
-        m.group.scale.multiplyScalar(s);
-        if (i === 0) m.group.position.y *= s; else m.group.position.y = 0;
-        slot.add(m.group);
-        const ped = new THREE.Mesh(kit.geo(new THREE.CylinderGeometry(1.5, 1.65, 0.1, 64)), kit.dark);
-        ped.position.y = -0.1; slot.add(ped);
-        const rim = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(1.5, 0.014, 8, 64)), kit.glow(d.c, 2.2));
-        rim.rotation.x = Math.PI / 2; rim.position.y = -0.04; slot.add(rim);
-        const pool = makeGlowPool(kit, d.c, 2.6); pool.position.y = -0.03; slot.add(pool);
-        slot.userData.base = (i / 3) * Math.PI * 2;
-        root.add(slot);
-        return slot;
+      const panels = defs.map((d, i) => {
+        const m = new THREE.Mesh(panelGeo, panelMat(d.o));
+        m.add(new THREE.LineSegments(rimGeo, rim));
+        m.position.set(d.p[0], d.p[1], d.p[2]); m.rotation.set(d.r[0], d.r[1], d.r[2]);
+        m.userData.p = d.p; m.userData.r = d.r; m.userData.i = i;
+        root.add(m);
+        return m;
       });
-      const ring = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(1, 0.004, 8, 200)), kit.glow("#ffffff", 0.8, 0.35));
-      ring.rotation.x = Math.PI / 2; ring.scale.set(3.7, 2.4, 1); ring.position.set(0, -0.12, -0.5); root.add(ring);
-      let spin = 0;
-      const one = new THREE.Vector3();
-      tick.push((t, dt) => {
-        const f = focusRef.current;
-        if (f >= 0) {
-          const target = -slots[f].userData.base;
-          const d = ((target - spin + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-          spin += d * Math.min(1, dt * 3);
-        } else spin += dt * 0.18;
-        slots.forEach((g, i) => {
-          const a = g.userData.base + spin;
-          g.position.set(Math.sin(a) * 3.7, 0, Math.cos(a) * 2.4 - 0.5);
-          g.rotation.y = -a * 0.35 + Math.sin(t * 0.5 + i) * 0.1;
-          const sc = f === i ? 1.22 : 1;
-          g.scale.lerp(one.set(sc, sc, sc), 0.1);
+      const rock = (r: number, seed: number) => {
+        const g = new THREE.IcosahedronGeometry(r, 4);
+        const pos = g.attributes.position, v = new THREE.Vector3();
+        for (let k = 0; k < pos.count; k++) {
+          v.fromBufferAttribute(pos, k);
+          const n = Math.sin(v.x * 2.1 + seed) * Math.cos(v.y * 2.7 + seed * 1.3) * 0.5 + Math.sin(v.z * 4.3 + seed) * 0.25 + Math.sin((v.x + v.y) * 6.1 + seed) * 0.12;
+          v.multiplyScalar(1 + n * 0.38);
+          pos.setXYZ(k, v.x, v.y, v.z);
+        }
+        g.computeVertexNormals();
+        return kit.geo(g);
+      };
+      const stone = kit.mat(new THREE.MeshStandardMaterial({ color: 0x4a443a, roughness: 0.85, metalness: 0.15, flatShading: true }));
+      const rocks = [
+        { g: rock(1.1, 1.3), p: [3.0, -1.7, -1.0] },
+        { g: rock(0.8, 4.1), p: [-3.0, 1.6, -3.4] },
+        { g: rock(0.55, 7.7), p: [-0.4, -2.0, 1.4] },
+      ].map((d) => { const m = new THREE.Mesh(d.g, stone); m.position.set(d.p[0], d.p[1], d.p[2]); m.userData.p = d.p; root.add(m); return m; });
+      tick.push((t) => {
+        panels.forEach((m) => {
+          const i = m.userData.i as number;
+          m.position.y = m.userData.p[1] + Math.sin(t * 0.5 + i * 1.7) * 0.12;
+          m.rotation.y = m.userData.r[1] + Math.sin(t * 0.3 + i) * 0.04;
         });
+        rocks.forEach((m, i) => { m.rotation.y = t * 0.08 + i; m.rotation.x = t * 0.05; m.position.y = m.userData.p[1] + Math.sin(t * 0.4 + i * 2) * 0.1; });
       });
     }
 
     // composer + bloom
-    const composer = new EffectComposer(renderer);
+    const msaa = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
+    const composer = new EffectComposer(renderer, msaa);
     composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.4, 0.5, 0.95);
+    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), variant === "glass" ? 0.12 : 0.4, 0.5, 0.95);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
 
+    let baseScale = 1;
     const size = () => {
       const w = el.clientWidth || 1, h = el.clientHeight || 1;
       renderer.setSize(w, h);
@@ -210,8 +216,8 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
       const wide = w / h > 1.3;
       camera.position.z = wide ? 10.5 : 15;
       camera.fov = wide ? 38 : 42;
-      root.position.x = wide ? (variant === "hub" ? 3.0 : variant === "arena" ? 2.7 : 3.0) : 0;
-      root.scale.setScalar(variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : 1);
+      root.position.x = wide ? (variant === "arena" ? 2.7 : variant === "glass" ? 3.4 : 3.0) : 0;
+      baseScale = variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : variant === "glass" ? 0.85 : 1;
       camera.updateProjectionMatrix();
     };
     const baseY = root.position.y;
@@ -228,26 +234,37 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
     };
     window.addEventListener("pointermove", move);
 
-    let visible = true, raf = 0, last = performance.now(), time = variant === "forge" ? 2 : 0;
+    let visible = true, raf = 0, last = performance.now(), time = variant === "forge" ? 2 : 0, age = 0, ema = 1 / 60, frames = 0, cool = 0;
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
     io.observe(el);
+    const damp = (a: number, b: number, k: number, dt: number) => a + (b - a) * (1 - Math.exp(-k * dt));
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
       if (!visible || document.hidden) { last = now; return; }
-      const dt = Math.min((now - last) / 1000, 0.05);
+      const raw = (now - last) / 1000;
+      const dt = Math.min(raw, 0.05);
       last = now;
+      ema = ema * 0.94 + Math.min(raw, 0.2) * 0.06;
+      if (++frames > 90 && --cool < 0) {
+        const apply = () => { renderer.setPixelRatio(dpr); composer.setPixelRatio(dpr); composer.setSize(el.clientWidth, el.clientHeight); };
+        if (ema > 1 / 42 && dpr > 1) { dpr = Math.max(1, dpr - 0.25); apply(); cool = 90; }
+        else if (ema < 1 / 57 && dpr < maxDpr) { dpr = Math.min(maxDpr, dpr + 0.25); apply(); cool = 240; }
+      }
       const d = reduce ? 0 : dt;
-      time += d;
+      time += d; age += dt;
       tick.forEach((f) => f(time, d));
       models.forEach((m) => m.update(time, d));
-      const sway = variant === "hub" ? 0 : Math.sin(time * 0.35) * 0.22;
-      root.rotation.y += ((variant === "hub" ? 0 : -0.35 + sway + mouse.x * 0.35) - root.rotation.y) * 0.05;
-      root.rotation.x += ((mouse.y * 0.06) - root.rotation.x) * 0.05;
-      camera.position.x += (mouse.x * 0.8 - camera.position.x) * 0.04;
-      camera.position.y += (1.6 - mouse.y * 0.6 - camera.position.y) * 0.04;
+      const intro = 1 - Math.pow(1 - Math.min(1, age / 1.8), 3);
+      root.scale.setScalar(baseScale * (0.9 + 0.1 * intro));
+      const sway = Math.sin(time * 0.35) * 0.22;
+      root.rotation.y = damp(root.rotation.y, -0.35 + sway + mouse.x * 0.35, 3, dt);
+      root.rotation.x = damp(root.rotation.x, mouse.y * 0.06, 3, dt);
+      camera.position.x = damp(camera.position.x, mouse.x * 0.8, 2.5, dt);
+      camera.position.y = damp(camera.position.y, 1.6 - mouse.y * 0.6, 2.5, dt);
       camera.lookAt(0, 0.8, 0);
       dust.rotation.y = time * 0.015;
       composer.render();
+      if (frames === 2) el.classList.add("ready");
     };
     raf = requestAnimationFrame(frame);
 
@@ -260,6 +277,7 @@ export default function Scene3D({ variant, accent = "#ffffff", focus = -1, class
       envRT.dispose();
       pmrem.dispose();
       composer.dispose();
+      msaa.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };

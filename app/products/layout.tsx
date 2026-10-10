@@ -1,5 +1,6 @@
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import "@fontsource-variable/unbounded";
 import "./products.css";
 
 export default function ProductsLayout({ children }: { children: React.ReactNode }) {

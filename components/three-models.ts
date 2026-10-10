@@ -24,6 +24,7 @@ export class Kit {
   }
 }
 
+const _c = new THREE.Color(), _v1 = new THREE.Vector3(), _v2 = new THREE.Vector3();
 const smooth = (a: number, b: number, x: number) => {
   const t = THREE.MathUtils.clamp((x - a) / (b - a), 0, 1);
   return t * t * (3 - 2 * t);
@@ -260,7 +261,7 @@ export function makeRack(kit: Kit, color: THREE.ColorRepresentation): Model & { 
       const c = (t % 10) / 10;
       const alert = c < 0.3 ? 0 : c < 0.45 ? smooth(0.3, 0.45, c) : c < 0.75 ? 1 : 1 - smooth(0.75, 0.88, c);
       state.alert = alert;
-      sickMat.color.copy(col).multiplyScalar(2.4).lerp(red.clone().multiplyScalar(2.6), alert);
+      sickMat.color.copy(col).multiplyScalar(2.4).lerp(_c.copy(red).multiplyScalar(2.6), alert);
       alertMat.opacity = alert * (0.18 + Math.sin(t * 9) * 0.1);
       const pp = (t * 1.2) % 1;
       (ping.material as THREE.MeshBasicMaterial).opacity = alert > 0.05 ? (1 - pp) * 0.7 * alert : 0;
@@ -269,13 +270,13 @@ export function makeRack(kit: Kit, color: THREE.ColorRepresentation): Model & { 
       beamMat.opacity = scanning ? 0.5 + Math.sin(t * 30) * 0.15 : 0;
       beam.visible = scanning;
       if (scanning) {
-        const from = new THREE.Vector3(0, 4.0, 0), to = new THREE.Vector3(0, sickY, 0.6);
-        beam.position.copy(from).lerp(to, 0.5);
+        const from = _v1.set(0, 4.0, 0), to = _v2.set(0, sickY, 0.6);
         beam.scale.set(1, from.distanceTo(to), 1);
+        beam.position.copy(from).lerp(to, 0.5);
         beam.rotation.x = Math.atan2(0.6, 4.0 - sickY) * -1;
         beam.scale.x = 1 + Math.sin(t * 20) * 0.2;
       }
-      if (alert > 0.5 && Math.random() < dt * 8) sparks.burst(new THREE.Vector3((Math.random() - 0.5) * 1.2, sickY, 0.6), 4, 1.4);
+      if (alert > 0.5 && Math.random() < dt * 8) sparks.burst(_v2.set((Math.random() - 0.5) * 1.2, sickY, 0.6), 4, 1.4);
       sparks.update(dt);
       coreG.rotation.y = t * 0.6;
       coreG.position.y = 4.0 + Math.sin(t * 1.2) * 0.1;
@@ -284,7 +285,7 @@ export function makeRack(kit: Kit, color: THREE.ColorRepresentation): Model & { 
       r2.rotation.set(Math.PI / 2 - 0.4, t * 0.5, 0);
       pkts.forEach((m, i) => {
         const k = ((t * 0.35 + m.userData.o) % 1);
-        const tgt = new THREE.Vector3(0, 0.28 + (sats[i].y > 1.5 ? 1.4 : 0.7), 0);
+        const tgt = _v1.set(0, 0.28 + (sats[i].y > 1.5 ? 1.4 : 0.7), 0);
         m.position.copy(sats[i]).lerp(tgt, k);
         m.scale.setScalar(Math.sin(k * Math.PI));
       });
@@ -297,8 +298,9 @@ export function makeRack(kit: Kit, color: THREE.ColorRepresentation): Model & { 
 /* ───────────────────────── QuestionForge: anvil, hammer, question cards ───────────────────────── */
 function cardTexture(kit: Kit, verified: boolean, accent: THREE.Color) {
   const cv = document.createElement("canvas");
-  cv.width = 256; cv.height = 352;
+  cv.width = 512; cv.height = 704;
   const x = cv.getContext("2d")!;
+  x.scale(2, 2);
   const rr = (X: number, Y: number, w: number, h: number, r: number) => { x.beginPath(); x.roundRect(X, Y, w, h, r); };
   x.fillStyle = "#0c0d10"; rr(0, 0, 256, 352, 22); x.fill();
   x.strokeStyle = verified ? `#${accent.getHexString()}` : "#33363d"; x.lineWidth = 4; rr(3, 3, 250, 346, 20); x.stroke();
@@ -317,7 +319,7 @@ function cardTexture(kit: Kit, verified: boolean, accent: THREE.Color) {
     x.fillStyle = "#6b6f78"; x.font = "600 22px ui-monospace, Menlo, monospace"; x.fillText("PENDING", 62, 301);
   }
   const t = kit.tex(new THREE.CanvasTexture(cv));
-  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
   return t;
 }
 
@@ -363,9 +365,11 @@ export function makeForge(kit: Kit, color: THREE.ColorRepresentation): Model {
     const c = new THREE.Group();
     c.add(new THREE.Mesh(bodyGeo, kit.dark));
     const f = new THREE.Mesh(faceGeo, matU); f.position.z = 0.027; c.add(f);
+    const vm = kit.mat(new THREE.MeshBasicMaterial({ map: texV, transparent: true, opacity: 0, toneMapped: false, depthWrite: false }));
+    const f2 = new THREE.Mesh(faceGeo, vm); f2.position.z = 0.0275; c.add(f2);
     const b = new THREE.Mesh(faceGeo, kit.dark); b.position.z = -0.027; b.rotation.y = Math.PI; c.add(b);
     g.add(c);
-    return { c, f, was: false };
+    return { c, f, vm };
   });
   const sparks = makeSparks(kit, hotColor, 220, 0.06, 5);
   g.add(sparks.points);
@@ -383,7 +387,7 @@ export function makeForge(kit: Kit, color: THREE.ColorRepresentation): Model {
         k.c.position.set(x, y + 0.25, -0.95);
         k.c.rotation.set(0, (1 - near) * (x < 0 ? 0.6 : -0.6) + Math.sin(t + i) * 0.05, 0);
         const verified = p > 0.5;
-        k.f.material = verified ? matV : matU;
+        k.vm.opacity = smooth(0.5, 0.56, p);
         const pulse = verified && p < 0.58 ? 1 + (1 - (p - 0.5) / 0.08) * 0.12 : 1;
         k.c.scale.setScalar(pulse * (0.9 + near * 0.1));
       });
@@ -394,7 +398,7 @@ export function makeForge(kit: Kit, color: THREE.ColorRepresentation): Model {
       else if (u < hit) { const d = (u - 0.2) / 0.3; ang = -1.15 * (1 - d * d * d); }
       else ang = -1.15 * smooth(hit, hit + 0.35, u);
       hammer.rotation.z = ang;
-      if (prevU < hit && u >= hit) { sparks.burst(new THREE.Vector3(-0.7, 1.25, 0), 46, 3.2); heatKick = 1; }
+      if (prevU < hit && u >= hit) { sparks.burst(_v1.set(-0.7, 1.25, 0), 46, 3.2); heatKick = 1; }
       prevU = u;
       heatKick = Math.max(0, heatKick - dt * 2.5);
       (heat.material as THREE.MeshBasicMaterial).opacity = heatKick * 0.7;
