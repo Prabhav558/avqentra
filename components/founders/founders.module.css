@@ -86,3 +86,23 @@
 @media (prefers-reduced-motion:reduce){
   .plate img{transition:none}
 }
+
+/* ---------- story ---------- */
+.story{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:96px;align-items:start}
+.quoteCol{position:sticky;top:140px}
+.quote{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(30px,3.4vw,48px);line-height:1.08;letter-spacing:-.035em;text-transform:uppercase;color:#f2efe8}
+.quote::before{content:"\201C";display:block;height:.6em;margin-bottom:12px;font-weight:200;font-size:1.6em;line-height:1;color:rgba(216,205,180,.45)}
+.quoteBy{display:block;margin-top:28px;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#7d7a73}
+.chapters{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,245,225,.14)}
+.chapters li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:0 24px;padding:40px 0;border-bottom:1px solid var(--hair)}
+.chNum{font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:200;font-size:34px;line-height:1;color:rgba(216,205,180,.5)}
+.chapters h3{margin:6px 0 14px}
+.chapters p{margin:0;max-width:520px;font:400 14px/1.8 var(--font-mono),monospace;color:#9a978e}
+.chapters p b{font-weight:500;color:#e6dcc8}
+
+@media (max-width:1080px){
+  .story{grid-template-columns:minmax(0,1fr);gap:48px}
+  .quoteCol{position:static}
+  .chapters li{grid-template-columns:48px minmax(0,1fr);gap:0 16px;padding:32px 0}
+  .chNum{font-size:26px}
+}
