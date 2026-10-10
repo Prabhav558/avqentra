@@ -152,6 +152,7 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
 
     if (variant === "glass") {
       const warm = new THREE.Color(accent);
+      root.position.y = 0.9;
       key.color.copy(warm); fill.color.copy(warm); key.intensity = 120;
       const panelGeo = kit.geo(new RoundedBoxGeometry(4.8, 3.0, 0.1, 5, 0.08));
       const panelMat = (o: number) => kit.mat(new THREE.MeshPhysicalMaterial({ color: 0x1c1a15, metalness: 0.75, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12, transparent: true, opacity: o }));
@@ -216,8 +217,8 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const wide = w / h > 1.3;
       camera.position.z = wide ? 10.5 : 15;
       camera.fov = wide ? 38 : 42;
-      root.position.x = wide ? (variant === "arena" ? 2.7 : variant === "glass" ? 3.4 : 3.0) : 0;
-      baseScale = variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : variant === "glass" ? 0.85 : 1;
+      root.position.x = wide ? (variant === "arena" ? 2.7 : variant === "glass" ? 3.3 : 3.0) : 0;
+      baseScale = variant === "arena" ? 0.76 : variant === "forge" ? 0.9 : variant === "glass" ? 0.56 : 1;
       camera.updateProjectionMatrix();
     };
     const baseY = root.position.y;
