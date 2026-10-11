@@ -2,7 +2,7 @@
 
 /* ---------- hero ---------- */
 .hero{position:relative;overflow:hidden;isolation:isolate;background:#0a0a08;padding:90px 0 0;border-bottom:1px solid var(--hair)}
-.heroInner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:center;padding:96px 96px 96px 112px;max-width:1440px}
+.heroInner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:center;padding:96px 96px 96px 112px;max-width:var(--hero-max,1440px)}
 .title{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(40px,5.3vw,78px);line-height:.98;letter-spacing:-.05em;text-transform:uppercase;color:#f2efe8}
 .line{display:block;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*90ms + 150ms)}
 .lede{margin:32px 0 0;max-width:520px;font:400 15px/1.75 var(--font-mono),monospace;color:#a09d94;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:420ms}
@@ -36,7 +36,7 @@
 @keyframes ping{0%{opacity:.9;transform:scale(.6)}30%,100%{opacity:0;transform:scale(2.4)}}
 
 /* ---------- blueprint figure plate ---------- */
-.headSplit{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:80px;align-items:end;margin-bottom:72px;max-width:1216px}
+.headSplit{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:80px;align-items:end;margin-bottom:72px;max-width:var(--content-max,1216px)}
 .fig{position:relative;margin:0;padding:32px 32px 22px;background:linear-gradient(160deg,#1b1a15,#0e0e0b);border:1px solid rgba(230,220,195,.12);overflow:hidden}
 .fig::before{content:"";position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(rgba(255,245,225,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,245,225,.04) 1px,transparent 1px);background-size:32px 32px;

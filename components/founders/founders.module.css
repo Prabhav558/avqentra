@@ -2,7 +2,7 @@
 
 /* ---------- hero ---------- */
 .hero{position:relative;overflow:hidden;isolation:isolate;background:#0a0a08;padding:90px 0 0;border-bottom:1px solid var(--hair)}
-.heroInner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:64px;align-items:end;padding:104px 96px 96px 112px;max-width:1440px}
+.heroInner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:64px;align-items:end;padding:104px 96px 96px 112px;max-width:var(--hero-max,1440px)}
 .title{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(44px,6vw,86px);line-height:.98;letter-spacing:-.05em;text-transform:uppercase;color:#f2efe8}
 .title span{display:block;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*90ms + 150ms)}
 .lede{margin:32px 0 0;max-width:500px;font:400 15px/1.75 var(--font-mono),monospace;color:#a09d94;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:420ms}
@@ -108,7 +108,7 @@
 }
 
 /* ---------- ownership matrix ---------- */
-.matrixWrap{max-width:1216px}
+.matrixWrap{max-width:var(--content-max,1216px)}
 .matrix{width:100%;border-collapse:collapse;table-layout:fixed;font-family:var(--font-mono),monospace}
 .matrix th,.matrix td{padding:0;border-bottom:1px solid var(--hair);text-align:left;font-weight:400}
 .matrix thead th{padding:0 0 20px;border-bottom:1px solid rgba(255,245,225,.14);vertical-align:bottom}

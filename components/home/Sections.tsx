@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { founders } from "@/lib/founders";
+import { contactEmail } from "@/lib/site";
 import ShowWork from "./ShowWork";
+import { PrinciplesVisual, ProcessVisual } from "./PanelVisuals";
+import TiltStage from "./TiltStage";
 import s from "./home.module.css";
 
 function Arrow() {
@@ -31,31 +34,32 @@ const principles = [
 export function Philosophy() {
   return (
     <section id="philosophy" className={s.sec} aria-labelledby="philosophy-h">
-      <div className={s.philoTop}>
-        <Head kicker="— Our philosophy" title={<span id="philosophy-h">We build beyond the obvious.</span>}>
-          Whether it&rsquo;s our own product or a client&rsquo;s, software should do more than digitize existing
-          processes. It should rethink how problems are approached, and what becomes possible when intelligent systems
-          are designed with purpose.
-        </Head>
-        <svg className={s.geo} viewBox="0 0 200 200" fill="none" aria-hidden="true">
-          <g stroke="currentColor" strokeWidth=".6">
-            <rect x="20" y="20" width="160" height="160" className={s.geoA} />
-            <rect x="48" y="48" width="104" height="104" className={s.geoB} />
-            <rect x="76" y="76" width="48" height="48" className={s.geoC} />
-            <path d="M100 0v200M0 100h200" strokeDasharray="2 5" opacity=".5" />
-            <circle cx="100" cy="100" r="3" fill="currentColor" />
-          </g>
-        </svg>
+      <div className={`${s.panelSplit} ${s.reveal}`}>
+        <div className={s.panelCopy}>
+          <p className={s.kicker}>— Our philosophy</p>
+          <h2 className={s.h2}><span id="philosophy-h">We build beyond the obvious.</span></h2>
+          <p className={s.sub}>
+            Whether it&rsquo;s our own product or a client&rsquo;s, software should do more than digitize existing
+            processes. It should rethink how problems are approached, and what becomes possible when intelligent
+            systems are designed with purpose.
+          </p>
+          <ol className={s.panelList}>
+            {principles.map((p) => (
+              <li key={p.n}>
+                <i>{p.n}</i>
+                <div>
+                  <h3 className={s.h3s}>{p.t}</h3>
+                  <p>{p.d}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div className={s.panelVisual}>
+          <TiltStage><PrinciplesVisual /></TiltStage>
+          <span className={s.visualCaption}>Illustrative interface</span>
+        </div>
       </div>
-      <ol className={`${s.principles} ${s.reveal}`}>
-        {principles.map((p) => (
-          <li key={p.n}>
-            <span className={s.pNum}>{p.n}</span>
-            <h3 className={s.h3s}>{p.t}</h3>
-            <p className={s.body}>{p.d}</p>
-          </li>
-        ))}
-      </ol>
     </section>
   );
 }
@@ -71,18 +75,28 @@ const stages = [
 export function Process() {
   return (
     <section id="how-we-build" className={s.sec} aria-labelledby="process-h">
-      <Head kicker="— How we build" title={<span id="process-h">From idea to implementation.</span>}>
-        The same process runs our own products and every client project.
-      </Head>
-      <ol className={`${s.timeline} ${s.reveal}`}>
-        {stages.map((st) => (
-          <li key={st.n}>
-            <span className={s.marker}>{st.n}</span>
-            <h3 className={s.h3s}>{st.t}</h3>
-            <p className={s.body}>{st.d}</p>
-          </li>
-        ))}
-      </ol>
+      <div className={`${s.panelSplit} ${s.panelFlip} ${s.reveal}`}>
+        <div className={s.panelVisual}>
+          <TiltStage><ProcessVisual /></TiltStage>
+          <span className={s.visualCaption}>Illustrative interface</span>
+        </div>
+        <div className={s.panelCopy}>
+          <p className={s.kicker}>— How we build</p>
+          <h2 className={s.h2}><span id="process-h">From idea to implementation.</span></h2>
+          <p className={s.sub}>The same process runs our own products and every client project.</p>
+          <ol className={s.panelList}>
+            {stages.map((st) => (
+              <li key={st.n}>
+                <i>{st.n}</i>
+                <div>
+                  <h3 className={s.h3s}>{st.t}</h3>
+                  <p>{st.d}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
     </section>
   );
 }
@@ -186,29 +200,46 @@ export function AboutSection() {
 }
 
 /* 09 — Final CTA */
+const routes = [
+  { for: "Client project", who: "Start a project", href: "/contact?type=project" },
+  { for: "Product interest", who: "Get early access", href: "/contact?type=early-access" },
+  { for: "Write to us", who: contactEmail, href: `mailto:${contactEmail}` },
+];
+
 export function FinalCta() {
   return (
     <section id="start" className={`${s.cta}`} aria-labelledby="cta-h">
       <div className={s.ctaGrid} aria-hidden="true" />
-      <div className={`${s.ctaInner} ${s.reveal}`}>
-        <p className={s.kicker}>— Build something with us</p>
-        <h2 className={s.ctaTitle} id="cta-h">
-          Have an idea
-          <br />
-          <span className={s.gold}>worth building?</span>
-        </h2>
-        <p className={s.sub}>
-          Bring us a project and we&rsquo;ll design and build it with you, or get early access to our products as
-          they launch.
-        </p>
-        <div className={s.ctaActions}>
-          <Link href="/contact?type=project" className={`${s.btn} ${s.btnSolid}`}>
-            Start a project <Arrow />
-          </Link>
-          <Link href="/contact?type=early-access" className={`${s.btn} ${s.btnGhost}`}>
-            Get early access <Arrow />
-          </Link>
+      <div className={`${s.ctaInner} ${s.ctaSplit} ${s.reveal}`}>
+        <div>
+          <p className={s.kicker}>— Build something with us</p>
+          <h2 className={s.ctaTitle} id="cta-h">
+            Have an idea
+            <br />
+            <span className={s.gold}>worth building?</span>
+          </h2>
+          <p className={s.sub}>
+            Bring us a project and we&rsquo;ll design and build it with you, or get early access to our products as
+            they launch.
+          </p>
+          <div className={s.ctaActions}>
+            <Link href="/contact?type=project" className={`${s.btn} ${s.btnSolid}`}>
+              Start a project <Arrow />
+            </Link>
+          </div>
         </div>
+
+        <ul className={s.ctaRoutes} aria-label="Ways to reach us">
+          {routes.map((r) => (
+            <li key={r.href}>
+              <a href={r.href}>
+                <small>{r.for}</small>
+                <b>{r.who}</b>
+                <Arrow />
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

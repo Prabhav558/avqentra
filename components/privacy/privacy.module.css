@@ -1,6 +1,6 @@
 /* Privacy page. Builds on home.module.css tokens (--cream, --hair, --tick). See DESIGN.md. */
 .hero{position:relative;overflow:hidden;isolation:isolate;background:#0a0a08;padding:90px 0 0;border-bottom:1px solid var(--hair)}
-.inner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:96px;align-items:start;padding:96px 96px 120px 112px;max-width:1440px}
+.inner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:96px;align-items:start;padding:96px 96px 120px 112px;max-width:var(--hero-max,1440px)}
 .intro{position:sticky;top:130px}
 .title{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(36px,4.6vw,66px);line-height:1;letter-spacing:-.05em;text-transform:uppercase;color:#f2efe8}
 .line{display:block;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards}
