@@ -24,7 +24,7 @@ export default function Nav() {
             <Logo className="plogo" />
           </Link>
           <ul>
-            {links.slice(1).map((l) => (
+            {links.filter((l) => l.href !== "/" && l.href !== "/about").map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className={path.startsWith(l.href) ? "active" : undefined}>{l.label}</Link>
               </li>
