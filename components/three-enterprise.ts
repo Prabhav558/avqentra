@@ -395,3 +395,67 @@ export function buildPipeline({ kit, root, accent, tick, fill }: Ctx) {
     sparks.update(dt);
   });
 }
+
+/* ─────────────── Ops Academy: the learning path. Four modules, climbed one at a time. ─────────────── */
+export function buildPath({ kit, root, accent, tick, fill }: Ctx) {
+  const g = new THREE.Group(); root.add(g);
+  const N = 4, W = 1.5, D = 1.7, GAP = 0.12, RISE = 0.78, BASE = 0.5;
+  const x0 = -((N - 1) * (W + GAP)) / 2;
+  const stepX = (i: number) => x0 + i * (W + GAP);
+  const topY = (i: number) => BASE + i * RISE;
+  // module states mirror the homepage visual: done, done, in progress, locked
+  const level = [1, 1, 0.55, 0.12];
+
+  const plinth = slab(kit, N * (W + GAP) + 1.2, 0.24, D + 1.2); plinth.position.y = 0.12; g.add(plinth);
+  const bez = new THREE.Mesh(kit.geo(new RoundedBoxGeometry(N * (W + GAP) + 1.3, 0.03, D + 1.3, 3, 0.012)), kit.chrome); bez.position.y = 0.25; g.add(bez);
+  const floor = makeFloor(kit, 12); floor.position.y = -0.01; g.add(floor);
+
+  const plates: THREE.MeshBasicMaterial[] = [];
+  for (let i = 0; i < N; i++) {
+    const h = topY(i) - 0.24;
+    const block = slab(kit, W, h, D, 0x15140f); block.position.set(stepX(i), 0.24 + h / 2, 0); g.add(block);
+    const edge = new THREE.Mesh(kit.geo(new THREE.BoxGeometry(W - 0.04, 0.02, 0.02)), kit.glow(CREAM, 0.5 + level[i] * 2.4)); edge.position.set(stepX(i), topY(i) + 0.005, D / 2 - 0.02); g.add(edge);
+    const pm = kit.mat(new THREE.MeshBasicMaterial({ color: CREAM.clone().multiplyScalar(level[i] * 0.9), transparent: true, opacity: 0.2 + level[i] * 0.4, toneMapped: false, depthWrite: false }));
+    plates.push(pm);
+    const plate = new THREE.Mesh(kit.geo(new THREE.PlaneGeometry(W - 0.34, D - 0.34)), pm); plate.rotation.x = -Math.PI / 2; plate.position.set(stepX(i), topY(i) + 0.012, 0); g.add(plate);
+    const label = textPlane(kit, `0${i + 1}`, 0.9, 0.2, i === 3 ? "#8a877f" : "#14120f"); label.position.set(stepX(i), topY(i) + 0.02, 0); g.add(label);
+  }
+
+  // the route: a fine line over the step tops, ending at the goal
+  const route = [0, 1, 2, 3].map((i) => new THREE.Vector3(stepX(i), topY(i) + 0.18, 0));
+  const seg: THREE.Vector3[] = [];
+  for (let i = 0; i < N - 1; i++) seg.push(route[i], new THREE.Vector3(route[i].x + (W + GAP) / 2, route[i].y, 0), new THREE.Vector3(route[i].x + (W + GAP) / 2, route[i].y, 0), route[i + 1]);
+  g.add(lines(kit, seg, CREAM, 0.22));
+
+  // goal: a floating completion marker above the last step
+  const goalY = topY(N - 1) + 1.15, gx = stepX(N - 1);
+  const ring = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(0.5, 0.025, 16, 96)), kit.chrome); ring.position.set(gx, goalY, 0); g.add(ring);
+  const ringGlow = new THREE.Mesh(kit.geo(new THREE.TorusGeometry(0.43, 0.007, 8, 96)), kit.glow(CREAM, 1.6)); ringGlow.position.copy(ring.position); g.add(ringGlow);
+  const gem = new THREE.Mesh(kit.geo(new THREE.OctahedronGeometry(0.2, 0)), kit.glow(CREAM, 2.2)); gem.position.copy(ring.position); g.add(gem);
+  g.add(lines(kit, [new THREE.Vector3(gx, topY(N - 1) + 0.03, 0), new THREE.Vector3(gx, goalY - 0.55, 0)], CREAM, 0.14));
+
+  // learner: an orb that hops up the path, one module at a time
+  const orb = new THREE.Mesh(kit.geo(new THREE.IcosahedronGeometry(0.15, 3)), kit.glow(CREAM, 2.8)); g.add(orb);
+  const halo = new THREE.Mesh(kit.geo(new THREE.RingGeometry(0.22, 0.27, 48)), kit.mat(new THREE.MeshBasicMaterial({ color: CREAM.clone().multiplyScalar(1.6), transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }))); halo.rotation.x = -Math.PI / 2; g.add(halo);
+  const sparks = makeSparks(kit, accent.clone().lerp(CREAM, 0.5), 120, 0.04, 0.6); g.add(sparks.points);
+  const HOP = 2.4, PAUSE = 0.9, CYCLE = (HOP + PAUSE) * (N - 1) + 1.6;
+  let at = 0, flash = 0;
+  tick.push((t, dt) => {
+    const c = t % CYCLE, k = Math.min(N - 1, c / (HOP + PAUSE)), i = Math.min(N - 2, Math.floor(k));
+    const local = (c - i * (HOP + PAUSE)) / HOP, u = c >= (N - 1) * (HOP + PAUSE) ? 1 : smooth(0, 1, Math.min(1, local));
+    const a = route[i], b = route[Math.min(N - 1, i + 1)];
+    orb.position.set(THREE.MathUtils.lerp(a.x, b.x, u), THREE.MathUtils.lerp(a.y, b.y, u) + Math.sin(u * Math.PI) * 0.55 * (u < 1 ? 1 : 0), 0);
+    halo.position.set(orb.position.x, THREE.MathUtils.lerp(a.y, b.y, u) - 0.12, 0);
+    const lands = u >= 1 && local >= 1 ? i + 1 : -1;
+    if (lands !== at && lands > 0) { flash = 1; sparks.burst(_v.copy(orb.position), 18, 1); }
+    at = lands;
+    flash = Math.max(0, flash - dt * 2);
+    orb.scale.setScalar(1 + flash * 0.4 + Math.sin(t * 4) * 0.05);
+    halo.scale.setScalar(1 + Math.sin(t * 2.4) * 0.15 + flash * 0.5);
+    plates[2].opacity = 0.2 + 0.55 * (0.6 + 0.4 * Math.sin(t * 2.2));
+    ring.rotation.set(Math.PI / 2 + Math.sin(t * 0.7) * 0.25, 0, t * 0.5); ringGlow.rotation.copy(ring.rotation);
+    gem.rotation.y = t * 0.8; gem.position.y = goalY + Math.sin(t * 1.4) * 0.08; gem.scale.setScalar(1 + (c > CYCLE - 1.8 ? 0.35 : 0));
+    fill.intensity = 35 + flash * 20;
+    sparks.update(dt);
+  });
+}

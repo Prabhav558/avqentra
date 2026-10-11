@@ -39,8 +39,8 @@ export type Product = {
   page?: ProductPage;
 };
 
-/** A product with its page content merged in and a repo link, as the product pages expect. */
-export type PageProduct = Product & ProductPage & { repo: string };
+/** A product with its page content merged in, as the product pages expect. `repo` is optional: not every product is open source. */
+export type PageProduct = Product & ProductPage;
 
 export const products: Product[] = [
   {
@@ -204,13 +204,40 @@ export const products: Product[] = [
       intro: "Pick a learning path, work through hands-on exercises, and track your progress.",
       steps: ["Choose a learning path", "Complete an exercise", "Track your progress"],
     },
+    page: {
+      title: "Ops Academy",
+      lead: "Learn operations by doing the work, one structured path at a time.",
+      pageTag: "Operations training",
+      description:
+        "Ops Academy builds practical operations skills through structured learning paths, hands-on exercises and visible progress, for individual learners and the teams that train them.",
+      accent: "#ffb454",
+      heroLines: ["Learn operations", "by doing the work."],
+      badge: "Operations Training",
+      stats: [
+        { value: "Paths", label: "Structured by role" },
+        { value: "Hands-on", label: "Exercises, not slides" },
+        { value: "Tracked", label: "Progress you can see" },
+      ],
+      steps: [
+        { title: "Choose a path", body: "Pick a learning path built around an operations role, from the first alert to the written review." },
+        { title: "Do the work", body: "Each module ends in an exercise you complete, not a page you scroll past." },
+        { title: "Run it live", body: "Apply the skill in a hands-on scenario, like triaging and handling a live incident." },
+        { title: "Track progress", body: "Completed, in-progress and locked modules stay visible to learners and their teams." },
+      ],
+      features: [
+        { title: "Structured learning paths", body: "Modules unlock in order, so each skill builds on the one before it instead of arriving as a pile of material." },
+        { title: "Hands-on exercises", body: "Practise the work itself: reading signals, triage and escalation, running an incident, writing the review." },
+        { title: "Clear progress", body: "Every module shows where a learner is: done, in progress or locked. Teams see the same picture." },
+      ],
+      stack: ["Paths", "Exercises", "Progress", "Teams"],
+    },
   },
 ];
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 
 /** Products that have a full redesigned page, with their page content merged in. */
-export const pageProducts: PageProduct[] = products.flatMap((p) => (p.page && p.repo ? [{ ...p, ...p.page, repo: p.repo }] : []));
+export const pageProducts: PageProduct[] = products.flatMap((p) => (p.page ? [{ ...p, ...p.page }] : []));
 export const getPageProduct = (slug: string) => pageProducts.find((p) => p.slug === slug);
 
 /** "AgentBattle, DevSick, QuestionForge and Ops Academy" */

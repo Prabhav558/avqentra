@@ -3,10 +3,10 @@ import Scene from "./Scene";
 import type { SceneVariant } from "./Scene3D";
 import Tilt from "./landing/Tilt";
 import SectionRail from "./landing/SectionRail";
-import { AgentBattleUI, DevSickUI, QuestionForgeUI } from "./landing/Mockups";
+import { AgentBattleUI, DevSickUI, OpsAcademyUI, QuestionForgeUI } from "./landing/Mockups";
 import { pageProducts as products, type PageProduct } from "@/lib/products";
 
-const UI: Record<string, () => React.JSX.Element> = { agentbattle: AgentBattleUI, devsick: DevSickUI, questionforge: QuestionForgeUI };
+const UI: Record<string, () => React.JSX.Element> = { agentbattle: AgentBattleUI, devsick: DevSickUI, questionforge: QuestionForgeUI, "ops-academy": OpsAcademyUI };
 const rail = [
   { id: "top", n: "01", label: "Overview" },
   { id: "how", n: "02", label: "How it works" },
@@ -61,7 +61,7 @@ export default function ProductDetail({ p, variant }: { p: PageProduct; variant:
       </section>
 
       <section className="pd-cap" id="capabilities">
-        <div className="ps-meta mono"><span>03 — CAPABILITIES</span><span>{p.pageTag.toUpperCase()}</span><a href={p.repo} target="_blank" rel="noreferrer">GITHUB <Arrow /></a></div>
+        <div className="ps-meta mono"><span>03 — CAPABILITIES</span><span>{p.pageTag.toUpperCase()}</span>{p.repo ? <a href={p.repo} target="_blank" rel="noreferrer">GITHUB <Arrow /></a> : <span>{p.status.toUpperCase()}</span>}</div>
         <div className="pd-cap-grid">
           <ol className="pd-feats">
             {p.features.map((f, k) => (
@@ -83,7 +83,7 @@ export default function ProductDetail({ p, variant }: { p: PageProduct; variant:
             <p className="pd-lead mono">{p.lead}</p>
             <div className="pd-actions">
               <Link className="pbtn cream" href="/contact">JOIN THE WAITLIST <Arrow /></Link>
-              <Link className="pbtn line" href={p.repo}>Source on GitHub <Arrow /></Link>
+              {p.repo && <Link className="pbtn line" href={p.repo} target="_blank" rel="noreferrer">Source on GitHub <Arrow /></Link>}
             </div>
             <ul className="pd-stack mono">{p.stack.map((s) => <li key={s}>{s}</li>)}</ul>
           </div>

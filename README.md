@@ -4,7 +4,7 @@
 
 ### Ideas into tools.
 
-**The official website of Avqentra: three products, one mission. We build software that helps people think, build, and explore without limits.**
+**The official website of Avqentra: four products, one mission. We build software that helps people think, build, and explore without limits.**
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)

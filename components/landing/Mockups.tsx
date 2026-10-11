@@ -62,3 +62,27 @@ export function QuestionForgeUI() {
     </div>
   );
 }
+
+export function OpsAcademyUI() {
+  const nav = ["Paths", "Exercises", "Progress", "Teams"];
+  const mods = [["Reading the signals", "Done", 100], ["Triage and escalation", "Done", 100], ["Run a live incident", "In progress", 55], ["Write the review", "Locked", 0]] as const;
+  return (
+    <div className="mk mk-ops">
+      <aside><b className="mk-logo"><Mark /> Ops Academy</b>{nav.map((n, i) => <span key={n} className={i === 0 ? "on" : ""}>{n}</span>)}</aside>
+      <div className="mk-main">
+        <div className="mk-top"><span className="mk-dim">Incident response</span><span className="mk-dim">2 / 4 modules</span></div>
+        <h4 className="ops-h">Learn by<br />doing</h4>
+        <p className="mk-dim">From the first alert to the written review, one hands-on module at a time.</p>
+        <div className="mk-list">
+          {mods.map(([t, state, pct], i) => (
+            <div className={`mk-row ops-row ${state === "Locked" ? "lock" : ""}`} key={t}>
+              <i>0{i + 1}</i>
+              <div><b>{t}</b><span className="ops-bar"><u style={{ width: `${pct}%` }} /></span></div>
+              <em className={state === "In progress" ? "live" : ""}>{state}</em>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

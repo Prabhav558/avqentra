@@ -473,3 +473,13 @@ body:has(.pv) footer .wrap{padding:8px var(--gutr) 8px var(--gut)}
 .pd-steps{flex:none}
 .pd-step{min-height:clamp(240px,34vh,340px)}
 @media(max-width:900px){.pd-step{min-height:0}}
+
+/* Ops Academy mockup: module rows with a progress bar */
+.mk-ops .mk-main{gap:.8em}
+.ops-h{margin-top:.2em!important}
+.ops-row{padding:.75em 1em}
+.ops-row i{width:2em;height:2em;display:grid;place-items:center;font:500 .7em var(--font-mono),monospace;font-style:normal;color:#b9ae94}
+.ops-row div{display:flex;flex-direction:column;gap:.45em}
+.ops-bar{display:block;height:.25em;border-radius:9em;background:#2a261f;overflow:hidden}
+.ops-bar u{display:block;height:100%;background:linear-gradient(90deg,#9c937a,#dcd2b6);border-radius:9em;text-decoration:none}
+.ops-row.lock{opacity:.55}

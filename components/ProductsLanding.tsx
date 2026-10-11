@@ -2,7 +2,7 @@ import Link from "next/link";
 import Scene from "./Scene";
 import Tilt from "./landing/Tilt";
 import SectionRail from "./landing/SectionRail";
-import { AgentBattleUI, DevSickUI, QuestionForgeUI } from "./landing/Mockups";
+import { AgentBattleUI, DevSickUI, OpsAcademyUI, QuestionForgeUI } from "./landing/Mockups";
 import { getPageProduct } from "@/lib/products";
 
 const sections = [
@@ -12,6 +12,8 @@ const sections = [
     body: "Sits on top of your monitoring stack to detect failures, explain the root cause with LLM reasoning, and guide the fix with a human in the loop." },
   { slug: "questionforge", n: "04", kicker: "GENERATE. VALIDATE. TRUST.", tags: ["KNOWLEDGE SYSTEMS", "AI CURATION", "HIRING"], UI: QuestionForgeUI,
     body: "Drafts technical interview questions with an LLM, then checks them by running code or independent review before a human ever sees them." },
+  { slug: "ops-academy", n: "05", kicker: "LEARN. PRACTISE. PROGRESS.", tags: ["TRAINING", "HANDS-ON", "OPERATIONS"], UI: OpsAcademyUI,
+    body: "A learning platform for operations skills: structured paths, hands-on exercises and progress that learners and their teams can see." },
 ];
 
 const Arrow = () => <span aria-hidden="true" className="arr">↗</span>;
@@ -28,7 +30,7 @@ export default function ProductsLanding() {
             <p className="eyebrow">PRODUCTS</p>
             <h1 className="display">IDEAS<br />INTO<br /><span className="tan">TOOLS.</span></h1>
             <div className="ph-copy">
-              <p className="mono">Three products. One mission.<br />We build software that helps people<br />think, build, and explore without limits.</p>
+              <p className="mono">Four products. One mission.<br />We build software that helps people<br />think, build, and explore without limits.</p>
               <Link className="pbtn cream" href="#agentbattle">EXPLORE PRODUCTS <Arrow /></Link>
             </div>
           </div>
@@ -56,7 +58,7 @@ export default function ProductsLanding() {
             <div className="ps-meta mono">
               <span>{n} — PRODUCT</span>
               <span>{p.pageTag.toUpperCase()}</span>
-              <a href={p.repo} target="_blank" rel="noreferrer">GITHUB <Arrow /></a>
+              {p.repo ? <a href={p.repo} target="_blank" rel="noreferrer">GITHUB <Arrow /></a> : <span>{p.status.toUpperCase()}</span>}
             </div>
             <div className="ps-grid">
               <div className="ps-copy">
@@ -82,7 +84,7 @@ export default function ProductsLanding() {
       })}
 
       <section className="pc" id="closing">
-        <p className="eyebrow mono">05 — BUILT BY AVQENTRA</p>
+        <p className="eyebrow mono">06 — BUILT BY AVQENTRA</p>
         <div className="pc-grid">
           <h2 className="display-m">DIFFERENT TOOLS.<br />A <span className="tan">BIGGER TOMORROW.</span></h2>
           <div className="pc-copy">

@@ -7,10 +7,10 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import { buildBenchmark, buildPipeline, buildTopology } from "./three-enterprise";
+import { buildBenchmark, buildPath, buildPipeline, buildTopology } from "./three-enterprise";
 import { Kit, makeSparks, type Model } from "./three-models";
 
-export type SceneVariant = "arena" | "incident" | "forge" | "mark";
+export type SceneVariant = "arena" | "incident" | "forge" | "path" | "mark";
 type Props = { variant: SceneVariant; accent?: string; className?: string };
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
@@ -92,6 +92,12 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       root.position.y = -2.5;
       key.intensity = 70; fill.intensity = 35;
       buildPipeline({ kit, root, accent: col, tick, fill, key });
+    }
+
+    if (variant === "path") {
+      root.position.y = -2.0;
+      key.intensity = 70; fill.intensity = 35;
+      buildPath({ kit, root, accent: col, tick, fill, key });
     }
 
     if (variant === "mark") {
@@ -244,14 +250,14 @@ export default function Scene3D({ variant, accent = "#ffffff", className }: Prop
       const wide = w / h > 1.3;
       camera.position.z = wide ? 10.5 : 15;
       camera.fov = wide ? 38 : 42;
-      root.position.x = wide ? (variant === "arena" ? 2.6 : variant === "mark" ? 3.3 : variant === "incident" ? 3.0 : variant === "forge" ? 2.4 : 3.0) : 0;
-      baseScale = variant === "arena" ? 0.68 : variant === "forge" ? 0.72 : variant === "incident" ? 0.55 : variant === "mark" ? 0.8 : 1;
+      root.position.x = wide ? (variant === "arena" ? 2.6 : variant === "mark" ? 3.3 : variant === "incident" ? 3.0 : variant === "forge" ? 2.4 : variant === "path" ? 2.6 : 3.0) : 0;
+      baseScale = variant === "arena" ? 0.68 : variant === "forge" ? 0.72 : variant === "path" ? 0.62 : variant === "incident" ? 0.55 : variant === "mark" ? 0.8 : 1;
       camera.updateProjectionMatrix();
     };
     const baseY = root.position.y;
     size();
     // wide layouts: nudge the model up so its base clears the stats strip over the bottom of the hero
-    const lift = variant === "incident" ? 2.0 : variant === "arena" ? 1.4 : variant === "forge" ? 1.3 : 0;
+    const lift = variant === "incident" ? 2.0 : variant === "arena" ? 1.4 : variant === "forge" ? 1.3 : variant === "path" ? 1.6 : 0;
     const place = () => { root.position.y = baseY + (el.clientWidth / (el.clientHeight || 1) > 1.3 ? lift : 2.4); };
     place();
     const ro = new ResizeObserver(() => { size(); place(); });

@@ -6,7 +6,8 @@ export const landingItems = [
   { id: "agentbattle", n: "02", label: "AgentBattle" },
   { id: "devsick", n: "03", label: "DevSick" },
   { id: "questionforge", n: "04", label: "QuestionForge" },
-  { id: "closing", n: "05", label: "Contact" },
+  { id: "ops-academy", n: "05", label: "Ops Academy" },
+  { id: "closing", n: "06", label: "Contact" },
 ];
 
 /** Fixed left rail: section numbers, highlights the one in view. */
