@@ -483,3 +483,24 @@ body:has(.pv) footer .wrap{padding:8px var(--gutr) 8px var(--gut)}
 .ops-bar{display:block;height:.25em;border-radius:9em;background:#2a261f;overflow:hidden}
 .ops-bar u{display:block;height:100%;background:linear-gradient(90deg,#9c937a,#dcd2b6);border-radius:9em;text-decoration:none}
 .ops-row.lock{opacity:.55}
+
+/* product page polish */
+/* the generic `body:has(.pv) nav` rule out-specifies `.rail{display:none}`, so the rail leaked onto small screens */
+@media(max-width:1250px){body:has(.pv) nav.rail{display:none}}
+/* full-bleed hero scenes are 100vw wide inside an offset frame; clip so the page never scrolls sideways */
+body:has(.pv){overflow-x:clip}
+/* long names (QUESTIONFORGE) must fit the column at every width: size from the card, not the viewport */
+.pd-next{container-type:inline-size}
+.pd-next strong{font-size:clamp(24px,3.3vw,72px);font-size:clamp(22px,8.4cqw,96px);overflow-wrap:anywhere}
+@media(max-width:900px){
+  .pd-hero .scene{opacity:.8;-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 78%);mask-image:linear-gradient(to bottom,transparent 38%,#000 78%)}
+  .pd-main{padding-left:0}
+}
+@media(max-width:520px){
+  .pnav-in{gap:12px}
+  .pnav .plogo{width:140px;height:21px}
+  .pnav .pbtn{margin-left:0;height:38px;padding:0 14px;gap:0;letter-spacing:.1em;white-space:nowrap}
+  .pnav .pbtn span{display:none}
+}
+/* the frame's side padding is asymmetric (--gut / --gutr), so a hero's centre sits off the viewport centre: correct for it */
+.pd-hero .scene,.pd-hero::before,.pv .ph .scene,.ph::before{margin-left:calc(-50vw - (var(--gut) - var(--gutr)) / 2)}
