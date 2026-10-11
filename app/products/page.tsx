@@ -15,7 +15,7 @@ export default function Products() {
         <p>Four products in development, each launching soon. Get early access to any of them.</p>
       </div>
       <section style={{ paddingTop: 24 }}>
-        <div className="grid">{products.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
+        <div className="product-grid">{products.map((p, i) => <ProductCard key={p.slug} p={p} index={i} />)}</div>
       </section>
     </div>
   );
