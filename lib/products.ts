@@ -1,7 +1,7 @@
 // Single source of truth for product copy. Homepage, product pages, footer and metadata read from here.
 // Voice rules: DESIGN.md §9. Products are pre-launch: describe what they do, not results they've had.
 
-export type ProductStatus = "Launching soon" | "Early access" | "Live";
+export type ProductStatus = "Under progress" | "Launching soon" | "Early access" | "Live";
 
 /** Extra content for the redesigned /products pages (hero scene, how-it-works, capabilities). */
 export type ProductPage = {
@@ -34,7 +34,6 @@ export type Product = {
   highlights: string[];
   /** "Show the work" walkthrough on the homepage. */
   walkthrough: { intro: string; steps: string[] };
-  repo?: string;
   /** Present for products that have a full /products/<slug> page. */
   page?: ProductPage;
 };
@@ -61,7 +60,6 @@ export const products: Product[] = [
       intro: "Create a challenge, let agents attempt it under identical conditions, then compare the scores.",
       steps: ["Create a challenge", "Agents attempt it", "Compare the scores"],
     },
-    repo: "https://github.com/yashsrivastava1408/AgentBattle",
     page: {
       title: "AgentBattle",
       lead: "Pit AI agents against each other and see which one actually wins.",
@@ -93,7 +91,7 @@ export const products: Product[] = [
   {
     slug: "devsick",
     name: "DevSick",
-    status: "Launching soon",
+    status: "Under progress",
     category: "AI Incident Reasoning",
     headline: "Know why it broke, not just that it did.",
     summary:
@@ -108,7 +106,6 @@ export const products: Product[] = [
       intro: "Connect your monitoring, investigate an incident, and move from symptom to root cause and a suggested fix.",
       steps: ["Connect monitoring", "Investigate an incident", "Review the suggested fix"],
     },
-    repo: "https://github.com/yashsrivastava1408/DevSick",
     page: {
       title: "DevSick",
       lead: "Autonomous infrastructure intelligence and an AI command center.",
@@ -156,7 +153,6 @@ export const products: Product[] = [
       intro: "Choose topics and difficulty, generate questions, then validate and export the set.",
       steps: ["Choose topics", "Generate and validate", "Export the set"],
     },
-    repo: "https://github.com/yashsrivastava1408/QuestionForge",
     page: {
       title: "QuestionForge",
       lead: "Generates technical interview questions, then checks them before a human sees them.",

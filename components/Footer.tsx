@@ -13,6 +13,7 @@ const company = [
   { href: "/founders", label: "Founders" },
   { href: "/contact?type=project", label: "Start a project" },
   { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy" },
 ];
 
 export default function Footer() {
@@ -23,7 +24,7 @@ export default function Footer() {
           <Link href="/" className="site-footer-logo">
             Avqentra
           </Link>
-          <p>A product and engineering studio. AI products launching soon, and software built for clients.</p>
+          <p>A product and engineering studio. AI products in development, and software built for clients.</p>
         </div>
         <div role="group" aria-label="Explore" className="site-footer-col">
           <h2>Explore</h2>

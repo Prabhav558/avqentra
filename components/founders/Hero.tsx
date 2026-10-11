@@ -8,7 +8,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export default function Hero() {
   const stats = [
     { value: pad(founders.length), label: "Founders" },
-    { value: pad(products.length), label: "Products launching soon" },
+    { value: pad(products.length), label: "Products in development" },
     { value: "01", label: "Shared standard" },
   ];
 

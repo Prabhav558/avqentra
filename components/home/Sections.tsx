@@ -159,7 +159,7 @@ export function AboutSection() {
             </div>
             <div>
               <dt>Products</dt>
-              <dd>Four in development, launching soon.</dd>
+              <dd>Four in development.</dd>
             </div>
             <div>
               <dt>Client work</dt>

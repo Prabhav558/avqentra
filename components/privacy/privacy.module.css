@@ -1,0 +1,27 @@
+/* Privacy page. Builds on home.module.css tokens (--cream, --hair, --tick). See DESIGN.md. */
+.hero{position:relative;overflow:hidden;isolation:isolate;background:#0a0a08;padding:90px 0 0;border-bottom:1px solid var(--hair)}
+.inner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:96px;align-items:start;padding:96px 96px 120px 112px;max-width:1440px}
+.intro{position:sticky;top:130px}
+.title{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(36px,4.6vw,66px);line-height:1;letter-spacing:-.05em;text-transform:uppercase;color:#f2efe8}
+.line{display:block;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards}
+.line+.line{animation-delay:90ms}
+.lede{margin:28px 0 0;max-width:420px;font:400 15px/1.75 var(--font-mono),monospace;color:#a09d94}
+.back{margin:32px 0 0;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase}
+.back a{color:#b9ae94;border-bottom:1px solid rgba(185,174,148,.35);padding-bottom:3px}
+.back a:hover{color:#e6dcc8;border-color:var(--cream)}
+.list{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,245,225,.14)}
+.list li{display:grid;grid-template-columns:56px minmax(0,1fr);gap:0 20px;padding:36px 0;border-bottom:1px solid var(--hair)}
+.num{font:500 10px/1.8 var(--font-mono),monospace;letter-spacing:.14em;color:#8a877f}
+.list h2{margin:0 0 14px}
+.list p{margin:0;max-width:540px;font:400 14px/1.8 var(--font-mono),monospace;color:#9a978e}
+.list a{color:#e6dcc8;border-bottom:1px solid rgba(230,220,200,.35)}
+.list a:hover{border-color:var(--cream)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+@media (max-width:1080px){
+  .hero{padding-top:72px}
+  .navRule{display:none}
+  .inner{grid-template-columns:minmax(0,1fr);gap:48px;padding:56px 24px 72px}
+  .intro{position:static}
+  .list li{grid-template-columns:40px minmax(0,1fr);padding:28px 0}
+}
+@media (prefers-reduced-motion:reduce){.line{animation:none}}

@@ -39,7 +39,7 @@ const chapters = [
     t: "The work",
     d: (
       <>
-        {count} products launching soon: {list}. Each started from a specific problem, not a technology
+        {count} products in development: {list}. Each started from a specific problem, not a technology
         looking for a use. Alongside them, <b>we build software for clients</b>.
       </>
     ),

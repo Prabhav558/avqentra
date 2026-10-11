@@ -3,7 +3,7 @@ import SystemVisual from "./SystemVisual";
 import s from "./home.module.css";
 
 const stats = [
-  { value: "04", label: ["Products", "Launching soon"], size: "lg" },
+  { value: "04", label: ["Products", "In development"], size: "lg" },
   { value: "AI", label: ["Core discipline"], size: "sm" },
   { value: "Open", label: ["For client", "projects"], size: "md" },
 ];
@@ -62,7 +62,7 @@ export default function Hero() {
             <span className={s.gold} style={{ "--i": 3 } as React.CSSProperties}>Systems.</span>
           </h1>
           <p className={s.lede} style={{ "--i": 4 } as React.CSSProperties}>
-            A product and engineering studio. We&rsquo;re building our own AI products, launching soon, and we design
+            A product and engineering studio. We&rsquo;re building our own AI products, and we design
             and build software for teams that need it done right.
           </p>
           <div className={s.actions} style={{ "--i": 5 } as React.CSSProperties}>
