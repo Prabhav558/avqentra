@@ -494,7 +494,6 @@ body:has(.pv){overflow-x:clip}
 .pd-next strong{font-size:clamp(24px,3.3vw,72px);font-size:clamp(22px,8.4cqw,96px);overflow-wrap:anywhere}
 @media(max-width:900px){
   .pd-hero .scene{opacity:.8;-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 78%);mask-image:linear-gradient(to bottom,transparent 38%,#000 78%)}
-  .pd-main{padding-left:0}
 }
 @media(max-width:520px){
   .pnav-in{gap:12px}
@@ -527,3 +526,16 @@ body:has(.pv){overflow-x:clip}
   .pnav-menu a span{font-size:14px;color:var(--muted)}
 }
 @media(min-width:901px){.pnav-menu,.pnav-toggle{display:none!important}}
+
+/* phone layout: one consistent text inset on both sides, and nothing floating over the copy */
+@media(max-width:900px){
+  .moon{display:none}
+  .ph-grid>div:first-child{padding:0 18px}
+  .ps-copy,.ps.rev .ps-copy{padding:0 18px}
+  /* a later 56vw cap beat the earlier reset and squeezed the hero copy into half the screen */
+  .pd-main{max-width:none;padding-right:18px;padding-bottom:clamp(110px,34vw,190px)}
+  .pd-hero .scene{-webkit-mask-image:linear-gradient(to bottom,transparent 24%,#000 56%);mask-image:linear-gradient(to bottom,transparent 24%,#000 56%)}
+  .pd-feats{padding-right:18px}
+  .pd .eyebrow{flex-wrap:wrap;row-gap:10px}
+  .pd .eyebrow .soon{margin-left:0}
+}
