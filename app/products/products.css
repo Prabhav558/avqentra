@@ -504,3 +504,26 @@ body:has(.pv){overflow-x:clip}
 }
 /* the frame's side padding is asymmetric (--gut / --gutr), so a hero's centre sits off the viewport centre: correct for it */
 .pd-hero .scene,.pd-hero::before,.pv .ph .scene,.ph::before{margin-left:calc(-50vw - (var(--gut) - var(--gutr)) / 2)}
+
+/* mobile menu: the inline links collapse below 900px, so the toggle opens them as a panel under the bar */
+.pnav-toggle{display:none}
+@media(max-width:900px){
+  .pnav-toggle{display:inline-flex;align-items:center;justify-content:center;flex:none;width:38px;height:38px;padding:0;border:1px solid var(--border-hi);background:none;color:var(--text);cursor:pointer;transition:border-color .2s,background .2s}
+  .pnav-toggle:hover,.pnav.open .pnav-toggle{border-color:var(--cream);background:rgba(230,220,200,.07)}
+  .pnav-toggle:focus-visible{outline:2px solid var(--cream);outline-offset:3px}
+  .pnav-toggle i,.pnav-toggle i::before,.pnav-toggle i::after{display:block;width:14px;height:1px;background:currentColor;transition:transform .25s,background .2s}
+  .pnav-toggle i{position:relative}
+  .pnav-toggle i::before,.pnav-toggle i::after{content:"";position:absolute;left:0}
+  .pnav-toggle i::before{top:-5px}.pnav-toggle i::after{top:5px}
+  .pnav.open .pnav-toggle i{background:transparent}
+  .pnav.open .pnav-toggle i::before{transform:translateY(5px) rotate(45deg)}
+  .pnav.open .pnav-toggle i::after{transform:translateY(-5px) rotate(-45deg)}
+  body:has(.pv) .pnav .pnav-menu{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:0;height:auto;position:absolute;left:0;right:0;top:100%;padding:4px var(--gutr) 12px var(--gut);background:#0e0e0b;border-bottom:1px solid var(--border-hi);box-shadow:0 24px 40px rgba(0,0,0,.45)}
+  body:has(.pv) .pnav .pnav-menu[hidden]{display:none}
+  .pnav-menu a{display:flex;align-items:center;justify-content:space-between;min-height:56px;border-bottom:1px solid var(--border);font:500 12px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text);opacity:.8;transition:opacity .2s,color .2s;padding:0}
+  .pnav-menu a:last-child{border-bottom:0}
+  .pnav-menu a:hover,.pnav-menu a.active{opacity:1}
+  .pnav-menu a.active{color:var(--cream)}
+  .pnav-menu a span{font-size:14px;color:var(--muted)}
+}
+@media(min-width:901px){.pnav-menu,.pnav-toggle{display:none!important}}

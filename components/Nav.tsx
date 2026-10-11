@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./home/Logo";
@@ -14,24 +15,42 @@ const links = [
 
 export default function Nav() {
   const path = usePathname();
+  const [open, setOpen] = useState(false);
+  // close the mobile menu on navigation and on Escape
+  useEffect(() => setOpen(false), [path]);
+  useEffect(() => {
+    if (!open) return;
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [open]);
   // These pages render their own SiteHeader.
   if (path === "/" || path === "/founders") return null;
   if (path.startsWith("/products")) {
+    const items = links.filter((l) => l.href !== "/" && l.href !== "/about");
     return (
-      <header className={`pnav ${display.variable} ${mono.variable}`}>
+      <header className={`pnav ${display.variable} ${mono.variable}${open ? " open" : ""}`}>
         <div className="pnav-in">
           <Link className="logo" href="/" aria-label="Avqentra home">
             <Logo className="plogo" />
           </Link>
           <ul>
-            {links.filter((l) => l.href !== "/" && l.href !== "/about").map((l) => (
+            {items.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className={path.startsWith(l.href) ? "active" : undefined}>{l.label}</Link>
               </li>
             ))}
           </ul>
           <Link className="pbtn ghost" href="/contact">GET IN TOUCH <span aria-hidden="true">↗</span></Link>
+          <button type="button" className="pnav-toggle" aria-expanded={open} aria-controls="pnav-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}>
+            <i aria-hidden="true" />
+          </button>
         </div>
+        <nav id="pnav-menu" className="pnav-menu" aria-label="Main" hidden={!open}>
+          {items.map((l) => (
+            <Link key={l.href} href={l.href} className={path.startsWith(l.href) ? "active" : undefined}>{l.label}<span aria-hidden="true">→</span></Link>
+          ))}
+        </nav>
       </header>
     );
   }
