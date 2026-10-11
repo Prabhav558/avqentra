@@ -25,7 +25,7 @@ export default function Nav() {
     return () => window.removeEventListener("keydown", esc);
   }, [open]);
   // These pages render their own SiteHeader.
-  if (path === "/" || path === "/founders") return null;
+  if (path === "/" || path === "/founders" || path === "/about" || path === "/contact" || path === "/privacy") return null;
   if (path.startsWith("/products")) {
     const items = links.filter((l) => l.href !== "/" && l.href !== "/about");
     return (

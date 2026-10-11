@@ -29,7 +29,20 @@ const LOCK_MS = 1400;
 export default function Ecosystem() {
   const track = useRef<HTMLElement>(null);
   const lock = useRef<{ idx: number; until: number } | null>(null);
+  const wheelBox = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [nameSize, setNameSize] = useState(3);
+
+  // Size the names to the column, so the longest one ("QuestionForge") never gets clipped.
+  useEffect(() => {
+    const el = wheelBox.current;
+    if (!el) return;
+    const fit = () => setNameSize(Math.min(3.8, Math.max(2.2, (el.clientWidth - 28) / 118)));
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Scroll position inside the pinned track decides which product is shown.
   useEffect(() => {
@@ -96,18 +109,22 @@ export default function Ecosystem() {
       style={{ "--eco-n": N } as React.CSSProperties}
     >
       <div className={s.ecoStage}>
-        <div className={s.ecoGrid}>
-          <div className={s.ecoLeft}>
+        <div className={s.ecoHead}>
+          <div>
             <p className={s.kicker}>— Our products</p>
             <h2 className={`${s.h2} ${s.ecoTitle}`} id="ecosystem-h">
               Four products. Distinct problems. One engineering mindset.
             </h2>
-            <p className={s.ecoIntro}>
-              Testing AI agents, explaining production failures, generating interview questions and teaching
-              operations: four focused products, each launching soon.
-            </p>
+          </div>
+          <p className={s.ecoIntro}>
+            Testing AI agents, explaining production failures, generating interview questions and teaching
+            operations: four focused products in development.
+          </p>
+        </div>
 
-            <div className={s.ecoWheel}>
+        <div className={s.ecoGrid}>
+          <div className={s.ecoLeft}>
+            <div className={s.ecoWheel} ref={wheelBox}>
               <OptionWheel
                 items={names}
                 selected={active}
@@ -116,9 +133,9 @@ export default function Ecosystem() {
                 ariaLabel="Avqentra products"
                 textColor="#6f6c65"
                 activeColor="#f2efe8"
-                fontSize={3}
-                spacing={1.5}
-                tilt={9}
+                fontSize={nameSize}
+                spacing={1.4}
+                tilt={8}
                 curve={1}
                 blur={1.2}
                 fade={0.42}

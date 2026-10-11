@@ -1,75 +1,76 @@
 import type { Metadata } from "next";
-import { getProduct, products } from "@/lib/products";
+import Link from "next/link";
+import SiteHeader from "@/components/home/SiteHeader";
+import ContactForm from "@/components/contact/ContactForm";
+import CopyEmail from "@/components/contact/CopyEmail";
+import { display, mono } from "@/lib/fonts";
+import { isTopic } from "@/lib/contact";
+import { products } from "@/lib/products";
+import { contactEmail } from "@/lib/site";
+import h from "@/components/home/home.module.css";
+import s from "@/components/contact/contact.module.css";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Start a client project with Avqentra, or get early access to our products.",
+  description: "Start a client project with Avqentra, ask for early access to a product, or write to the founders.",
 };
 
-const topics = {
-  project: {
-    label: "Client project",
-    title: "Start a project",
-    intro: "Tell us what you're building, where it stands, and when you need it. A founder will reply.",
-    prompt: "What are you building?",
-  },
-  "early-access": {
-    label: "Early access to a product",
-    title: "Get early access",
-    intro: "Our products are launching soon. Tell us which one you're interested in and we'll reach out when it opens.",
-    prompt: "What would you use it for?",
-  },
-  general: {
-    label: "Something else",
-    title: "Get in touch",
-    intro: "Client projects, early access, partnerships or questions. Every message reaches a founder.",
-    prompt: "Message",
-  },
-} as const;
-
-type Topic = keyof typeof topics;
 type Props = { searchParams: Promise<{ type?: string; product?: string }> };
 
 export default async function Contact({ searchParams }: Props) {
   const { type, product } = await searchParams;
-  const topic: Topic = type && type in topics ? (type as Topic) : "general";
-  const t = topics[topic];
-  const selected = product && getProduct(product) ? product : undefined;
+  const names = products.map((p) => p.name);
+  const initialProduct = names.find((n, i) => n === product || products[i].slug === product);
 
   return (
-    <div className="wrap">
-      <div className="page-head">
-        <h1>{t.title}</h1>
-        <p>{t.intro}</p>
-      </div>
-      <section style={{ paddingTop: 24 }}>
-        <form action="mailto:prabhavkeshwar@gmail.com" method="post" encType="text/plain">
-          <label>
-            What&apos;s this about?
-            <select name="topic" defaultValue={t.label}>
-              {Object.values(topics).map((o) => (
-                <option key={o.label}>{o.label}</option>
-              ))}
-            </select>
-          </label>
-          {topic === "early-access" && (
-            <label>
-              Product
-              <select name="product" defaultValue={selected ? getProduct(selected)!.name : products[0].name}>
-                {products.map((p) => (
-                  <option key={p.slug}>{p.name}</option>
-                ))}
-              </select>
-            </label>
-          )}
-          <label>Name<input name="name" autoComplete="name" required /></label>
-          <label>Email<input type="email" name="email" autoComplete="email" required /></label>
-          {topic === "project" && (
-            <label>Company (optional)<input name="company" autoComplete="organization" /></label>
-          )}
-          <label>{t.prompt}<textarea name="message" required /></label>
-          <button className="btn primary" type="submit">Send message</button>
-        </form>
+    <div className={`home-theme ${display.variable} ${mono.variable} ${h.page}`}>
+      <SiteHeader />
+      <section className={s.hero} aria-labelledby="contact-h">
+        <div className={h.backdrop} aria-hidden="true" />
+        <div className={h.frame} aria-hidden="true">
+          <span className={`${h.ruleV} ${h.left}`} />
+          <span className={`${h.ruleV} ${h.right}`} />
+          <span className={`${h.ruleH} ${h.navRule} ${s.navRule}`} />
+        </div>
+
+        <div className={s.inner}>
+          <div className={s.intro}>
+            <p className={h.kicker}>— Contact</p>
+            <h1 className={s.title} id="contact-h">
+              <span className={s.line} style={{ "--i": 0 } as React.CSSProperties}>Get in touch.</span>
+              <span className={`${s.line} ${h.gold}`} style={{ "--i": 1 } as React.CSSProperties}>A founder will reply.</span>
+            </h1>
+            <p className={s.lede}>
+              Client projects, early access, partnerships or questions. There is no sales layer: every message reaches
+              one of the three founders.
+            </p>
+
+            <div className={s.direct}>
+              <span className={s.label}>Or write to us directly</span>
+              <div className={s.mailRow}>
+                <a className={s.mail} href={`mailto:${contactEmail}`}>{contactEmail}</a>
+                <CopyEmail />
+              </div>
+            </div>
+
+            <dl className={`${h.facts} ${s.facts}`}>
+              <div>
+                <dt>Projects</dt>
+                <dd>Tell us what you&rsquo;re building and when you need it.</dd>
+              </div>
+              <div>
+                <dt>Products</dt>
+                <dd>Ask for early access to any of the four.</dd>
+              </div>
+              <div>
+                <dt>People</dt>
+                <dd><Link href="/founders">Meet the founders</Link> who read every message.</dd>
+              </div>
+            </dl>
+          </div>
+
+          <ContactForm productNames={names} initialTopic={isTopic(type) ? type : "general"} initialProduct={initialProduct} />
+        </div>
       </section>
     </div>
   );

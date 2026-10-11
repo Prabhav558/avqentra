@@ -58,7 +58,7 @@ export default function ProductsLanding() {
             <div className="ps-meta mono">
               <span>{n} — PRODUCT</span>
               <span>{p.pageTag.toUpperCase()}</span>
-              {p.repo ? <a href={p.repo} target="_blank" rel="noreferrer">GITHUB <Arrow /></a> : <span>{p.status.toUpperCase()}</span>}
+              <span>{p.status.toUpperCase()}</span>
             </div>
             <div className="ps-grid">
               <div className="ps-copy">

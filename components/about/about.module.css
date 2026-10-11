@@ -1,0 +1,154 @@
+/* About page. Builds on home.module.css tokens (--cream, --hair, --tick) and type scale. See DESIGN.md. */
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;isolation:isolate;background:#0a0a08;padding:90px 0 0;border-bottom:1px solid var(--hair)}
+.heroInner{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:center;padding:96px 96px 96px 112px;max-width:1440px}
+.title{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(40px,5.3vw,78px);line-height:.98;letter-spacing:-.05em;text-transform:uppercase;color:#f2efe8}
+.line{display:block;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*90ms + 150ms)}
+.lede{margin:32px 0 0;max-width:520px;font:400 15px/1.75 var(--font-mono),monospace;color:#a09d94;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:420ms}
+
+/* the three checks: bottom strip that doubles as in-page navigation */
+.checks{position:relative;z-index:3;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 64px;padding:0;border-top:1px solid var(--hair);background:rgba(10,10,8,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.checks li+li{border-left:1px solid var(--hair)}
+.checks a{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:8px 20px;padding:28px 48px 32px;color:#ece8df;transition:background-color .25s}
+.checks a:hover{background:rgba(230,220,195,.03)}
+.cNum{font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#8a877f}
+.cVerb{font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(22px,2.4vw,34px);line-height:1;letter-spacing:-.03em;text-transform:uppercase;color:#e6dcc8}
+.cProd{grid-column:2;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94}
+
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+
+
+/* ---------- hero diagram: the three checks around the mark ---------- */
+.orbit{position:relative;width:100%;max-width:500px;aspect-ratio:1;justify-self:end;animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:420ms}
+.orbitSvg{display:block;width:100%;height:100%;overflow:visible}
+.ringsSlow{transform-origin:260px 260px;animation:spin 120s linear infinite}
+.arm{transform-origin:260px 260px;animation:spin 12s linear infinite}
+.orbitMark{position:absolute;left:50%;top:50%;width:14%;height:auto;transform:translate(-50%,-50%);opacity:.95}
+.nodeHalo{fill:none;stroke:#e6dcc8;stroke-width:1;opacity:0;transform-box:fill-box;transform-origin:center;animation:ping 9s cubic-bezier(.2,.7,.2,1) infinite;animation-delay:var(--d,0s)}
+.orbitLabel{position:absolute;display:grid;gap:6px;white-space:nowrap;pointer-events:none}
+.orbitLabel b{font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#ece8df}
+.orbitLabel i{font:500 10px/1 var(--font-mono),monospace;font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94}
+.lblTop{transform:translate(-50%,-150%);text-align:center}
+.lblRight{transform:translate(18px,-4px)}
+.lblLeft{transform:translate(calc(-100% - 18px),-4px);text-align:right}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ping{0%{opacity:.9;transform:scale(.6)}30%,100%{opacity:0;transform:scale(2.4)}}
+
+/* ---------- blueprint figure plate ---------- */
+.headSplit{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:80px;align-items:end;margin-bottom:72px;max-width:1216px}
+.fig{position:relative;margin:0;padding:32px 32px 22px;background:linear-gradient(160deg,#1b1a15,#0e0e0b);border:1px solid rgba(230,220,195,.12);overflow:hidden}
+.fig::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,245,225,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,245,225,.04) 1px,transparent 1px);background-size:32px 32px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 45%,#000 30%,transparent 100%);mask-image:radial-gradient(ellipse 90% 80% at 50% 45%,#000 30%,transparent 100%)}
+.figBody{position:relative}
+.corner{position:absolute;width:14px;height:14px;border:0 solid rgba(230,220,200,.45)}
+.c1{top:10px;left:10px;border-top-width:1px;border-left-width:1px}
+.c2{top:10px;right:10px;border-top-width:1px;border-right-width:1px}
+.c3{bottom:10px;left:10px;border-bottom-width:1px;border-left-width:1px}
+.c4{bottom:10px;right:10px;border-bottom-width:1px;border-right-width:1px}
+.figCap span:first-child{white-space:nowrap}
+.figCap{position:relative;display:flex;justify-content:space-between;gap:16px;margin-top:22px;font:500 10px/1.4 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a877f}
+
+/* fig 01: claims and checks */
+.ledger{width:100%;border-collapse:collapse;font-family:var(--font-mono),monospace}
+.ledger th{padding:0 0 12px;text-align:left;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94;border-bottom:1px solid rgba(255,245,225,.14)}
+.ledger td{padding:14px 16px 14px 0;vertical-align:top;border-bottom:1px solid var(--hair);font-size:13px;line-height:1.6;color:#a09d94}
+.ledger td+td,.ledger th+th{padding-left:16px;border-left:1px solid var(--hair);color:#cfccc4}
+.ledger tr:last-child td{border-bottom:0;padding-bottom:0}
+.ledger b{display:block;margin-bottom:2px;font:600 10px/1.6 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#e6dcc8}
+.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* fig 02: one studio */
+.studio{display:grid;gap:14px}
+.studioTop{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.studioTop div{display:grid;gap:8px;padding:18px 18px 20px;border:1px solid rgba(230,220,195,.22)}
+.studioTop b{font-family:var(--font-display),sans-serif;font-stretch:112%;font-weight:400;font-size:15px;letter-spacing:-.005em;text-transform:uppercase;color:#ece8df}
+.studioTop span{font:400 12px/1.5 var(--font-mono),monospace;color:#a09d94}
+.studioBase{padding:14px 18px;text-align:center;font:600 10px/1.4 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#1c1a16;background:var(--cream)}
+
+/* fig 03: the loop */
+.loopFig{margin-top:56px;max-width:420px}
+.loop{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.loop li{position:relative;display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);font:400 13px/1.5 var(--font-mono),monospace;color:#cfccc4}
+.loop li:last-child{border-bottom:0;color:#e6dcc8}
+.loop span{font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#8a877f}
+
+/* ---------- thesis: measure, explain, verify ---------- */
+.verbs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid rgba(255,245,225,.14)}
+.verbs li{display:flex;flex-direction:column;align-items:flex-start;padding:40px 40px 0 0;scroll-margin-top:110px}
+.verbs li+li{padding-left:40px;border-left:1px solid var(--hair)}
+.verbs .body{margin-bottom:28px}
+.verbLink{display:inline-flex;align-items:center;gap:10px;margin-top:auto;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94;transition:color .2s}
+.verbLink:hover{color:#e6dcc8}
+.verbLink svg{transition:transform .25s}
+.verbLink:hover svg{transform:translate(2px,-2px)}
+
+.people{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:64px;margin-top:72px;padding-top:40px;border-top:1px solid var(--hair)}
+.people .body{margin-bottom:0}
+
+/* ---------- offer: products and client work ---------- */
+.offer{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:96px;align-items:start}
+.rows{list-style:none;margin:0 0 36px;padding:0;border-top:1px solid rgba(255,245,225,.14)}
+.rows a{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--hair);color:#ece8df;transition:padding .3s cubic-bezier(.2,.7,.2,1)}
+.rows a:hover{padding-left:8px}
+.rNum{font:500 10px/1 var(--font-mono),monospace;letter-spacing:.14em;color:#8a877f}
+.rName{font-family:var(--font-display),sans-serif;font-stretch:112%;font-weight:400;font-size:17px;letter-spacing:-.005em;text-transform:uppercase}
+.rRole{font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#b9ae94}
+
+/* ---------- standards ---------- */
+.standards{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:96px;align-items:start}
+.quoteCol{position:sticky;top:140px}
+.quote{margin:0;font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:300;font-size:clamp(30px,3.4vw,48px);line-height:1.08;letter-spacing:-.035em;text-transform:uppercase;color:#f2efe8}
+.quoteBy{display:block;margin-top:28px;font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a877f}
+.chapters{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,245,225,.14)}
+.chapters li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:0 24px;padding:40px 0;border-bottom:1px solid var(--hair)}
+.chNum{font-family:var(--font-display),sans-serif;font-stretch:125%;font-weight:200;font-size:34px;line-height:1;color:rgba(216,205,180,.5)}
+.chapters h3{margin:6px 0 14px}
+.chapters p{margin:0;max-width:520px;font:400 14px/1.8 var(--font-mono),monospace;color:#9a978e}
+
+/* ---------- team ---------- */
+.team{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:80px;align-items:end}
+.team .rows{margin-bottom:0}
+.teamCta{margin-top:40px}
+
+/* ---------- closing ---------- */
+.ctaSplit{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:80px;align-items:end}
+.routes{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,245,225,.14)}
+.routes a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;padding:20px 0;border-bottom:1px solid var(--hair);color:#ece8df;transition:padding .3s cubic-bezier(.2,.7,.2,1)}
+.routes a:hover{padding-left:8px}
+.routeFor{font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a877f}
+.routeWho{grid-column:1;font-family:var(--font-display),sans-serif;font-stretch:112%;font-size:16px;letter-spacing:-.005em;text-transform:uppercase}
+.routes svg{grid-column:2;grid-row:1/span 2;align-self:center}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .hero{padding-top:72px}
+  .navRule{display:none}
+  .heroInner{grid-template-columns:minmax(0,1fr);gap:56px;padding:56px 24px 48px}
+  .orbit{justify-self:center;max-width:420px}
+  .checks{grid-template-columns:minmax(0,1fr);margin:0 24px}
+  .checks li+li{border-left:0;border-top:1px solid var(--hair)}
+  .checks a{padding:20px 0 22px}
+  .headSplit{grid-template-columns:minmax(0,1fr);gap:40px;margin-bottom:48px}
+  .verbs{grid-template-columns:minmax(0,1fr)}
+  .verbs li{padding:32px 0}
+  .verbs li+li{padding-left:0;border-left:0;border-top:1px solid var(--hair)}
+  .people,.offer,.team,.ctaSplit{grid-template-columns:minmax(0,1fr);gap:48px}
+  .people{margin-top:48px;gap:20px}
+  .standards{grid-template-columns:minmax(0,1fr);gap:48px}
+  .quoteCol{position:static}
+  .loopFig{margin-top:40px}
+  .chapters li{grid-template-columns:48px minmax(0,1fr);gap:0 16px;padding:32px 0}
+  .chNum{font-size:26px}
+}
+@media (max-width:520px){
+  .lblRight,.lblLeft{transform:translate(-50%,20px);text-align:center}
+  .fig{padding:28px 20px 20px}
+  .studioTop{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  .line,.lede{animation:none}
+  .ringsSlow,.arm,.nodeHalo,.orbit{animation:none}
+  .checks a,.rows a,.routes a,.verbLink,.verbLink svg{transition:none}
+}

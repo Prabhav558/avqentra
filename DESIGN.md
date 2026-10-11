@@ -201,7 +201,7 @@ Use the existing class before writing a new one.
 
 ### What Avqentra is
 
-> **Avqentra is a product and engineering studio.** We are building our own AI products, launching soon,
+> **Avqentra is a product and engineering studio.** We are building our own AI products,
 > and we design and build software for clients.
 
 Every page must make both halves clear: **our products** and **work with us**. A first-time visitor should
@@ -209,7 +209,7 @@ know within one screen what we make, that the products are not live yet, and tha
 
 ### Rules
 
-- **Products are launching, not launched.** Say *launching soon*, *in development*, *early access*. Don't
+- **Products are launching, not launched.** Say *under progress*, *launching soon*, *in development*, *early access*. Don't
   write as if they have users, integrations or results they don't yet have.
 - **Client work is a real offer.** Use *client projects*, *we build for teams*, *start a project*. Avoid
   vague agency phrases (*"let's create magic"*, *"digital solutions"*).
@@ -242,5 +242,6 @@ Pages and patterns that don't follow this system yet. Fix them, don't copy them.
 - `#6f6c65` used for information (`.capNum`, ecosystem wheel text) → move to `text/meta` or mark decorative.
 - `globals.css` still defines the legacy blue tokens (`--accent:#6d7cff`) overridden by
   `body:has(.home-theme)`. Remove once all pages are migrated.
-- Contact form is `mailto:`. Replace with a form endpoint.
-- No Open Graph image.
+- Contact form delivers through `/api/contact` (Supabase and/or Resend, see README). Add a bot check (e.g. Cloudflare Turnstile) if spam appears.
+- Share images are static (`app/opengraph-image.png`). Per-product images would make shared product links richer.
+- `npm audit` still reports PostCSS issues bundled inside Next.js 15. Clear them with the Next.js 16 upgrade.
