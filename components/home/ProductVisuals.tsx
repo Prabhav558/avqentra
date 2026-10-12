@@ -145,10 +145,10 @@ export function QuestionForgeVisual() {
 
 export function OpsAcademyVisual() {
   const modules = [
-    { t: "Reading the signals", state: "Done", pct: 100 },
-    { t: "Triage and escalation", state: "Done", pct: 100 },
-    { t: "Run a live incident", state: "In progress", pct: 55 },
-    { t: "Write the review", state: "Locked", pct: 0 },
+    { t: "Linux fundamentals", state: "Done", pct: 100 },
+    { t: "Docker and Compose", state: "Done", pct: 100 },
+    { t: "Kubernetes pods", state: "In progress", pct: 55 },
+    { t: "Terraform on AWS", state: "Locked", pct: 0 },
   ];
   return (
     <div className={`${s.vShell} ${s.vOps}`} aria-hidden="true">
@@ -156,8 +156,8 @@ export function OpsAcademyVisual() {
       <div className={`${s.vBody} ${s.vOpsBody}`}>
         <div className={s.vTask}>
           <span className={s.vLabel}>Learning path</span>
-          <p>Incident response: from the first alert to the written review.</p>
-          <div className={s.vChips}><span>Hands-on</span><span>Guided</span><span>Tracked</span></div>
+          <p>DevOps roadmap: from the Linux terminal to Terraform and Kubernetes.</p>
+          <div className={s.vChips}><span>Live lab</span><span>AI mentor</span><span>Tracked</span></div>
         </div>
         <div className={s.vModList}>
           {modules.map((m, i) => (

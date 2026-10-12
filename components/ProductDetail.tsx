@@ -88,7 +88,15 @@ export default function ProductDetail({ p, variant }: { p: PageProduct; variant:
               </li>
             ))}
           </ol>
-          <Tilt flip>{Mock ? <Mock /> : null}</Tilt>
+          {p.screenshot ? (
+            <figure className="pd-shot">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.screenshot.src} alt={p.screenshot.alt} width={p.screenshot.width} height={p.screenshot.height} loading="lazy" />
+              <figcaption className="mono">Screenshot from the product</figcaption>
+            </figure>
+          ) : (
+            <Tilt flip>{Mock ? <Mock /> : null}</Tilt>
+          )}
         </div>
       </section>
 

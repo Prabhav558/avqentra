@@ -118,7 +118,7 @@ export default function Ecosystem() {
           </div>
           <p className={s.ecoIntro}>
             Testing AI agents, explaining production failures, generating interview questions and teaching
-            operations: four focused products in development.
+            DevOps: four focused products in development.
           </p>
         </div>
 

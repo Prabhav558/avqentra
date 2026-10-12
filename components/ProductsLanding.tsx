@@ -14,8 +14,8 @@ const sections = [
     body: "Sits on top of your monitoring stack to detect failures, explain the root cause with LLM reasoning, and guide the fix with a human in the loop." },
   { slug: "questionforge", n: "04", kicker: "GENERATE. VALIDATE. EXPORT.", tags: ["QUESTION BANKS", "VALIDATION", "HIRING"], UI: QuestionForgeUI,
     body: "Drafts technical interview questions with an LLM, then checks them by running code or independent review before a human ever sees them." },
-  { slug: "ops-academy", n: "05", kicker: "LEARN. PRACTICE. PROGRESS.", tags: ["TRAINING", "HANDS-ON", "OPERATIONS"], UI: OpsAcademyUI,
-    body: "A learning platform for operations skills: structured paths, hands-on exercises and progress that learners and their teams can see." },
+  { slug: "ops-academy", n: "05", kicker: "LEARN. PRACTICE. PROGRESS.", tags: ["DEVOPS", "LIVE LABS", "AI MENTORING"], UI: OpsAcademyUI,
+    body: "A DevOps learning platform: live terminal labs in the browser, multi-agent AI mentoring and real-world case studies, built for placement preparation." },
 ];
 
 const Arrow = () => <span aria-hidden="true" className="arr">↗</span>;
@@ -101,7 +101,7 @@ export default function ProductsLanding() {
         <div className="pc-grid">
           <h2 className="display-m">FOUR TOOLS.<br />ONE <span className="tan">STANDARD.</span></h2>
           <div className="pc-copy">
-            <p className="mono">From agent evaluation to incident reasoning, question validation and operations training, each product exists to make work easier to check and easier to trust.</p>
+            <p className="mono">From agent evaluation to incident reasoning, question validation and DevOps training, each product exists to make work easier to check and easier to trust.</p>
             <Link className="pbtn line" href="/contact">GET IN TOUCH <Arrow /></Link>
           </div>
         </div>

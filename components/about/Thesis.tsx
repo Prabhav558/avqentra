@@ -95,7 +95,7 @@ export default function Thesis() {
           </div>
           <div>
             <p className={h.body}>
-              The same idea applied to people: hands-on exercises and visible progress show that someone can do the
+              The same idea applied to people: live terminal labs and visible progress show that someone can do the
               work, not only that they read about it.
             </p>
             <Link href={`/products/${ops.slug}`} className={s.verbLink}>

@@ -17,6 +17,8 @@ export type ProductPage = {
   steps: { title: string; body: string }[];
   features: { title: string; body: string }[];
   stack: string[];
+  /** A real screenshot of the product. Shown instead of the illustrative mockup when present. */
+  screenshot?: { src: string; alt: string; width: number; height: number };
 };
 
 export type Product = {
@@ -186,46 +188,48 @@ export const products: Product[] = [
     slug: "ops-academy",
     name: "Ops Academy",
     status: "Launching soon",
-    category: "Operations Training",
-    headline: "Learn operations by doing the work.",
+    category: "DevOps Training",
+    headline: "Learn DevOps by doing the work.",
     summary:
-      "A learning platform that builds practical operations skills through structured paths, hands-on exercises and visible progress.",
-    tagline: "Learn operations through structured paths and hands-on exercises.",
+      "A browser-based DevOps learning platform with live terminal labs, AI mentoring and real-world case studies, built for placement preparation.",
+    tagline: "Hands-on DevOps labs in the browser, with AI mentoring.",
     highlights: [
-      "Structured learning paths for operations roles",
-      "Hands-on exercises, not just reading",
-      "Clear progress for learners and teams",
+      "Live Linux terminal labs in the browser",
+      "Multi-agent AI mentoring",
+      "A DevOps roadmap and real-world case studies",
     ],
     walkthrough: {
-      intro: "Pick a learning path, work through hands-on exercises, and track your progress.",
-      steps: ["Choose a learning path", "Complete an exercise", "Track your progress"],
+      intro: "Follow the roadmap, practice in a live terminal, and learn from real-world case studies.",
+      steps: ["Follow the roadmap", "Practice in a live lab", "Study a case"],
     },
     page: {
       title: "Ops Academy",
-      lead: "Learn operations by doing the work, one structured path at a time.",
-      pageTag: "Operations training",
+      lead: "Master Linux, Docker, Kubernetes, AWS and DevSecOps in live browser labs.",
+      pageTag: "DevOps training",
       description:
-        "Ops Academy builds practical operations skills through structured learning paths, hands-on exercises and visible progress, for individual learners and the teams that train them.",
+        "Ops Academy is a DevOps learning platform. Interactive browser-based labs with a live Linux terminal, multi-agent AI mentoring and real-world case studies teach Linux, Docker, Kubernetes, AWS and DevSecOps for placement preparation.",
       accent: "#ffb454",
-      heroLines: ["Learn operations", "by doing the work."],
-      badge: "Operations Training",
+      heroLines: ["Learn DevOps", "by doing the work."],
+      badge: "DevOps Training",
+      screenshot: { src: "/ops-academy.jpg", alt: "The Ops Academy home screen: a DevOps learning platform with an interactive sandbox showing a live terminal and a Terraform file.", width: 1600, height: 914 },
       stats: [
-        { value: "Paths", label: "Structured by role" },
-        { value: "Hands-on", label: "Exercises, not slides" },
-        { value: "Tracked", label: "Progress you can see" },
+        { value: "Live", label: "Linux terminal in the browser" },
+        { value: "Multi-agent", label: "AI mentoring" },
+        { value: "Roadmap", label: "From Linux to DevSecOps" },
       ],
       steps: [
-        { title: "Choose a path", body: "Pick a learning path built around an operations role, from the first alert to the written review." },
-        { title: "Do the work", body: "Each module ends in an exercise you complete, not a page you scroll past." },
-        { title: "Run it live", body: "Apply the skill in a hands-on scenario, like triaging and handling a live incident." },
-        { title: "Track progress", body: "Completed, in-progress and locked modules stay visible to learners and their teams." },
+        { title: "Follow the roadmap", body: "A DevOps roadmap takes you from Linux basics to Docker, Kubernetes, AWS and DevSecOps." },
+        { title: "Practice in a live lab", body: "Run real commands in a browser terminal and edit scripts, Docker Compose, Terraform and Kubernetes files." },
+        { title: "Learn from a mentor", body: "Multi-agent AI mentoring helps you work out what went wrong and what to try next." },
+        { title: "Study real cases", body: "Work through real-world case studies and track your progress from the dashboard." },
       ],
       features: [
-        { title: "Structured learning paths", body: "Modules unlock in order, so each skill builds on the one before it instead of arriving as a pile of material." },
-        { title: "Hands-on exercises", body: "Practice the work itself: reading signals, triage and escalation, running an incident, writing the review." },
-        { title: "Clear progress", body: "Every module shows where a learner is: done, in progress or locked. Teams see the same picture." },
+        { title: "Interactive sandbox", body: "A live Linux terminal and editor in the browser, with tabs for scripts, Docker Compose, Terraform and Kubernetes manifests." },
+        { title: "Multi-agent AI mentoring", body: "Several AI agents coach you through each lab, so you get help while you work instead of an answer key." },
+        { title: "Real-world case studies", body: "Learn from realistic scenarios instead of toy examples, and see how the pieces fit together in production." },
+        { title: "Roadmap and dashboard", body: "A clear DevOps roadmap and a dashboard show what you have done and what comes next." },
       ],
-      stack: ["Paths", "Exercises", "Progress", "Teams"],
+      stack: ["Linux", "Docker", "Kubernetes", "AWS", "Terraform", "DevSecOps"],
     },
   },
 ];

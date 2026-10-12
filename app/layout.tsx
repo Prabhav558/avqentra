@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "Avqentra is a product and engineering studio. We're building AgentBattle, DevSick, QuestionForge and Ops Academy, and we build software for clients.",
   applicationName: siteName,
-  keywords: ["AI product studio", "AI agent evaluation", "AI incident root cause analysis", "technical interview question generator", "operations training", "custom software development", "agentic AI engineering"],
+  keywords: ["AI product studio", "AI agent evaluation", "AI incident root cause analysis", "technical interview question generator", "DevOps training", "custom software development", "agentic AI engineering"],
   authors: [{ name: siteName, url: siteUrl }],
   creator: siteName,
   publisher: siteName,

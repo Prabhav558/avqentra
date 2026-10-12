@@ -47,7 +47,7 @@ export const organization = {
   description: siteDescription,
   email: contactEmail,
   slogan: "Ideas into tools.",
-  knowsAbout: ["AI agent evaluation", "Incident root-cause analysis", "Technical interview question validation", "Operations training", "Software engineering"],
+  knowsAbout: ["AI agent evaluation", "Incident root-cause analysis", "Technical interview question validation", "DevOps training", "Software engineering"],
   contactPoint: { "@type": "ContactPoint", contactType: "sales", email: contactEmail, availableLanguage: "English" },
   founder: founders.map((f) => ({ "@type": "Person", name: f.name, jobTitle: f.title, url: `https://${f.site}`, worksFor: { "@id": `${siteUrl}/#organization` } })),
 };
