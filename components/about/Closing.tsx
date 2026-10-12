@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { responseTime } from "@/lib/site";
 import h from "@/components/home/home.module.css";
 import Arrow from "./Arrow";
 import s from "./about.module.css";
@@ -21,7 +22,7 @@ export default function Closing() {
             <br />
             <span className={h.gold}>concrete problem.</span>
           </h2>
-          <p className={h.sub}>Tell us what you are building and where it stands. A founder will reply.</p>
+          <p className={h.sub}>Tell us what you are building and where it stands. A founder will reply within {responseTime}.</p>
           <div className={h.ctaActions}>
             <Link href="/contact?type=project" className={`${h.btn} ${h.btnSolid}`}>
               Start a project <Arrow />

@@ -4,16 +4,19 @@ import SiteHeader from "@/components/home/SiteHeader";
 import ContactForm from "@/components/contact/ContactForm";
 import CopyEmail from "@/components/contact/CopyEmail";
 import { display, mono } from "@/lib/fonts";
+import JsonLd from "@/components/JsonLd";
+import { absolute, breadcrumbs, pageMeta } from "@/lib/seo";
 import { isTopic } from "@/lib/contact";
 import { products } from "@/lib/products";
-import { contactEmail } from "@/lib/site";
+import { contactEmail, responseTime } from "@/lib/site";
 import h from "@/components/home/home.module.css";
 import s from "@/components/contact/contact.module.css";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Start a client project with Avqentra, ask for early access to a product, or write to the founders.",
-};
+export const metadata: Metadata = pageMeta({
+  title: "Contact: start a project or get early access",
+  description: "Start a client project with Avqentra, ask for early access to a product, or write to the founders. A founder replies within two business days.",
+  path: "/contact",
+});
 
 type Props = { searchParams: Promise<{ type?: string; product?: string }> };
 
@@ -24,6 +27,12 @@ export default async function Contact({ searchParams }: Props) {
 
   return (
     <div className={`home-theme ${display.variable} ${mono.variable} ${h.page}`}>
+      <JsonLd
+        data={[
+          { "@context": "https://schema.org", "@type": "ContactPage", name: "Contact Avqentra", url: absolute("/contact"), about: { "@id": absolute("/#organization") } },
+          breadcrumbs([{ name: "Contact", path: "/contact" }]),
+        ]}
+      />
       <SiteHeader />
       <section className={s.hero} aria-labelledby="contact-h">
         <div className={h.backdrop} aria-hidden="true" />
@@ -42,7 +51,7 @@ export default async function Contact({ searchParams }: Props) {
             </h1>
             <p className={s.lede}>
               Client projects, early access, partnerships or questions. There is no sales layer: every message reaches
-              one of the three founders.
+              one of the three founders, and we reply within {responseTime}.
             </p>
 
             <div className={s.direct}>

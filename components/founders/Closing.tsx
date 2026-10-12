@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { responseTime } from "@/lib/site";
 import { founders } from "@/lib/founders";
 import h from "@/components/home/home.module.css";
 import s from "./founders.module.css";
@@ -32,7 +33,7 @@ export default function Closing() {
           </h2>
           <p className={h.sub}>
             No sales layer, no gatekeepers. Every message, from a project brief to an early-access request, reaches a
-            founder.
+            founder, and we reply within {responseTime}.
           </p>
           <div className={h.ctaActions}>
             <Link href="/contact?type=project" className={`${h.btn} ${h.btnSolid}`}>

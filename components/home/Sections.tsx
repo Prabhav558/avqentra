@@ -26,9 +26,9 @@ function Head({ kicker, title, children, wide }: { kicker: string; title: React.
 
 /* 04 — Philosophy */
 const principles = [
-  { n: "01", t: "Problem First", d: "We focus on meaningful problems before choosing technologies or building features." },
-  { n: "02", t: "Intelligence by Design", d: "We explore how AI and automation can make software more useful, adaptive, and capable." },
-  { n: "03", t: "Built to Be Used", d: "We prioritize practical functionality, thoughtful interfaces, and reliable engineering." },
+  { n: "01", t: "Problem first", d: "We define the problem and who it is for before choosing technology or building features." },
+  { n: "02", t: "Intelligence by design", d: "We use AI and automation where they make software measurably more useful, and keep people in control of the result." },
+  { n: "03", t: "Built to be used", d: "We favor working features, clear interfaces and reliable engineering over novelty." },
 ];
 
 export function Philosophy() {
@@ -37,11 +37,11 @@ export function Philosophy() {
       <div className={`${s.panelSplit} ${s.reveal}`}>
         <div className={s.panelCopy}>
           <p className={s.kicker}>— Our philosophy</p>
-          <h2 className={s.h2}><span id="philosophy-h">We build beyond the obvious.</span></h2>
+          <h2 className={s.h2}><span id="philosophy-h">We start with the problem.</span></h2>
           <p className={s.sub}>
             Whether it&rsquo;s our own product or a client&rsquo;s, software should do more than digitize existing
-            processes. It should rethink how problems are approached, and what becomes possible when intelligent
-            systems are designed with purpose.
+            processes. It should rethink how the problem is solved, and use AI only where it makes the result better
+            and easier to check.
           </p>
           <ol className={s.panelList}>
             {principles.map((p) => (
@@ -66,10 +66,10 @@ export function Philosophy() {
 
 /* 05 — How we build */
 const stages = [
-  { n: "01", t: "Discover", d: "Understand the problem, intended users, constraints, and desired outcome." },
-  { n: "02", t: "Design", d: "Define the experience, system architecture, and implementation approach." },
-  { n: "03", t: "Engineer", d: "Build the software, integrate the necessary technologies, and test the implementation." },
-  { n: "04", t: "Evolve", d: "Deploy, evaluate results, gather feedback, and improve the product." },
+  { n: "01", t: "Discover", d: "Understand the problem, the intended users, the constraints and the desired outcome." },
+  { n: "02", t: "Design", d: "Define the experience, the system architecture and the implementation approach." },
+  { n: "03", t: "Engineer", d: "Build the software, integrate the necessary technologies and test the result." },
+  { n: "04", t: "Evolve", d: "Deploy, evaluate results, gather feedback and improve the product." },
 ];
 
 export function Process() {
@@ -103,19 +103,19 @@ export function Process() {
 
 /* 06 — Capabilities */
 const capabilities = [
-  { t: "AI & Agentic Systems", d: "Designing software systems that use AI to reason, interact with tools, and execute structured workflows." },
-  { t: "Full-Stack Software Engineering", d: "Building maintainable applications with clear architecture, reliable integrations, and thoughtful user experiences." },
-  { t: "Application Architecture", d: "Shaping the structure of systems so they stay understandable, testable, and ready to grow." },
-  { t: "Automation & Intelligent Workflows", d: "Turning repetitive, multi-step work into dependable automated flows with people kept in the loop." },
-  { t: "Product Design & Development", d: "Taking a product from a defined problem to an interface people can actually use." },
-  { t: "Software Testing & Evaluation", d: "Measuring behaviour with repeatable tests and evaluations instead of relying on demos." },
+  { t: "AI and agentic systems", d: "Designing software systems that use AI to reason, interact with tools and run structured workflows." },
+  { t: "Full-stack software engineering", d: "Building maintainable applications with clear architecture, reliable integrations and usable interfaces." },
+  { t: "Application architecture", d: "Shaping the structure of systems so they stay understandable, testable and ready to grow." },
+  { t: "Automation and intelligent workflows", d: "Turning repetitive, multi-step work into dependable automated flows with people kept in the loop." },
+  { t: "Product design and development", d: "Taking a product from a defined problem to an interface people can actually use." },
+  { t: "Software testing and evaluation", d: "Measuring behavior with repeatable tests and evaluations instead of relying on demos." },
 ];
 
 export function Capabilities() {
   return (
     <section id="capabilities" className={s.sec} aria-labelledby="cap-h">
-      <Head kicker="— What we build for clients" title={<span id="cap-h">Built with engineering at the core.</span>}>
-        The disciplines behind our own products, available for your project.
+      <Head kicker="— What we build for clients" title={<span id="cap-h">Engineering you can inspect.</span>}>
+        The same disciplines behind our own products, available for your project.
       </Head>
       <ul className={`${s.caps} ${s.reveal}`}>
         {capabilities.map((c, i) => (
@@ -169,7 +169,7 @@ export function AboutSection() {
           <dl className={s.facts}>
             <div>
               <dt>Mission</dt>
-              <dd>Build products that solve real challenges and make people&rsquo;s work measurably better.</dd>
+              <dd>Build products that solve specific problems, and prove they work before asking anyone to trust them.</dd>
             </div>
             <div>
               <dt>Products</dt>
@@ -177,7 +177,7 @@ export function AboutSection() {
             </div>
             <div>
               <dt>Client work</dt>
-              <dd>AI systems, full-stack applications and automation, built for teams that need them done right.</dd>
+              <dd>AI systems, full-stack applications and automation, built to the same standard as our own products.</dd>
             </div>
           </dl>
           <ul className={s.founders}>

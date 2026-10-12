@@ -1,6 +1,12 @@
 /** Where messages from the contact form (and the direct-email links) go. */
 export const contactEmail = "founder@avqentra.in";
 
+/** MOCK until confirmed: promised reply time, quoted on the contact, about and founders pages. */
+export const responseTime = "two business days";
+
+/** Last meaningful content change, used as `lastModified` in the sitemap. Update when copy changes. */
+export const siteUpdated = "2026-10-13";
+
 export const siteName = "Avqentra";
 export const siteTagline = "Ideas into tools.";
 export const siteDescription =

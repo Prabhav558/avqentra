@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 import { products } from "@/lib/products";
-import { siteUrl } from "@/lib/site";
+import { siteUpdated, siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const now = new Date(siteUpdated);
   const page = (path: string, priority: number, changeFrequency: "weekly" | "monthly" | "yearly" = "monthly") => ({
     url: `${siteUrl}${path}`,
     lastModified: now,
@@ -18,5 +18,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/founders", 0.7),
     page("/contact", 0.7),
     page("/privacy", 0.3, "yearly"),
+    page("/terms", 0.3, "yearly"),
   ];
 }

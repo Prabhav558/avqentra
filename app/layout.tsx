@@ -4,8 +4,9 @@ import Footer from "@/components/Footer";
 import FooterScene from "@/components/FooterScene";
 import Nav from "@/components/Nav";
 import { display, mono } from "@/lib/fonts";
-import { founders } from "@/lib/founders";
-import { contactEmail, siteDescription, siteName, siteUrl } from "@/lib/site";
+import JsonLd from "@/components/JsonLd";
+import { organization, website } from "@/lib/seo";
+import { siteName, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,31 +15,25 @@ export const metadata: Metadata = {
   description:
     "Avqentra is a product and engineering studio. We're building AgentBattle, DevSick, QuestionForge and Ops Academy, and we build software for clients.",
   applicationName: siteName,
+  keywords: ["AI product studio", "AI agent evaluation", "AI incident root cause analysis", "technical interview question generator", "operations training", "custom software development", "agentic AI engineering"],
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
+  verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION, other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } : undefined },
   alternates: { canonical: "./" },
   // title and description are inherited from each page, so a shared link to /products/devsick says "DevSick"
-  openGraph: { type: "website", siteName, url: "./" },
+  openGraph: { type: "website", siteName, url: "./", locale: "en_IN" },
   twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = { themeColor: "#0e0e0b", colorScheme: "dark" };
 
-// Structured data so search engines can tie the site to the company and its founders.
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: siteName,
-  url: siteUrl,
-  logo: `${siteUrl}/avqentra-logo.png`,
-  description: siteDescription,
-  email: contactEmail,
-  founder: founders.map((f) => ({ "@type": "Person", name: f.name, jobTitle: f.title })),
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${display.variable} ${mono.variable}`}>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }} />
+        <JsonLd data={[organization, website]} />
         <Cursor />
         <Nav />
         <main>{children}</main>

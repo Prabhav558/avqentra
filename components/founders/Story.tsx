@@ -5,7 +5,7 @@ import s from "./founders.module.css";
 const words = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 const count = words[products.length] ?? String(products.length);
 
-// "A, B, C and D" with only the names emphasised.
+// "A, B, C and D" with only the names emphasized.
 const list = products.map((p, i) => (
   <span key={p.slug}>
     {i > 0 && (i === products.length - 1 ? " and " : ", ")}

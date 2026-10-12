@@ -14,6 +14,7 @@ const company = [
   { href: "/contact?type=project", label: "Start a project" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
 ];
 
 export default function Footer() {

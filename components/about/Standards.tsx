@@ -16,7 +16,7 @@ const standards = [
   {
     n: "03",
     t: "Iterate with the people who use it",
-    d: "Honest feedback from real users decides what we build next.",
+    d: "Feedback from the people who use it decides what we build next.",
   },
   {
     n: "04",

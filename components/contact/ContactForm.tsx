@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import h from "@/components/home/home.module.css";
-import { contactEmail } from "@/lib/site";
+import { contactEmail, responseTime } from "@/lib/site";
 import { limits, topicKeys, topics, validate, type Errors, type Field, type Lead, type Topic } from "@/lib/contact";
 import s from "./contact.module.css";
 
@@ -94,7 +94,7 @@ export default function ContactForm({ productNames, initialTopic, initialProduct
         <div className={s.done} role="status">
           <p className={s.eyebrow}>— Sent</p>
           <h2 className={s.doneTitle}>Message <span className={h.gold}>received.</span></h2>
-          <p className={h.sub}>A founder will reply to {values.email}. If it&rsquo;s urgent, you can also write to {contactEmail}.</p>
+          <p className={h.sub}>A founder will reply to {values.email} within {responseTime}. If it&rsquo;s urgent, you can also write to {contactEmail}.</p>
           <div className={s.doneActions}>
             <button type="button" className={`${h.btn} ${h.btnGhost}`} onClick={reset}>Send another <Arrow /></button>
           </div>

@@ -2,18 +2,27 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "@/components/home/SiteHeader";
 import { display, mono } from "@/lib/fonts";
+import { pageMeta } from "@/lib/seo";
 import { contactEmail } from "@/lib/site";
 import h from "@/components/home/home.module.css";
 import s from "@/components/privacy/privacy.module.css";
 
-export const metadata: Metadata = {
-  title: "Privacy",
-  description: "What Avqentra collects when you contact us, why, and how to have it removed.",
-};
+export const metadata: Metadata = pageMeta({ title: "Privacy policy", description: "What Avqentra collects when you contact us, why we collect it, where it is kept, how long we keep it, and how to have it removed.", path: "/privacy" });
 
-const UPDATED = "12 October 2026";
+// MOCK details below (retention period, hosting region, response times): confirm before launch.
+// Still needed from the company: legal entity name, registered address, grievance officer name.
+const UPDATED = "13 October 2026";
 
 const sections = [
+  {
+    t: "Who we are",
+    d: (
+      <p>
+        Avqentra is a product and engineering studio. This page covers this website and the messages sent through it.
+        Write to us at <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+      </p>
+    ),
+  },
   {
     t: "What we collect",
     d: (
@@ -40,7 +49,7 @@ const sections = [
     d: (
       <>
         <p>
-          Messages are stored in a database we run on Supabase, and the founders may also receive a copy by email. Our
+          Messages are stored in a Supabase database hosted in the Mumbai (ap-south-1) region, and the founders may also receive a copy by email. Our
           hosting provider may keep standard server logs, such as IP addresses and the pages requested, for security
           and reliability.
         </p>
@@ -59,14 +68,15 @@ const sections = [
   },
   {
     t: "How long we keep it",
-    d: <p>For as long as we need to reply and follow up on your message, and for our own records of who we have spoken to.</p>,
+    d: <p>Up to 12 months after your last message, then we delete it. If we start working together, we keep project records for as long as the work and our legal obligations require.</p>,
   },
   {
     t: "Your choices",
     d: (
       <p>
-        To see, correct or delete what we hold about you, email{" "}
-        <a href={`mailto:${contactEmail}`}>{contactEmail}</a> from the address you used and we will act on it.
+        You can ask to see, correct or delete what we hold about you, and to withdraw consent for us to contact you. Email{" "}
+        <a href={`mailto:${contactEmail}`}>{contactEmail}</a> from the address you used and we will act on it within 30 days. Questions or complaints go to the same address, and we reply within seven days. You may also have rights under
+        applicable data protection law, such as India&rsquo;s Digital Personal Data Protection Act, 2023.
       </p>
     ),
   },

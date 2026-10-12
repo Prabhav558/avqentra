@@ -53,11 +53,11 @@ The site is built around one design idea: **restrained, instrument-like, cream o
 | Product | What it is | Status |
 |---|---|---|
 | **AgentBattle** | A head-to-head arena for AI agents. Same tasks, same conditions, scored and repeatable results, so you compare agents on data instead of demos. | Launching soon |
-| **DevSick** | An incident-intelligence layer that sits on top of your monitoring stack, detects failures, explains the root cause with LLM reasoning, and keeps a human in the loop for the fix. | Under progress |
+| **DevSick** | An incident-intelligence layer that sits on top of your monitoring stack, detects failures, explains the root cause with LLM reasoning, and keeps a human in the loop for the fix. | In development |
 | **QuestionForge** | Drafts technical interview questions with an LLM, then verifies them by running code or independent review before a human ever sees them. | Launching soon |
 | **Ops Academy** | A learning platform that builds practical operations skills through structured paths, hands-on exercises and visible progress. | Launching soon |
 
-Status values live in one place, `lib/products.ts` (`Under progress`, `Launching soon`, `Early access`, `Live`). Change a product's status there and every page, card and label updates.
+Status values live in one place, `lib/products.ts` (`In development`, `Launching soon`, `Early access`, `Live`). Change a product's status there and every page, card and label updates.
 
 ## Screenshots
 

@@ -59,11 +59,11 @@ export default function Hero() {
             <span className={s.eyebrow} style={{ "--i": 0 } as React.CSSProperties}>We turn</span>
             <span style={{ "--i": 1 } as React.CSSProperties}>Ideas</span>
             <span style={{ "--i": 2 } as React.CSSProperties}>into</span>
-            <span className={s.gold} style={{ "--i": 3 } as React.CSSProperties}>Systems.</span>
+            <span className={s.gold} style={{ "--i": 3 } as React.CSSProperties}>Tools.</span>
           </h1>
           <p className={s.lede} style={{ "--i": 4 } as React.CSSProperties}>
             A product and engineering studio. We&rsquo;re building our own AI products, and we design
-            and build software for teams that need it done right.
+            and build software for teams that need it built to the same standard.
           </p>
           <div className={s.actions} style={{ "--i": 5 } as React.CSSProperties}>
             <Link href="/products" className={`${s.btn} ${s.btnSolid}`}>

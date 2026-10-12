@@ -23,6 +23,8 @@ export const founders: Founder[] = [
     site: "yash.avqentra.in",
     focus: "Sets where Avqentra goes, and makes sure every product earns its place.",
     owns: ["Company direction", "Product strategy", "Partnerships"],
+    // MOCK bio: replace with real background.
+    bio: "Leads company direction and product strategy. Decides which problems Avqentra takes on, and which products keep earning investment.",
   },
   {
     slug: "prabhav",
@@ -32,6 +34,8 @@ export const founders: Founder[] = [
     site: "prabhav.avqentra.in",
     focus: "Decides how our systems are built, and holds the bar on what ships.",
     owns: ["Architecture", "Engineering", "AI systems"],
+    // MOCK bio: replace with real background.
+    bio: "Leads architecture and engineering. Reviews system designs before they are built and sets the testing bar for everything that ships.",
   },
   {
     slug: "ishaan",
@@ -41,6 +45,8 @@ export const founders: Founder[] = [
     site: "ishaan.avqentra.in",
     focus: "Keeps the company funded, measured, and built to last.",
     owns: ["Finance", "Capital & runway", "Operations"],
+    // MOCK bio: replace with real background.
+    bio: "Leads finance and operations. Plans funding and runway, and keeps client projects scoped, priced and delivered on schedule.",
   },
 ];
 

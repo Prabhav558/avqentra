@@ -5,6 +5,8 @@ import Tilt from "./landing/Tilt";
 import SectionRail from "./landing/SectionRail";
 import { AgentBattleUI, DevSickUI, OpsAcademyUI, QuestionForgeUI } from "./landing/Mockups";
 import { pageProducts as products, type PageProduct } from "@/lib/products";
+import JsonLd from "./JsonLd";
+import { absolute, breadcrumbs } from "@/lib/seo";
 
 const UI: Record<string, () => React.JSX.Element> = { agentbattle: AgentBattleUI, devsick: DevSickUI, questionforge: QuestionForgeUI, "ops-academy": OpsAcademyUI };
 const rail = [
@@ -24,6 +26,21 @@ export default function ProductDetail({ p, variant }: { p: PageProduct; variant:
   const Mock = UI[p.slug];
   return (
     <div className="frame pd" style={{ ["--c" as string]: THEME }}>
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: p.title,
+            description: p.description,
+            url: absolute(`/products/${p.slug}`),
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            publisher: { "@id": absolute("/#organization") },
+          },
+          breadcrumbs([{ name: "Products", path: "/products" }, { name: p.title, path: `/products/${p.slug}` }]),
+        ]}
+      />
       <SectionRail items={rail} />
 
       <section className="pd-hero" id="top">
@@ -34,7 +51,7 @@ export default function ProductDetail({ p, variant }: { p: PageProduct; variant:
           <h1 className="pd-title">{p.heroLines[0]}<br /><span className="tan">{p.heroLines[1]}</span></h1>
           <p className="pd-lead mono">{p.description}</p>
           <div className="pd-actions">
-            <Link className="pbtn cream" href="/contact">Get notified <Arrow /></Link>
+            <Link className="pbtn cream" href={`/contact?type=early-access&product=${p.slug}`}>Get early access <Arrow /></Link>
           </div>
         </div>
         <dl className="ps-facts pd-facts">
@@ -82,7 +99,7 @@ export default function ProductDetail({ p, variant }: { p: PageProduct; variant:
             <h2 className="display-m">TRY <span className="tan">{p.title.toUpperCase()}.</span></h2>
             <p className="pd-lead mono">{p.lead}</p>
             <div className="pd-actions">
-              <Link className="pbtn cream" href="/contact">JOIN THE WAITLIST <Arrow /></Link>
+              <Link className="pbtn cream" href={`/contact?type=early-access&product=${p.slug}`}>GET EARLY ACCESS <Arrow /></Link>
             </div>
             <ul className="pd-stack mono">{p.stack.map((s) => <li key={s}>{s}</li>)}</ul>
           </div>
